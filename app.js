@@ -4,11 +4,11 @@ var app = express();
 var path = require('path');
 
 app.get('/', function (req, res) {
-    res.sendFile(path.join(__dirname + '/typingfantasy.html'));
+    res.sendFile(path.join(__dirname + '/index.html'));
 });
 
-app.get('/words.js', (req,res)=>{
-    res.sendFile(path.join(__dirname + '/words.js'))
+app.get('/main.js', (req,res)=>{
+    res.sendFile(path.join(__dirname + '/dist/main.js'))
 });
 
 app.listen(3000);
