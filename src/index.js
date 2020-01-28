@@ -1,24 +1,41 @@
-document.addEventListener('DOMContentLoaded', ()=> {
+// 3 chars vs 3 chars you can choose who to target and each char gets 1 word/amount of time
+import Enemy from './enemy'
+
+let canvas;
+let ctx;
+let word;
+let keys;
+let fontSize;
+
+document.addEventListener('DOMContentLoaded', () => {
     canvas = document.getElementById('canvas');
     ctx = canvas.getContext('2d');
     ctx.fillStyle = "black";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     document.addEventListener("keydown", keyPush);
+    word = [];
 
-    word = []
-    // window.word = word
-    wordsList = ['asdf', 'magic', 'qwerty']
-    function getRandomInt(max) {
-        return Math.floor(Math.random() * Math.floor(max));
-    }
+    //https://stackoverflow.com/questions/15661796/how-to-handle-multiple-keypresses-with-canvas
+    keys = []; // keys that have been pressed and not released are true in here 
+    document.body.addEventListener("keydown", function (e) {
+        keys[e.keyCode] = true;
+    });
 
+    document.body.addEventListener("keyup", function (e) {
+        keys[e.keyCode] = false;
+        console.log(keys)
+    });
+    //
+    
     setInterval(game, 1000 / 30); //30fps
+    setInterval(()=> new Enemy, 1000 / 30); //30fps
+
 
 })
 
+
 function game() {
     fontSize = 50;
-
     //handles deleting old characters 
     ctx.clearRect(0, canvas.height - fontSize, canvas.width, fontSize)
     //end deleting
@@ -34,103 +51,6 @@ function game() {
     ctx.fillText(word.join(''), 0, (canvas.height));
     //end user input word
     // console.log(canvas.width/fontSize) = 25.6 atm but it can fit approx 44 charss-- all in arial 50s on a 1280 width
-}
-// var img = new Image();
-
-// // User Variables - customize these to change the image being scrolled, its
-// // direction, and the speed.
-
-// img.src = 'https://mdn.mozillademos.org/files/4553/Capitan_Meadows,_Yosemite_National_Park.jpg';
-// var CanvasXSize = 1000;
-// var CanvasYSize = 500;
-// var speed = 20; // lower is faster
-// var scale = 3.05;
-// var y = 0; // vertical offset
-
-// // Main program
-
-// var dx = 0.75;
-// var imgW;
-// var imgH;
-// var x = 0;
-// var clearX;
-// var clearY;
-// var ctx;
-
-// img.onload = function () {
-//     imgW = img.width * scale;
-//     imgH = img.height * scale;
-
-//     if (imgW > CanvasXSize) {
-//         // image larger than canvas
-//         x = CanvasXSize - imgW;
-//     }
-//     if (imgW > CanvasXSize) {
-//         // image width larger than canvas
-//         clearX = imgW;
-//     } else {
-//         clearX = CanvasXSize;
-//     }
-//     if (imgH > CanvasYSize) {
-//         // image height larger than canvas
-//         clearY = imgH;
-//     } else {
-//         clearY = CanvasYSize;
-//     }
-
-//     // get canvas context
-//     ctx = document.getElementById('canvas').getContext('2d');
-
-//     // set refresh rate
-//     return setInterval(draw, speed);
-// }
-
-// function draw() {
-//     ctx.clearRect(0, 0, clearX, clearY); // clear the canvas
-
-//     // if image is <= Canvas Size
-//     if (imgW <= CanvasXSize) {
-//         // reset, start from beginning
-//         if (x > CanvasXSize) {
-//             x = -imgW + x;
-//         }
-//         // draw additional image1
-//         if (x > 0) {
-//             ctx.drawImage(img, -imgW + x, y, imgW, imgH);
-//         }
-//         // draw additional image2
-//         if (x - imgW > 0) {
-//             ctx.drawImage(img, -imgW * 2 + x, y, imgW, imgH);
-//         }
-//     }
-
-//     // image is > Canvas Size
-//     else {
-//         // reset, start from beginning
-//         if (x > (CanvasXSize)) {
-//             x = CanvasXSize - imgW;
-//         }
-//         // draw aditional image
-//         if (x > (CanvasXSize - imgW)) {
-//             ctx.drawImage(img, x - imgW + 1, y, imgW, imgH);
-//         }
-//     }
-//     // draw image
-//     ctx.drawImage(img, x, y, imgW, imgH);
-//     // amount to move
-//     x += dx;
-// }
-function makeEnemy() {
-    Math.randomcanvas.width
-    enemies = []
-    enemiesWords = []
-    // each enemy: 
-    // 1. has a rendered pic at random location
-    // 2. has a word in enemieswords array thats checked per keypress
-    enemyId++
-}
-
-function destroyEnemy() {
 
 }
 

@@ -7,7 +7,7 @@ app.get('/', function (req, res) {
     res.sendFile(path.join(__dirname + '/index.html'));
 });
 
-app.get('/main.js', (req,res)=>{
+app.get('/dist/main.js', (req,res)=>{
     res.sendFile(path.join(__dirname + '/dist/main.js'))
 });
 
