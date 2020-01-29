@@ -1,17 +1,24 @@
 class Enemy{
-    constructor(difficulty){
-        this.word = dictionary[Math.floor(Math.random() * dictionary.length)]
-        this.difficulty = difficulty
+    constructor(x, y, difficulty){
+        this.word = dictionary[Math.floor(Math.random() * dictionary.length)];
+        this.difficulty = difficulty;
+        this.alive = true ;
+        this.animateDeath = this.animateDeath.bind(this)
         console.log(this.word)
         // Math.random(canvas.width)
         // enemyId++
         // each enemy: 
         // 1. has a rendered pic at random location
         // 2. has a word in enemieswords array thats checked per keypress
+
+        
     }
 
-    death() {
-
+    animateDeath() {
+        let canvas = document.getElementById('canvas');
+        let ctx = canvas.getContext('2d');
+        ctx.fillStyle = "purple";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
     }
 
 

@@ -26,15 +26,28 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log(keys)
     });
     //
-    
-    setInterval(game, 1000 / 30); //30fps
-    setInterval(()=> new Enemy, 1000 / 30); //30fps
+
+    setInterval(animateTypingArea, 1000 / 30); //30fps
+    game()
 
 
 })
 
-
 function game() {
+    let enemies = []
+    window.enemies = enemies
+    let rate = .5 //per second
+    
+    
+    
+    spawnEnemy()
+    
+    function spawnEnemy(rate){
+        enemies.push(new Enemy)
+    }
+}
+
+function animateTypingArea() {
     fontSize = 50;
     //handles deleting old characters 
     ctx.clearRect(0, canvas.height - fontSize, canvas.width, fontSize)
@@ -53,13 +66,23 @@ function game() {
     // console.log(canvas.width/fontSize) = 25.6 atm but it can fit approx 44 charss-- all in arial 50s on a 1280 width
 
 }
+function handleSubmit(enteredWord){
+    for(let i = 0; i < enemies.length; i++){
+        if(enemies[i].word.includes(enteredWord) && enemies[i].alive === true){
+            enemies[i].alive = false;
+            enemies[i].animateDeath();
+        }else{
+            console.log('failedenter')
+        }
+    }
+}
 
 function keyPush(e) {
     //couldve used fromCharCode()
     switch (e.keyCode) {
         case 65:
             word.push('a')
-            console.log(word)
+            // console.log(word)
             break;
         case 66:
             word.push('b')
@@ -141,8 +164,13 @@ function keyPush(e) {
             break;
         case 8:
             // console.log('Delete Keymac/backspace pc Pressed');
-            word.pop()
+            word.pop();
             break;
+        case 13:
+            handleSubmit(word.join(''))
+            word = [];
+            break;
+
     }
 }
 
