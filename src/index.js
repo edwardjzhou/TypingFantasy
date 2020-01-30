@@ -8,15 +8,22 @@ var keys;
 var fontSize;
 var enemies;
 var bg;
-var cronoimg;
+var cronorightimg;
+var cronoleftimg;
+var cronodownimg;
+var cronoupimg;
 var forestbg;
 var player
 var imp
+var request;
 
 document.addEventListener('DOMContentLoaded', () => {
     canvas = document.getElementById('canvas');
     ctx = canvas.getContext('2d');   
-    cronoimg = document.getElementById('cronoleft')
+    cronoleftimg = document.getElementById('cronoleft')
+    cronorightimg = document.getElementById('cronoright')
+    cronodownimg = document.getElementById('cronodown')
+    cronoupimg = document.getElementById('cronoup')
     forestbg = document.getElementById('forest')
     imp = document.getElementById('imp')
 
@@ -43,18 +50,22 @@ document.addEventListener('DOMContentLoaded', () => {
 function game() {
     let rate = .5 //per second
     enemies = []
-    spawnEnemy()
+    spawnEnemy(rate)
 
-    player = new Crono(300,300, canvas, ctx, cronoimg, keys)
+    player = new Crono(300,300, canvas, ctx, cronoleftimg, cronorightimg, cronoupimg, cronodownimg, keys)
 
     function spawnEnemy(rate){
-        enemies.push(new Enemy(100,100,canvas,ctx, imp))
+        enemies.push(new Enemy(Math.floor(Math.random()*canvas.width+1),Math.floor(Math.random()*canvas.height+1),canvas,ctx, imp))
+        setTimeout(()=>spawnEnemy(rate),1000/rate)
     }
-
-    setInterval(()=>render(player,enemies), 1000/15);
+    render(player, enemies)
+    // setInterval(()=>render(player,enemies), 1000/15);
 }
 
-function render(player, enemies){
+function render(player, enemies, asdf){
+    asdf = asdf || 1
+    request = requestAnimationFrame(() => render(player, enemies, asdf))
+
     // ctx.clearRect(0, 0, canvas.width, canvas.height); // wipe everything
     // player.moveRight()
     // bg = new Image(); // 1024x768 background render
@@ -67,11 +78,17 @@ function render(player, enemies){
 
     animateTypingArea();
     player.animate();
-    player.moveRight()
+    // player.moveRight()
     for(let i = 0; i < enemies.length; i++){
         enemies[i].animate();
     }
+    asdf++
+    console.log(asdf)
 
+}
+
+function gameover(){
+    cancelAnimationFrame(request)
 }
 
 function animateTypingArea() {
@@ -95,9 +112,9 @@ function animateTypingArea() {
 }
 function handleSubmit(enteredWord){
     for(let i = 0; i < enemies.length; i++){
-        if(enemies[i].word.includes(enteredWord) && enemies[i].alive === true){
+        if(enemies[i].word === enteredWord && enemies[i].alive === true){
             enemies[i].alive = false;
-            enemies[i].animateDeath();
+            // enemies[i].animateDeath();
         }else{
             console.log('failedenter')
         }

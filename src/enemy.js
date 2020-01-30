@@ -10,6 +10,7 @@ class Enemy{
         this.imp = imp
         this.word = dictionary[Math.floor(Math.random() * dictionary.length)];
         this.difficulty = difficulty;
+      
 
         console.log(this.word)
         // Math.random(canvas.width)
@@ -20,12 +21,23 @@ class Enemy{
         
     }
     animate(){
-        this.ctx.drawImage(this.imp, 0, 0, 200, 300, this.x, this.y, 500, 500)
-        
+        if (this.alive === true){
+            this.ctx.drawImage(this.imp, 0, 0, 200, 300, this.x, this.y, 500, 500)
+            this.ctx.fillStyle = "white";
+            this.ctx.font = `bold 50px ChronoType`;
+            this.ctx.fillText(this.word, this.x, this.y, 500, 500)
+
+        } else {
+            // this.ctx.rotate(Math.PI);
+            // this.ctx.save()
+            this.ctx.drawImage(this.imp, 0, 0, 200, 300, this.x, this.y, 500, 500)
+            // this.ctx.restore()
+        }
     }
 
-    animateDeath() {
-
+    animateDeath(){}
+    wander() {
+        // if( Math.random()
 
     }
 

@@ -23,6 +23,19 @@ app.get('/src/chrono.png', (req, res) => {
 app.get('/src/cronobattleleft.gif', (req, res) => {
     res.sendFile(path.join(__dirname + '/src/cronobattleleft.gif'))
 });
+app.get('/src/cronobattleright.gif', (req, res) => {
+    res.sendFile(path.join(__dirname + '/src/cronobattleright.gif'))
+});
+
+app.get('/src/cronobattleup.gif', (req, res) => {
+    res.sendFile(path.join(__dirname + '/src/cronobattleup.gif'))
+});
+
+app.get('/src/cronobattledown.gif', (req, res) => {
+    res.sendFile(path.join(__dirname + '/src/cronobattledown.gif'))
+});
+
+
 
 
 app.get('/src/Blue_Imp.png', (req, res) => {
