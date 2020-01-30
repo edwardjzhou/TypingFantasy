@@ -6,12 +6,36 @@ let ctx;
 let word;
 let keys;
 let fontSize;
+let enemies;
 
 document.addEventListener('DOMContentLoaded', () => {
     canvas = document.getElementById('canvas');
     ctx = canvas.getContext('2d');
-    ctx.fillStyle = "black";
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    // ctx.fillStyle = "black";
+    // ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+
+
+    
+    var img = new Image();   // Create new img element
+    var bg = new Image(); // 1024x768
+  
+
+    bg.addEventListener('load', function () {
+        ctx.drawImage(bg, 0, 0, 500, 350, 0, 0, canvas.width, canvas.height - 50)
+    }, false)
+    img.addEventListener('load', function () {
+        // execute drawImage statements here
+        ctx.drawImage(img, 0, 0, 500, 500, canvas.width / 2, canvas.height / 2, 500, 500)
+    }, false);
+
+    bg.src = 'src/ChronoTrigger1000GuardiaForestBG.png'
+    img.src = 'src/cronobattleleft.png'; // Set source path
+
+    //TESZTING
+
+
+
     document.addEventListener("keydown", keyPush);
     word = [];
 
@@ -27,6 +51,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     //
 
+
     setInterval(animateTypingArea, 1000 / 30); //30fps
     game()
 
@@ -34,11 +59,9 @@ document.addEventListener('DOMContentLoaded', () => {
 })
 
 function game() {
-    let enemies = []
-    window.enemies = enemies
     let rate = .5 //per second
     
-    
+    enemies = []
     
     spawnEnemy()
     
