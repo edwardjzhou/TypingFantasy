@@ -1,11 +1,16 @@
 class Enemy{
-    constructor(x, y, difficulty){
-        this.word = dictionary[Math.floor(Math.random() * dictionary.length)];
-        this.difficulty = difficulty;
-        this.alive = true ;
-        this.animateDeath = this.animateDeath.bind(this)
+    constructor(x, y, canvas, ctx, imp, difficulty){
+        this.canvas = canvas
+        this.ctx = ctx
         this.x = x
         this.y = y
+        this.alive = true;
+        this.animate = this.animate.bind(this)
+        this.animateDeath = this.animateDeath.bind(this)
+        this.imp = imp
+        this.word = dictionary[Math.floor(Math.random() * dictionary.length)];
+        this.difficulty = difficulty;
+
         console.log(this.word)
         // Math.random(canvas.width)
         // enemyId++
@@ -15,15 +20,10 @@ class Enemy{
         
     }
     animate(){
-        let canvas = document.getElementById('canvas');
-        let ctx = canvas.getContext('2d');
-        let img = new Image();
-        img.addEventListener('load', function () {
-            ctx.drawImage(img, 0, 0, 500, 500, this.x, this.y, 500, 500)
-        }, false);
-        img.src = 'src/cronobattleleft.gif'; // Set source path
+        this.ctx.drawImage(this.imp, 0, 0, 200, 300, this.x, this.y, 500, 500)
+        
     }
-    
+
     animateDeath() {
 
 

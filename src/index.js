@@ -11,12 +11,15 @@ var bg;
 var cronoimg;
 var forestbg;
 var player
+var imp
 
 document.addEventListener('DOMContentLoaded', () => {
     canvas = document.getElementById('canvas');
     ctx = canvas.getContext('2d');   
     cronoimg = document.getElementById('cronoleft')
     forestbg = document.getElementById('forest')
+    imp = document.getElementById('imp')
+
 
 
     document.addEventListener("keydown", keyPush);
@@ -42,10 +45,10 @@ function game() {
     enemies = []
     spawnEnemy()
 
-    player = new Crono(300,300, canvas, ctx, cronoimg)
+    player = new Crono(300,300, canvas, ctx, cronoimg, keys)
 
     function spawnEnemy(rate){
-        enemies.push(new Enemy(100,100))
+        enemies.push(new Enemy(100,100,canvas,ctx, imp))
     }
 
     setInterval(()=>render(player,enemies), 1000/15);
