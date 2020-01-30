@@ -1,28 +1,42 @@
 class Crono{
-    constructor(x, y, difficulty){
-
+    constructor(x, y, canvas, ctx, cronoimg){
+        this.canvas = canvas
+        this.ctx = ctx
+        this.x = x
+        this.y = y
         this.alive = true ;
+        this.animate = this.animate.bind(this)
         this.animateDeath = this.animateDeath.bind(this)
-        this.canvas = document.getElementById('canvas');
-        this.ctx = canvas.getContext('2d');
+        this.moveRight = this.moveRight.bind(this)
+        this.cronoimg = cronoimg
+        // this.cronoImg.src = 'src/cronobattleleft.gif'; 
+       
+        // this.cronoImg.src = 'src/cronobattleleft.gif'; // Set source path
+    }
+
+    animate(){
+           this.ctx.drawImage(this.cronoimg, 0, 0, 500, 500, this.x,200, 500, 500)
+            }    //     // let canvas = document.getElementById('canvas');
+    //     // let ctx = canvas.getContext('2d');
+            
+    //     this.cronoImg.addEventListener('onload', function () {
+    //         this.ctx.drawImage(this.cronoImg, 0, 0, 62, 62, 300, 300, 62, 62)
+    //     }, false);
+    //     this.cronoImg.src = 'src/cronobattleleft.gif'; // Set source path
+    //     //    this.ctx.drawImage(this.cronoImg, 0, 0, 62, 62, 300, 300, 62, 62)
+       
+    
+
+    moveRight(){
+        if (this.x < this.canvas.width -30 ){
+            this.x += 10
+        } else {
+        }
     }
 
     animateDeath() {
         let canvas = document.getElementById('canvas');
         let ctx = canvas.getContext('2d');
-        // ctx.fillStyle = "purple";
-        // ctx.fillRect(0, 0, canvas.width, canvas.height);
-        var bg = new Image();
-        bg.onload = function () {
-
-            // At this point, the image is fully loaded
-            // So do your thing!
-
-        };
-
-        bg.src = 'src/ChronoTrigger1000GuardiaForestBG.png'; // Set source path
-        // ctx.drawImage(bg, 500, 500, 256, 224, 0, 0, canvas.width, canvas.height)
-        ctx.drawImage(bg,90,90, 200,200)
 
     }
 

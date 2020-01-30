@@ -4,32 +4,28 @@ class Enemy{
         this.difficulty = difficulty;
         this.alive = true ;
         this.animateDeath = this.animateDeath.bind(this)
+        this.x = x
+        this.y = y
         console.log(this.word)
         // Math.random(canvas.width)
         // enemyId++
         // each enemy: 
         // 1. has a rendered pic at random location
         // 2. has a word in enemieswords array thats checked per keypress
-
         
     }
-
-    animateDeath() {
+    animate(){
         let canvas = document.getElementById('canvas');
         let ctx = canvas.getContext('2d');
-        // ctx.fillStyle = "purple";
-        // ctx.fillRect(0, 0, canvas.width, canvas.height);
-        var bg = new Image();
-        bg.onload = function () {
+        let img = new Image();
+        img.addEventListener('load', function () {
+            ctx.drawImage(img, 0, 0, 500, 500, this.x, this.y, 500, 500)
+        }, false);
+        img.src = 'src/cronobattleleft.gif'; // Set source path
+    }
+    
+    animateDeath() {
 
-            // At this point, the image is fully loaded
-            // So do your thing!
-
-        };
-
-        bg.src = 'src/ChronoTrigger1000GuardiaForestBG.png'; // Set source path
-        // ctx.drawImage(bg, 500, 500, 256, 224, 0, 0, canvas.width, canvas.height)
-        ctx.drawImage(bg,90,90, 200,200)
 
     }
 

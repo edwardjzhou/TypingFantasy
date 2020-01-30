@@ -1,39 +1,22 @@
-// 3 chars vs 3 chars you can choose who to target and each char gets 1 word/amount of time
 import Enemy from './enemy'
+import Crono from './crono';
 
-let canvas;
-let ctx;
-let word;
-let keys;
-let fontSize;
-let enemies;
+var canvas;
+var ctx;
+var word;
+var keys;
+var fontSize;
+var enemies;
+var bg;
+var cronoimg;
+var forestbg;
+var player
 
 document.addEventListener('DOMContentLoaded', () => {
     canvas = document.getElementById('canvas');
-    ctx = canvas.getContext('2d');
-    // ctx.fillStyle = "black";
-    // ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-
-
-    
-    var img = new Image();   // Create new img element
-    var bg = new Image(); // 1024x768
-  
-
-    bg.addEventListener('load', function () {
-        ctx.drawImage(bg, 0, 0, 500, 350, 0, 0, canvas.width, canvas.height - 50)
-    }, false)
-    img.addEventListener('load', function () {
-        // execute drawImage statements here
-        ctx.drawImage(img, 0, 0, 500, 500, canvas.width / 2, canvas.height / 2, 500, 500)
-    }, false);
-
-    bg.src = 'src/ChronoTrigger1000GuardiaForestBG.png'
-    img.src = 'src/cronobattleleft.png'; // Set source path
-
-    //TESZTING
-
+    ctx = canvas.getContext('2d');   
+    cronoimg = document.getElementById('cronoleft')
+    forestbg = document.getElementById('forest')
 
 
     document.addEventListener("keydown", keyPush);
@@ -51,23 +34,41 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     //
 
-
-    setInterval(animateTypingArea, 1000 / 30); //30fps
     game()
-
-
 })
 
 function game() {
     let rate = .5 //per second
-    
     enemies = []
-    
     spawnEnemy()
-    
+
+    player = new Crono(300,300, canvas, ctx, cronoimg)
+
     function spawnEnemy(rate){
-        enemies.push(new Enemy)
+        enemies.push(new Enemy(100,100))
     }
+
+    setInterval(()=>render(player,enemies), 1000/15);
+}
+
+function render(player, enemies){
+    // ctx.clearRect(0, 0, canvas.width, canvas.height); // wipe everything
+    // player.moveRight()
+    // bg = new Image(); // 1024x768 background render
+    // bg.addEventListener('load', function () {
+    //     ctx.drawImage(bg, 0, 0, 500, 350, 0, 0, canvas.width, canvas.height - 50)
+    // }, false)
+    // bg.src = 'src/ChronoTrigger1000GuardiaForestBG.png'
+
+    ctx.drawImage(forestbg, 0, 0, 500, 350, 0, 0, canvas.width, canvas.height - 50)
+
+    animateTypingArea();
+    player.animate();
+    player.moveRight()
+    for(let i = 0; i < enemies.length; i++){
+        enemies[i].animate();
+    }
+
 }
 
 function animateTypingArea() {
@@ -83,7 +84,7 @@ function animateTypingArea() {
 
     //user input word
     ctx.fillStyle = "blue";
-    ctx.font = `bold ${fontSize}px Arial`;
+    ctx.font = `bold ${fontSize}px ChronoType`;
     ctx.fillText(word.join(''), 0, (canvas.height));
     //end user input word
     // console.log(canvas.width/fontSize) = 25.6 atm but it can fit approx 44 charss-- all in arial 50s on a 1280 width
