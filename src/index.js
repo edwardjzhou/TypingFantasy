@@ -1,3 +1,14 @@
+// FUTURE:
+// 1. show WPM somewhere need to keep track of time elapsed
+// 2. gameover reset the game 
+// 3. animate attack from crono-- should he just teleport everywhere and use x-attack? OR HUGE ARC with MATH that he flies through
+// 4. how does crono lose? do monsters need to attack him he needs hp or soemthing or if more than 5monsters are alive at once he loses
+// 5. make it feel more alive with actual edges that crono and monsters cant spawn/cross
+// 6. monsters move randomly left and right to and fro, also spawn preferentially away from existing monsters??
+// 7. animate random movement, walking, and standing so it doesnt look like crono is skating
+// 8. options/welcome screen/ choosing difficulty such as spawn rate
+// 9. animate monster death
+// 10. glitch: moving down+left double animates 
 import Enemy from './enemy'
 import Crono from './crono';
 
@@ -12,10 +23,14 @@ var cronorightimg;
 var cronoleftimg;
 var cronodownimg;
 var cronoupimg;
+var cronothrust
 var forestbg;
 var player
 var imp
 var request;
+var wpm;
+var time;
+
 
 document.addEventListener('DOMContentLoaded', () => {
     canvas = document.getElementById('canvas');
@@ -26,6 +41,8 @@ document.addEventListener('DOMContentLoaded', () => {
     cronoupimg = document.getElementById('cronoup')
     forestbg = document.getElementById('forest')
     imp = document.getElementById('imp')
+    cronothrust = document.getElementById('cronothrust')
+
 
 
 
@@ -48,11 +65,11 @@ document.addEventListener('DOMContentLoaded', () => {
 })
 
 function game() {
-    let rate = .5 //per second
+    let rate = .2 //per second
     enemies = []
     spawnEnemy(rate)
 
-    player = new Crono(300,300, canvas, ctx, cronoleftimg, cronorightimg, cronoupimg, cronodownimg, keys)
+    player = new Crono(300,300, canvas, ctx, cronoleftimg, cronorightimg, cronoupimg, cronodownimg, cronothrust, keys)
 
     function spawnEnemy(rate){
         enemies.push(new Enemy(Math.floor(Math.random()*canvas.width+1),Math.floor(Math.random()*canvas.height+1),canvas,ctx, imp))
@@ -76,21 +93,24 @@ function render(player, enemies, asdf){
 
     ctx.drawImage(forestbg, 0, 0, 500, 350, 0, 0, canvas.width, canvas.height - 50)
 
-    animateTypingArea();
-    player.animate();
     // player.moveRight()
     for(let i = 0; i < enemies.length; i++){
         enemies[i].animate();
     }
-    asdf++
-    console.log(asdf)
+    animateTypingArea();
+    player.animate();
+
+    // asdf++
+    // console.log(asdf)
 
 }
 
 function gameover(){
     cancelAnimationFrame(request)
 }
+function animateWPM(){
 
+}
 function animateTypingArea() {
     fontSize = 50;
     //handles deleting old characters 
@@ -113,6 +133,7 @@ function animateTypingArea() {
 function handleSubmit(enteredWord){
     for(let i = 0; i < enemies.length; i++){
         if(enemies[i].word === enteredWord && enemies[i].alive === true){
+            player.animateAttack(enemies[i].x, enemies[i].y-50, cronothrust)
             enemies[i].alive = false;
             // enemies[i].animateDeath();
         }else{

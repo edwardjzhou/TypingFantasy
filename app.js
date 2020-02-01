@@ -2,6 +2,8 @@
 var express = require('express');
 var app = express();
 var path = require('path');
+var port = process.env.PORT || 3000;
+
 
 app.get('/', function (req, res) {
     res.sendFile(path.join(__dirname + '/index.html'));
@@ -34,6 +36,9 @@ app.get('/src/cronobattleup.gif', (req, res) => {
 app.get('/src/cronobattledown.gif', (req, res) => {
     res.sendFile(path.join(__dirname + '/src/cronobattledown.gif'))
 });
+app.get('/src/cronodownthrust.gif', (req, res) => {
+    res.sendFile(path.join(__dirname + '/src/cronodownthrust.gif'))
+});
 
 
 
@@ -57,4 +62,4 @@ app.get('/src/chronotype/ChronoType.svg', (req, res) => {
 
 
 
-app.listen(3000);
+app.listen(port);

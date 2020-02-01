@@ -1,5 +1,5 @@
 class Crono{
-    constructor(x, y, canvas, ctx, cronoleftimg, cronorightimg, cronoupimg, cronodownimg, keys){
+    constructor(x, y, canvas, ctx, cronoleftimg, cronorightimg, cronoupimg, cronodownimg, cronothrust, keys){
         this.canvas = canvas
         this.ctx = ctx
         this.x = x
@@ -13,6 +13,7 @@ class Crono{
         this.cronoupimg = cronoupimg
         this.cronodownimg = cronodownimg
         this.lastaction = this.cronodownimg
+        this.cronothrust = cronothrust
 
         this.keys = keys
         // this.cronoImg.src = 'src/cronobattleleft.gif'; 
@@ -20,6 +21,13 @@ class Crono{
         // this.cronoImg.src = 'src/cronobattleleft.gif'; // Set source path
     }
 
+    animateAttack(x,y){
+        this.x = x
+        this.y = y
+        this.ctx.drawImage(this.cronothrust, 0, 0, 500, 500, this.x, this.y + 50, 500, 500)
+        this.lastaction = this.cronothrust
+    }
+    
     animate(){
             if (this.keys[39]=== true){
                this.moveRight()

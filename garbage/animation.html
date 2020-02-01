@@ -1,0 +1,28 @@
+<script src="GIFGroover.js"></script>
+
+
+<script>
+    var myCanvas = document.createElement("canvas");
+
+        const myGif = GIFGroover();
+        myGif.src = "/cronobattleleft.gif";
+        myGif.onload = gifLoad;
+        function gifLoad(event) {
+                const gif = event.gif;
+                const canvas = document.createElement("canvas");
+                canvas.width = gif.width; // set canvas size to match the gif.
+                canvas.height = gif.height;
+                const ctx = canvas.getContext("2d");  // get a rendering context
+                document.body.appendChild(canvas);    // add canvas to the DOM
+                requestAnimationFrame(displayGif);    // start displaying the gif.
+
+                // Display loop
+                function displayGif() {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear in case the gif is transparent
+                    ctx.drawImage(gif.image);                      // The current frame
+                    requestAnimationFrame(displayGif);
+                }
+            }    
+            myGif.play();                     // continues playing from last position
+
+</script>

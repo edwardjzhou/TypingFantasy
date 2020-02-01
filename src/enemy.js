@@ -25,13 +25,28 @@ class Enemy{
             this.ctx.drawImage(this.imp, 0, 0, 200, 300, this.x, this.y, 500, 500)
             this.ctx.fillStyle = "white";
             this.ctx.font = `bold 50px ChronoType`;
+            // this.ctx.rotate(2)
             this.ctx.fillText(this.word, this.x, this.y, 500, 500)
 
         } else {
-            // this.ctx.rotate(Math.PI);
-            // this.ctx.save()
+        //     this.ctx.rotate(Math.PI);
+        //     this.ctx.save()
+        //     this.ctx.save();
+        //     let degrees = 180
+        //     let image = this.imp
+        //     // move to the center of the canvas
+        //     this.ctx.translate(canvas.width / 2, canvas.height / 2);
+
+        //     // rotate the canvas to the specified degrees
+        //    this.ctx.rotate(degrees * Math.PI / 180);
+
+        //     // draw the image
+        //     // since the context is rotated, the image will be rotated also
+        //     // this.ctx.drawImage(image, this.x, this.y, 50, 100);
+
+        //     // we’re done with the rotating so restore the unrotated context
+        //     this.ctx.restore();
             this.ctx.drawImage(this.imp, 0, 0, 200, 300, this.x, this.y, 500, 500)
-            // this.ctx.restore()
         }
     }
 
