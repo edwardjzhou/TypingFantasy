@@ -4,7 +4,7 @@ function GIFGroover() {
     var interlacedBufSize, deinterlaceBuf, pixelBufSize, pixelBuf, st, timerID, currentFrame, currentTime, playing, loading, complete, cancel, disposalMethod, transparencyGiven, delayTime, transparencyIndex, gifWidth, gifHeight, duration, frameTime, playSpeed, nextFrameTime, nextFrame, lastFrame, bgColorCSS, gifSrc, paused, colorRes, globalColourCount, bgColourIndex, globalColourTable;
     const bitValues = new Uint32Array([1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096]);
     const interlaceOffsets = [0, 4, 2, 1];
-    const interlaceSteps = [8, 8, 4, 2];
+    const interlaceSteps = [8, 8, 4, 2]; 
     const frames = [];
     const comments = [];
     const events = [];

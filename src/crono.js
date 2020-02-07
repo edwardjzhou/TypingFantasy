@@ -16,16 +16,24 @@ class Crono{
         this.cronothrust = cronothrust
 
         this.keys = keys
+        this.arcY
+        this.arcX
+        this.radius
         // this.cronoImg.src = 'src/cronobattleleft.gif'; 
        
         // this.cronoImg.src = 'src/cronobattleleft.gif'; // Set source path
     }
 
     animateAttack(x,y){
+        // x bigger the more right, y bigger the lower, arclength, 1
+        this.arcY = (this.y + y )/ 2
+        this.arcX = (this.x + x )/ 2
+        this.radius = Math.abs(this.x-x) / 2
         this.x = x
         this.y = y
         this.ctx.drawImage(this.cronothrust, 0, 0, 500, 500, this.x, this.y + 50, 500, 500)
         this.lastaction = this.cronothrust
+       
     }
     
     animate(){
@@ -84,7 +92,7 @@ class Crono{
     }
     
     moveLeft(){
-        if (this.x > 0 - 30 && (this.keys[40] || this.keys[38] )=== false) {
+        if (this.x > 0 - 30 && (this.keys[40] || this.keys[38]) === false) {
             this.x -= 4
             this.ctx.drawImage(this.cronoleftimg, 0, 0, 500, 500, this.x, this.y, 500, 500)
         } else if (this.x > 0 - 30 && (this.keys[40] || this.keys[38]) === true){
