@@ -14,11 +14,8 @@ class Crono{
         this.cronodownimg = cronodownimg
         this.lastaction = this.cronodownimg
         this.cronothrust = cronothrust
-
         this.keys = keys
-        this.arcY
-        this.arcX
-        this.radius
+      
 
     }
 
@@ -30,7 +27,6 @@ class Crono{
         this.circleCenterY = (this.y + y )/ 2
         this.circleCenterX = (this.x + x )/ 2
         this.diameter = Math.pow(Math.pow((this.x-x),2) + Math.pow((this.y-y),2), 0.5)
-        console.log('we here')
         // which unit is on the LEFT?
         if (this.x < x){
             leftsY = this.y
@@ -39,22 +35,8 @@ class Crono{
             leftsY = y
             leftsX = x
         }
-        //thing to  right is higher than center GLITCHED reverse
-        // if unit on the LEFT is LOWER than circle center then: 
-        
-        // if (leftsY > this.circleCenterY){
-        //     this.angleStartClockwise = -Math.atan((leftsY - this.circleCenterY) / (this.circleCenterX - leftsX)) + Math.PI
-        //     this.angleEndClockwise = Math.PI + this.angleStartClockwise
-        //     console.log(this.angleStartClockwise)
-
-        // }
-
-        // // if unit on the LEFT is HIGHER than the circle center thebn:
-        // if (leftsY <= this.circleCenterY) {
-            this.angleStartClockwise = -Math.atan( (leftsY - this.circleCenterY) / (this.circleCenterX - leftsX)) + Math.PI
-            this.angleEndClockwise = Math.PI + this.angleStartClockwise
-            console.log('problem')
-        // }
+        this.angleStartClockwise = -Math.atan( (leftsY - this.circleCenterY) / (this.circleCenterX - leftsX)) + Math.PI
+        this.angleEndClockwise = Math.PI + this.angleStartClockwise
 
         this.x = x
         this.y = y
@@ -68,18 +50,21 @@ class Crono{
                this.moveRight()
                this.lastaction = this.cronorightimg
             }
+            
+            if (this.keys[37] === true) {
+                this.moveLeft()
+                this.lastaction = this.cronoleftimg
+            }
+            // down and up will overpower left and right as a lastaction
             if (this.keys[40] === true) {
                 this.moveDown()
                 this.lastaction = this.cronodownimg
             }
-            if (this.keys[37] === true) {
-                this.moveLeft()
-                this.lastaction =this.cronoleftimg
-            }
             if (this.keys[38] === true) {
                 this.moveUp()
                 this.lastaction = this.cronoupimg
-            } else if ( (this.keys[37] === false || this.keys[37] === undefined)
+            } 
+            if ( (this.keys[37] === false || this.keys[37] === undefined)
             && (this.keys[38] === false || this.keys[38] === undefined)
             && (this.keys[39] === false || this.keys[39] === undefined)
             && (this.keys[40] === false || this.keys[40] === undefined)){
@@ -89,14 +74,7 @@ class Crono{
             }
         }
     
-             //     // let canvas = document.getElementById('canvas');
-    //     // let ctx = canvas.getContext('2d');
-            
-    //     this.cronoImg.addEventListener('onload', function () {
-    //         this.ctx.drawImage(this.cronoImg, 0, 0, 62, 62, 300, 300, 62, 62)
-    //     }, false);
-    //     this.cronoImg.src = 'src/cronobattleleft.gif'; // Set source path
-    //     //    this.ctx.drawImage(this.cronoImg, 0, 0, 62, 62, 300, 300, 62, 62)
+
        
     moveDown(){
         if (this.y < this.canvas.height - 30 && (this.keys[37] || this.keys[39])=== false) {
@@ -139,8 +117,7 @@ class Crono{
     }
 
     animateDeath() {
-        let canvas = document.getElementById('canvas');
-        let ctx = canvas.getContext('2d');
+  
 
     }
 
