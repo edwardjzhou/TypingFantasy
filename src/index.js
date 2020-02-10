@@ -63,7 +63,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.body.addEventListener("keyup", function (e) {
         keys[e.keyCode] = false;
-        console.log(keys)
+        //console.log(keys)
     });
     //
 
@@ -92,9 +92,12 @@ function render(player, enemies, persistedArc){
     animateWPM()
     ctx.drawImage(forestbg, 0, 0, 500, 350, 0, 0, canvas.width, canvas.height - 50)
     
-    if(player.arcX){
+    if(player.circleCenterY){
         ctx.beginPath();
-        ctx.arc(player.arcX, player.arcY, player.radius, Math.atan(player.arcY/player.arcX)+ Math.PI, 2*Math.PI, false)//, 2 * Math.PI);
+        ctx.arc(player.circleCenterX, player.circleCenterY, player.diameter/2, player.angleStartClockwise, player.angleEndClockwise, false)
+        // console.log(player.angleStartClockwise)
+        // console.log(player.angleEndClockwise)
+        // first angle is how far away from 0 to CW - 
         ctx.strokeStyle = "#FF0000";
         ctx.lineWidth = 10;
         ctx.lineCap = 'round'

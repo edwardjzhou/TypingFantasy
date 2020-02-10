@@ -19,16 +19,43 @@ class Crono{
         this.arcY
         this.arcX
         this.radius
-        // this.cronoImg.src = 'src/cronobattleleft.gif'; 
-       
-        // this.cronoImg.src = 'src/cronobattleleft.gif'; // Set source path
+
     }
 
     animateAttack(x,y){
+        let leftsY
+        let leftsX
         // x bigger the more right, y bigger the lower, arclength, 1
-        this.arcY = (this.y + y )/ 2
-        this.arcX = (this.x + x )/ 2
-        this.radius = Math.abs(this.x-x) / 2
+        // this.y is where crono is y is where enemy is at the start
+        this.circleCenterY = (this.y + y )/ 2
+        this.circleCenterX = (this.x + x )/ 2
+        this.diameter = Math.pow(Math.pow((this.x-x),2) + Math.pow((this.y-y),2), 0.5)
+        console.log('we here')
+        // which unit is on the LEFT?
+        if (this.x < x){
+            leftsY = this.y
+            leftsX = this.x
+        } else {
+            leftsY = y
+            leftsX = x
+        }
+        //thing to  right is higher than center GLITCHED reverse
+        // if unit on the LEFT is LOWER than circle center then: 
+        
+        // if (leftsY > this.circleCenterY){
+        //     this.angleStartClockwise = -Math.atan((leftsY - this.circleCenterY) / (this.circleCenterX - leftsX)) + Math.PI
+        //     this.angleEndClockwise = Math.PI + this.angleStartClockwise
+        //     console.log(this.angleStartClockwise)
+
+        // }
+
+        // // if unit on the LEFT is HIGHER than the circle center thebn:
+        // if (leftsY <= this.circleCenterY) {
+            this.angleStartClockwise = -Math.atan( (leftsY - this.circleCenterY) / (this.circleCenterX - leftsX)) + Math.PI
+            this.angleEndClockwise = Math.PI + this.angleStartClockwise
+            console.log('problem')
+        // }
+
         this.x = x
         this.y = y
         this.ctx.drawImage(this.cronothrust, 0, 0, 500, 500, this.x, this.y + 50, 500, 500)
@@ -52,10 +79,10 @@ class Crono{
             if (this.keys[38] === true) {
                 this.moveUp()
                 this.lastaction = this.cronoupimg
-            } else if ( (this.keys[37] === false || this.keys[37] ===undefined)
+            } else if ( (this.keys[37] === false || this.keys[37] === undefined)
             && (this.keys[38] === false || this.keys[38] === undefined)
-            && (this.keys[39] === false || this.keys[39] ===undefined)
-            && (this.keys[40] === false || this.keys[40] ===undefined)){
+            && (this.keys[39] === false || this.keys[39] === undefined)
+            && (this.keys[40] === false || this.keys[40] === undefined)){
                 this.ctx.drawImage(this.lastaction, 0, 0, 500, 500, this.x, this.y, 500, 500)
             }  else{
                 this.ctx.drawImage(this.lastaction, 0, 0, 500, 500, this.x, this.y, 500, 500)
