@@ -20,8 +20,36 @@ class Enemy{
         // 2. has a word in enemieswords array thats checked per keypress
         
     }
-    animate(){
+    animate(cronoX,cronoY){
         if (this.alive === true){
+            let randomMove = Math.random()
+            if(cronoX > this.x){
+                if (randomMove < .50){
+                    this.x += 1
+                } else if(randomMove >= .65 && randomMove < .75){
+                    this.x -= 1
+                }
+            } else if(cronoX < this.x) {
+                if (randomMove < .50) {
+                    this.x -= 1
+                } else if (randomMove >= .65 && randomMove < .75) {
+                    this.x += 1
+                }
+            }
+            if (cronoY > this.y) {
+                if (randomMove < .50) {
+                    this.y += 1
+                } else if (randomMove >= .65 && randomMove < .75) {
+                    this.y -= 1
+                }
+            } else if (cronoY < this.y) {
+                if (randomMove < .50) {
+                    this.y -= 1
+                } else if (randomMove >= .65 && randomMove < .75) {
+                    this.y += 1
+                }
+            }
+
             this.ctx.drawImage(this.imp, 0, 0, 200, 300, this.x, this.y, 500, 500)
             this.ctx.fillStyle = "white";
             this.ctx.font = `bold 50px ChronoType`;
@@ -46,7 +74,7 @@ class Enemy{
 
         //     // we’re done with the rotating so restore the unrotated context
         //     this.ctx.restore();
-            this.ctx.drawImage(this.imp, 0, 0, 200, 300, this.x, this.y, 500, 500)
+            // this.ctx.drawImage(this.imp, 0, 0, 200, 300, this.x, this.y, 500, 500)
         }
     }
 
