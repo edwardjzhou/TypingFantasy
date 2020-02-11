@@ -39,6 +39,12 @@ app.get('/src/cronobattledown.gif', (req, res) => {
 app.get('/src/cronodownthrust.gif', (req, res) => {
     res.sendFile(path.join(__dirname + '/src/cronodownthrust.gif'))
 });
+app.get('/src/520448.jpg', (req, res) => {
+    res.sendFile(path.join(__dirname + '/src/520448.jpg'))
+});
+app.get('/src/blue.png', (req, res) => {
+    res.sendFile(path.join(__dirname + '/src/blue.png'))
+});
 
 
 
@@ -59,6 +65,7 @@ app.get('/src/chronotype/ChronoType.ttf', (req, res) => {
 app.get('/src/chronotype/ChronoType.svg', (req, res) => {
     res.sendFile(path.join(__dirname + '/src/chronotype/ChronoType.svg'))
 });
+
 
 
 

@@ -1,5 +1,5 @@
 class Enemy{
-    constructor(x, y, canvas, ctx, imp, difficulty){
+    constructor(x, y, canvas, ctx, imp, difficulty, bluepaint){
         this.canvas = canvas
         this.ctx = ctx
         this.x = x
@@ -10,7 +10,8 @@ class Enemy{
         this.imp = imp
         this.word = dictionary[Math.floor(Math.random() * dictionary.length)];
         this.difficulty = difficulty;
-      
+        this.standStill = false
+        this.bluepaint = bluepaint;
 
         console.log(this.word)
         // Math.random(canvas.width)
@@ -21,42 +22,64 @@ class Enemy{
         
     }
     animate(cronoX,cronoY){
-        if (this.alive === true){
+        if (this.alive === true && this.standStill === false){
             let randomMove = Math.random()
             if(cronoX > this.x){
-                if (randomMove < .50){
+                if (randomMove < .70){
                     this.x += 1
-                } else if(randomMove >= .65 && randomMove < .75){
+                } else if(randomMove >= .70 && randomMove < .99){
                     this.x -= 1
+                } else{
+                    this.standStill = true
+                    setTimeout(() => this.standStill = false , 3000)
                 }
             } else if(cronoX < this.x) {
-                if (randomMove < .50) {
+                if (randomMove < .70) {
                     this.x -= 1
-                } else if (randomMove >= .65 && randomMove < .75) {
+                } else if (randomMove >= .70 && randomMove < .99) {
                     this.x += 1
-                }
+                } else{
+                    this.standStill = true
+                    setTimeout(() => this.standStill = false, 3000)
+                } 
             }
             if (cronoY > this.y) {
-                if (randomMove < .50) {
+                if (randomMove < .70) {
                     this.y += 1
-                } else if (randomMove >= .65 && randomMove < .75) {
+                } else if (randomMove >= .70 && randomMove < .99) {
                     this.y -= 1
+                } else{
+                    this.standStill = true
+                    setTimeout(() => this.standStill = false, 3000)
                 }
             } else if (cronoY < this.y) {
-                if (randomMove < .50) {
+                if (randomMove < .70) {
                     this.y -= 1
-                } else if (randomMove >= .65 && randomMove < .75) {
+                } else if (randomMove >= .70 && randomMove < .99) {
                     this.y += 1
+                } else{
+                    this.standStill = true
+                    setTimeout(() => this.standStill = false, 3000)
                 }
-            }
-
+            } 
+        }
+            if (this.alive === true){
             this.ctx.drawImage(this.imp, 0, 0, 200, 300, this.x, this.y, 500, 500)
             this.ctx.fillStyle = "white";
             this.ctx.font = `bold 50px ChronoType`;
             // this.ctx.rotate(2)
             this.ctx.fillText(this.word, this.x, this.y, 500, 500)
+            } 
+            
+            if (this.alive === false){
+                this.ctx.drawImage(this.bluepaint, 0, 0, 500, 500, this.x, this.y, 60, 60)
+            }
 
-        } else {
+            // this.ctx.drawImage(this.imp, 0, 0, 200, 300, this.x, this.y, 500, 500)
+            // this.ctx.fillStyle = "white";
+            // this.ctx.font = `bold 50px ChronoType`;
+            // this.ctx.rotate(2)
+            // this.ctx.fillText(this.word, this.x, this.y, 500, 500)
         //     this.ctx.rotate(Math.PI);
         //     this.ctx.save()
         //     this.ctx.save();
@@ -75,7 +98,7 @@ class Enemy{
         //     // we’re done with the rotating so restore the unrotated context
         //     this.ctx.restore();
             // this.ctx.drawImage(this.imp, 0, 0, 200, 300, this.x, this.y, 500, 500)
-        }
+        
     }
 
     animateDeath(){}

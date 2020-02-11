@@ -50,7 +50,6 @@ class Crono{
                this.moveRight()
                this.lastaction = this.cronorightimg
             }
-            
             if (this.keys[37] === true) {
                 this.moveLeft()
                 this.lastaction = this.cronoleftimg
@@ -69,9 +68,7 @@ class Crono{
             && (this.keys[39] === false || this.keys[39] === undefined)
             && (this.keys[40] === false || this.keys[40] === undefined)){
                 this.ctx.drawImage(this.lastaction, 0, 0, 500, 500, this.x, this.y, 500, 500)
-            }  else{
-                this.ctx.drawImage(this.lastaction, 0, 0, 500, 500, this.x, this.y, 500, 500)
-            }
+            } 
         }
     
 

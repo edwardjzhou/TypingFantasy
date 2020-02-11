@@ -43,7 +43,8 @@ let time;
 let then;
 let now;
 let firstTime = 0;
-let destroyedCount = 0
+let destroyedCount = 0;
+let bluepaint;
 
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -56,7 +57,7 @@ document.addEventListener('DOMContentLoaded', () => {
     forestbg = document.getElementById('forest')
     imp = document.getElementById('imp')
     cronothrust = document.getElementById('cronothrust')
-
+    bluepaint = document.getElementById('bluepaint')
 
 
 
@@ -79,14 +80,14 @@ document.addEventListener('DOMContentLoaded', () => {
 })
 
 function game() {
-    let rate = .5 //per second
+    let rate = 1 //per second
     enemies = []
     spawnEnemy(rate)
 
     player = new Crono(300,300, canvas, ctx, cronoleftimg, cronorightimg, cronoupimg, cronodownimg, cronothrust, keys)
 
     function spawnEnemy(rate){
-        enemies.push(new Enemy(Math.floor(Math.random()*canvas.width+1),Math.floor(Math.random()*canvas.height+1),canvas,ctx, imp))
+        enemies.push(new Enemy(Math.floor(Math.random()*canvas.width+1),Math.floor(Math.random()*canvas.height+1),canvas,ctx, imp, 1, bluepaint))
         setTimeout(()=>spawnEnemy(rate),1000/rate)
         
     }
