@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Typing Fantasy</title>
+    <link rel="icon" type="image/png" href="/src/Blue_Imp.png">
     <style>
         img{
             display: none;
@@ -25,7 +26,83 @@
             margin: 0;
             padding: 0;
             border: 0; 
+            font-family:ChronoType;
         }
+
+        #canvas{
+            /* position: relative;
+            /* right: 50%; */
+            /* margin-left: 640px; */
+            /* margin-right: 640px;  */
+            /* text-align:center; */
+            display:inline-block;
+        }
+
+        #wrapper{
+            text-align:center;
+            
+        }
+
+        #instructions{
+            box-sizing: border-box;
+            background-image: linear-gradient(#736c72,black);
+            /* height: 100px; */
+            width: 1280px;
+            padding: 50px;
+            border: 2px solid black;
+            display: block;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            color: white;
+            transform: translate(25%, 0%);
+            /* left: 50%; */
+            /* position:absolute; */
+            /* top:50%;  */
+        }
+
+        #contact{
+            display: flex;
+            justify-content:center;                
+        }
+        
+        .child{
+                color:white; 
+                text-decoration: none !important;
+        }
+
+        a:link {
+            text-decoration: none;
+                            color:white; 
+
+        }
+
+        a:visited {
+            text-decoration: none;
+                            color:white; 
+
+        }
+
+                a:hover {
+        text-decoration: none;
+                        color:white; 
+
+        }
+
+        a:active {
+        text-decoration: none;
+                        color:white; 
+
+        }
+
+        @media (min-width: 1280px) and (min-height: 720px) {
+
+
+        }
+
     </style>
     
             <img src="/src/ChronoTrigger1000GuardiaForestBG.png" id="forest">
@@ -45,18 +122,24 @@
     <script src="./dist/main.js"></script>
     
 </head>
-    <!-- <div style="background-image: url('/src/520448.jpg'); height:calc(100% - 3em); width:100%; background-size: contain; background-repeat: no-repeat;  position:absolute;"> -->
-
-
-
 
 <body style="background:antiquewhite">
-    <!-- <body style="background-image: url('/src/520448.jpg'); background-repeat: no-repeat; display: block; height: 100vh;"> -->
-            <!-- <body style="background-image: url('/src/520448.jpg'); background-repeat: no-repeat; background-size: auto; background-position: center;"> -->
+<div id="wrapper">
+    <h1 style="">TYPING FANTASY</h1>
+    <canvas id="canvas" width="1280" height="800"></canvas>
+    <div id="instructions">Instructions: 
+        <br>1. Type the word above the monster's head to attack it!
+        <br>2. Keep typing until you're bored!
+        <br>
+        <br>
+        <div id="contact">
+            <div class="child"><a href="https://www.linkedin.com/in/edzhou/">My Linkedin</a></div>&nbsp;|&nbsp;
+            <div class="child"><a href="https://github.com/featurerich1/">My Github</a></div>&nbsp;|&nbsp;
+            <div class="child"><a href="mailto:edward@utexas.edu">Email me!</a></div>
+        </div>
             
-    <h1 style="margin-left: 40%">TYPING FANTASY</h1>
-    <canvas style="margin-left: 15%" id="canvas" width="1280" height="800"></canvas>
-    
+    </div>
+</div>
 </body>
-ß
+
 </html>
