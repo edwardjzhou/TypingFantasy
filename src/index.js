@@ -60,7 +60,7 @@ document.addEventListener('DOMContentLoaded', () => {
     bluepaint = document.getElementById('bluepaint')
 
 
-
+    prompt()
     document.addEventListener("keydown", keyPush);
     word = [];
 

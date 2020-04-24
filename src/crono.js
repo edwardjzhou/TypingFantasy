@@ -49,7 +49,7 @@ class Crono{
             if (this.keys[39]=== true){
                this.moveRight()
                this.lastaction = this.cronorightimg
-            }
+            } 
             if (this.keys[37] === true) {
                 this.moveLeft()
                 this.lastaction = this.cronoleftimg
