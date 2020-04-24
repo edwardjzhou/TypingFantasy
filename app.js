@@ -66,7 +66,7 @@ app.get('/src/chronotype/ChronoType.svg', (req, res) => {
     res.sendFile(path.join(__dirname + '/src/chronotype/ChronoType.svg'))
 });
 
-
+// app.use(express.favicon("/src/Blue_Imp.png")); 
 
 
 app.listen(port);
