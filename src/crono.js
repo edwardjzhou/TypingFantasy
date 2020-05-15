@@ -59,7 +59,7 @@ class Crono{
                 this.moveDown()
                 this.lastaction = this.cronodownimg
             }
-            if (this.keys[38] === true) {
+            if (this.keys[38] === true && this.keys[40] === false) {
                 this.moveUp()
                 this.lastaction = this.cronoupimg
             } 

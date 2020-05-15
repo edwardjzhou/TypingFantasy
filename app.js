@@ -2,7 +2,7 @@
 var express = require('express');
 var app = express();
 var path = require('path');
-var port = process.env.PORT || 3000;
+var port = process.env.PORT || 3001;
 
 
 app.get('/', function (req, res) {
@@ -47,6 +47,12 @@ app.get('/src/blue.png', (req, res) => {
 });
 
 
+app.get('/src/TechnodeChocobo.mp3', (req, res) => {
+    res.sendFile(path.join(__dirname + '/src/TechnodeChocobo.mp3'))
+});
+
+
+
 
 
 app.get('/src/Blue_Imp.png', (req, res) => {
@@ -65,6 +71,12 @@ app.get('/src/chronotype/ChronoType.ttf', (req, res) => {
 app.get('/src/chronotype/ChronoType.svg', (req, res) => {
     res.sendFile(path.join(__dirname + '/src/chronotype/ChronoType.svg'))
 });
+
+
+app.get('/src/blue.png', (req, res) => {
+    res.sendFile(path.join(__dirname + '/src/blue.png'))
+});
+
 
 // app.use(express.favicon("/src/Blue_Imp.png")); 
 

@@ -47,6 +47,7 @@ let destroyedCount = 0;
 let bluepaint;
 
 
+
 document.addEventListener('DOMContentLoaded', () => {
     canvas = document.getElementById('canvas');
     ctx = canvas.getContext('2d');   
@@ -60,7 +61,9 @@ document.addEventListener('DOMContentLoaded', () => {
     bluepaint = document.getElementById('bluepaint')
 
 
-    prompt()
+ 
+
+
     document.addEventListener("keydown", keyPush);
     word = [];
 
@@ -145,6 +148,32 @@ function animateWPM(){
     ctx.fillStyle = "blue";
     ctx.font = `bold ${fontSize}px ChronoType`;
     ctx.fillText('Time: ' + time + '   WPM: ' + wpm , canvas.width - 600, (canvas.height));
+
+    // var context = canvas.getContext("2d");
+    // canvas.x = 150;
+    // canvas.y = 150;
+    let context = ctx
+    context.strokeStyle = "#000000";
+    context.strokeWeight = 3;
+    context.shadowOffsetX = 4.0;
+    context.shadowOffsetY = 4.0;
+    context.lineWidth = 10.0;
+    context.fillStyle = "#FF0000";
+    var d = 30
+    var k = 100;
+
+    context.moveTo(k, k + d / 4);
+    context.quadraticCurveTo(k, k, k + d / 4, k);
+    context.quadraticCurveTo(k + d / 2, k, k + d / 2, k + d / 4);
+    context.quadraticCurveTo(k + d / 2, k, k + d * 3 / 4, k);
+    context.quadraticCurveTo(k + d, k, k + d, k + d / 4);
+    context.quadraticCurveTo(k + d, k + d / 2, k + d * 3 / 4, k + d * 3 / 4);
+    context.lineTo(k + d / 2, k + d);
+    context.lineTo(k + d / 4, k + d * 3 / 4);
+    context.quadraticCurveTo(k, k + d / 2, k, k + d / 4);
+    context.stroke();
+    context.fill();
+
 
 }
 function animateTypingArea() {
