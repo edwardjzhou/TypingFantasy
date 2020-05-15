@@ -1,5 +1,5 @@
 class Crono {
-    constructor(x, y, canvas, ctx, cronoleftimg, cronorightimg, cronoupimg, cronodownimg, cronothrust, keys, enemies){
+    constructor(x, y, canvas, ctx, cronoleftimg, cronorightimg, cronoupimg, cronodownimg, cronothrust, keys, enemies) {
         this.canvas = canvas
         this.ctx = ctx
         this.x = x
@@ -15,10 +15,19 @@ class Crono {
         this.cronothrust = cronothrust
         this.keys = keys
         this.enemies = enemies
+
+        setInterval(this.checkCollision.bind(this), 1000)
+    }
+
+    checkCollision() {
+        for (let enemy in this.enemies) {
+            console.log(enemy)
+
+        }
     }
 
     takeDamage() {
-
+        
     }
 
     animateAttack(x, y) {

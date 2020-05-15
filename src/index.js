@@ -102,12 +102,12 @@ function game() {
 
     function spawnEnemy(rate){
         enemies.push(new Enemy(Math.floor(Math.random()*canvas.width+1),Math.floor(Math.random()*canvas.height+1),canvas,ctx, imp, 1, bluepaint))
-        setTimeout(()=>spawnEnemy(rate),1000/rate)
+        setTimeout(() => spawnEnemy(rate),1000/rate)
         
     }
     // requestAnimationFrame(()=>render(player, enemies))
     // setInterval(()=>render(player,enemies), 1000/15);
-    render(player,enemies)
+    render(player, enemies)
 }
 
 function render(player, enemies, frameCount){
@@ -115,21 +115,26 @@ function render(player, enemies, frameCount){
    // 1024x768 background render
     ctx.drawImage(forestbg, 0, 0, 500, 350, 0, 0, canvas.width, canvas.height - 50)
     
-
-
+    // THIS IS WHERE THE ARC IS DRAWN)
     if(player.circleCenterY ){
+        
+        // first line of two
         ctx.beginPath();
         ctx.arc(player.circleCenterX, player.circleCenterY, player.diameter/2, player.angleStartClockwise, player.angleEndClockwise, false)
-        ctx.strokeStyle = "#FFFFFF";
+        ctx.strokeStyle = "#FFFF00";
         ctx.lineWidth = 2;
         ctx.lineCap = 'round'
         ctx.stroke();
+        ctx.closePath();
+
+        // second line of two
         ctx.beginPath();
         ctx.arc(player.circleCenterX, player.circleCenterY, player.diameter / 2+ 10, player.angleStartClockwise, player.angleEndClockwise, false)
-        ctx.strokeStyle = "#FFFFFF";
+        ctx.strokeStyle = "#FFFF00";
         ctx.lineWidth = 1;
         ctx.lineCap = 'round'
         ctx.stroke();
+        ctx.closePath();
 
     }
 
@@ -163,7 +168,11 @@ function animateWPM(){
     // var context = canvas.getContext("2d");
     // canvas.x = 150;
     // canvas.y = 150;
+
+    //THIS IS THE HEART ANIMATION FOR HP
+
     let context = ctx
+    context.beginPath()
     context.strokeStyle = "#000000";
     context.strokeWeight = 3;
     context.shadowOffsetX = 4.0;
@@ -184,11 +193,16 @@ function animateWPM(){
     context.quadraticCurveTo(k, k + d / 2, k, k + d / 4);
     context.stroke();
     context.fill();
+    context.closePath();
+
+
+  // end heart animation
 
 
 }
 function animateTypingArea() {
     fontSize = 50;
+
     //handles deleting old characters 
     ctx.clearRect(0, canvas.height - fontSize, canvas.width, fontSize)
     //end deleting
@@ -206,6 +220,7 @@ function animateTypingArea() {
     // console.log(canvas.width/fontSize) = 25.6 atm but it can fit approx 44 charss-- all in arial 50s on a 1280 width
 
 }
+
 function handleSubmit(enteredWord){
     for(let i = 0; i < enemies.length; i++){
         if(enemies[i].word === enteredWord && enemies[i].alive === true){
