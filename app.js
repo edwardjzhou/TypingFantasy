@@ -1,4 +1,3 @@
-// node app.js
 var express = require('express');
 var app = express();
 var path = require('path');
@@ -20,7 +19,6 @@ app.get('/src/ChronoTrigger1000GuardiaForestBG.png', (req, res) => {
 app.get('/src/chrono.png', (req, res) => {
     res.sendFile(path.join(__dirname + '/src/chrono.png'))
 });
-
 
 app.get('/src/cronobattleleft.gif', (req, res) => {
     res.sendFile(path.join(__dirname + '/src/cronobattleleft.gif'))
@@ -46,14 +44,9 @@ app.get('/src/blue.png', (req, res) => {
     res.sendFile(path.join(__dirname + '/src/blue.png'))
 });
 
-
 app.get('/src/TechnodeChocobo.mp3', (req, res) => {
     res.sendFile(path.join(__dirname + '/src/TechnodeChocobo.mp3'))
 });
-
-
-
-
 
 app.get('/src/Blue_Imp.png', (req, res) => {
     res.sendFile(path.join(__dirname + '/src/Blue_Imp.png'))
@@ -72,13 +65,10 @@ app.get('/src/chronotype/ChronoType.svg', (req, res) => {
     res.sendFile(path.join(__dirname + '/src/chronotype/ChronoType.svg'))
 });
 
-
 app.get('/src/blue.png', (req, res) => {
     res.sendFile(path.join(__dirname + '/src/blue.png'))
 });
 
-
-// app.use(express.favicon("/src/Blue_Imp.png")); 
 
 
 app.listen(port);

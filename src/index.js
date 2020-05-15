@@ -1,3 +1,11 @@
+// Node notes:
+// package.json is if I want to make my own little javascript stuff into a module for others to use on npm
+// hence scripts in there and "main": "app.js", so app.js would be entry point for others; typically should be index.js i think
+// my app.js is just express hosting stuff which might be unnecesary if it werent for javascript and cors policy with scripts not on a server runing on acomputer not being allowed
+// my index.js is what starts running and importing everyting as entry point for WEBPACK which kinda compiles all js code into one thing called main.js IDK where i set the entry and exit pts
+// main.js is the onyl thign that is used by index.html in the end
+// CANT find webpack.config.js, were we suppose 2 make it on our own?
+
 // asap:1. walking animaton based on EITHER instance variable keeping track of past actions
 // OR just count requestanimationframe frames IDK
 // 2. collisions and damage on chrono
@@ -20,8 +28,11 @@
 //https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Basic_animations
 //https://retrogamezone.co.uk/chronotrigger.htm
 //http://www.videogamesprites.net/ChronoTrigger/Party/Crono/
-import Enemy from './enemy'
+import Enemy from './enemy';
 import Crono from './crono';
+// import Game from './game';
+// import Actor from './actor';
+
 
 let canvas;
 let ctx;
@@ -87,7 +98,7 @@ function game() {
     enemies = []
     spawnEnemy(rate)
 
-    player = new Crono(300,300, canvas, ctx, cronoleftimg, cronorightimg, cronoupimg, cronodownimg, cronothrust, keys)
+    player = new Crono(300,300, canvas, ctx, cronoleftimg, cronorightimg, cronoupimg, cronodownimg, cronothrust, keys, enemies)
 
     function spawnEnemy(rate){
         enemies.push(new Enemy(Math.floor(Math.random()*canvas.width+1),Math.floor(Math.random()*canvas.height+1),canvas,ctx, imp, 1, bluepaint))

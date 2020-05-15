@@ -1,5 +1,5 @@
-class Crono{
-    constructor(x, y, canvas, ctx, cronoleftimg, cronorightimg, cronoupimg, cronodownimg, cronothrust, keys){
+class Crono {
+    constructor(x, y, canvas, ctx, cronoleftimg, cronorightimg, cronoupimg, cronodownimg, cronothrust, keys, enemies){
         this.canvas = canvas
         this.ctx = ctx
         this.x = x
@@ -7,7 +7,6 @@ class Crono{
         this.alive = true ;
         this.animate = this.animate.bind(this)
         this.animateDeath = this.animateDeath.bind(this)
-        this.moveRight = this.moveRight.bind(this)
         this.cronoleftimg = cronoleftimg
         this.cronorightimg= cronorightimg
         this.cronoupimg = cronoupimg
@@ -15,11 +14,14 @@ class Crono{
         this.lastaction = this.cronodownimg
         this.cronothrust = cronothrust
         this.keys = keys
-      
+        this.enemies = enemies
+    }
+
+    takeDamage() {
 
     }
 
-    animateAttack(x,y){
+    animateAttack(x, y) {
         let leftsY
         let leftsX
         // x bigger the more right, y bigger the lower, arclength, 1
@@ -42,76 +44,62 @@ class Crono{
         this.y = y
         this.ctx.drawImage(this.cronothrust, 0, 0, 500, 500, this.x, this.y + 50, 500, 500)
         this.lastaction = this.cronothrust
-       
     }
     
-    animate(){
-            if (this.keys[39]=== true){
-               this.moveRight()
-               this.lastaction = this.cronorightimg
-            } 
-            if (this.keys[37] === true) {
-                this.moveLeft()
-                this.lastaction = this.cronoleftimg
+    animate() {
+        let up = this.keys[38]
+        let down = this.keys[40]
+        let left = this.keys[37]
+        let right = this.keys[39]
+
+        if (right){
+            if (this.x < this.canvas.width - 30 && (!down && !up)) {
+                this.x += 4
+                this.ctx.drawImage(this.cronorightimg, 0, 0, 500, 500, this.x, this.y, 500, 500)
+            } else if (this.x > 0 - 30 && (down || up)) {
+                this.x += 2.8
             }
-            // down and up will overpower left and right as a lastaction
-            if (this.keys[40] === true) {
-                this.moveDown()
-                this.lastaction = this.cronodownimg
+            this.lastaction = this.cronorightimg
+        } 
+
+        if (left) {
+            if (this.x > 0 - 30 && (!down && !up)) {
+                this.x -= 4
+                this.ctx.drawImage(this.cronoleftimg, 0, 0, 500, 500, this.x, this.y, 500, 500)
+            } else if (this.x > 0 - 30 && (down || up)) {
+                this.x -= 2.8
             }
-            if (this.keys[38] === true && this.keys[40] === false) {
-                this.moveUp()
-                this.lastaction = this.cronoupimg
-            } 
-            if ( (this.keys[37] === false || this.keys[37] === undefined)
-            && (this.keys[38] === false || this.keys[38] === undefined)
-            && (this.keys[39] === false || this.keys[39] === undefined)
-            && (this.keys[40] === false || this.keys[40] === undefined)){
-                this.ctx.drawImage(this.lastaction, 0, 0, 500, 500, this.x, this.y, 500, 500)
-            } 
+            this.lastaction = this.cronoleftimg
         }
-    
 
+        // down and up will overpower left and right as a lastaction
+        if (down) {
+            if (this.y < this.canvas.height - 30 && (!left && !right)) {
+                this.y += 4
+            } else if (this.y < this.canvas.height - 30 && (left || right)) {
+                this.y += 2.8
+            }
+            this.ctx.drawImage(this.cronodownimg, 0, 0, 500, 500, this.x, this.y, 500, 500)
+            this.lastaction = this.cronodownimg
+        }
+
+        if (up && !down) {
+            if (this.y > 0 - 30 && (!left && !right)) {
+                this.y -= 4
+            } else if (this.y > 0 - 30 && (left || right)) {
+                this.y -= 2.8
+            }
+            this.ctx.drawImage(this.cronoupimg, 0, 0, 500, 500, this.x, this.y, 500, 500)
+            this.lastaction = this.cronoupimg
+        } 
+
+        if ( !left && !up && !right && !right && !down ) {
+            this.ctx.drawImage(this.lastaction, 0, 0, 500, 500, this.x, this.y, 500, 500)
+        }
+    }
+    
        
-    moveDown(){
-        if (this.y < this.canvas.height - 30 && (this.keys[37] || this.keys[39])=== false) {
-            this.y += 4
-        } else if (this.y < this.canvas.height - 30 && (this.keys[37] || this.keys[39]) === true){
-            this.y += 2.8
-        }
-        this.ctx.drawImage(this.cronodownimg, 0, 0, 500, 500, this.x, this.y, 500, 500)
 
-    }
-
-    moveUp(){
-        if (this.y > 0 - 30 && (this.keys[37] || this.keys[39]) === false) {
-            this.y -= 4
-        } else if (this.y > 0 - 30 && (this.keys[37] || this.keys[39]) === true) {
-            this.y -= 2.8
-        }
-        this.ctx.drawImage(this.cronoupimg, 0, 0, 500, 500, this.x, this.y, 500, 500)
-
-    }
-    
-    moveLeft(){
-        if (this.x > 0 - 30 && (this.keys[40] || this.keys[38]) === false) {
-            this.x -= 4
-            this.ctx.drawImage(this.cronoleftimg, 0, 0, 500, 500, this.x, this.y, 500, 500)
-        } else if (this.x > 0 - 30 && (this.keys[40] || this.keys[38]) === true){
-            this.x -= 2.8
-        }
-
-    }
-
-    moveRight(){
-        if (this.x < this.canvas.width - 30 && (this.keys[40] || this.keys[38] )=== false){
-            this.x += 4
-            this.ctx.drawImage(this.cronorightimg, 0, 0, 500, 500, this.x, this.y, 500, 500)
-        } else if(this.x > 0 - 30 && (this.keys[40] || this.keys[38]) === true) {
-            this.x += 2.8
-        }
-
-    }
 
     animateDeath() {
   
