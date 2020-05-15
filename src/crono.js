@@ -17,17 +17,41 @@ class Crono {
         this.enemies = enemies
 
         setInterval(this.checkCollision.bind(this), 1000)
+
+        this.takingDamage = false
+    }
+
+    poll() {
+        //animate whatever is polled in terms of importance
+        // taking damage > moving > passive action ? 
+        
     }
 
     checkCollision() {
         for (let enemy in this.enemies) {
-            console.log(enemy)
+            // console.log(enemy)
+            if ( (enemy.x - this.x)^2 + (enemy.y - this.y)^2  < 10) {
+             this.takeDamage()
+             console.log('asdf')
 
+            }
         }
     }
 
     takeDamage() {
-        
+        console.log(42354235)
+        this.takingDamage = true
+        let asdf = document.getElementById('sprites') 
+        // this.ctx.drawImage(asdf, 80, 250, 30, 60, this.x, this.y + 50, 500, 500)
+        this.ctx.drawImage(asdf, 0, 0, 30, 60, this.x, this.y + 50, 50, 50)
+
+        // this.lastaction = document.getElementById('sprites') 
+        // this.ctx.drawImage(this.lastaction, 80, 250, 30, 60, this.x, this.y + 50, 500, 500)
+    /* top is 250 */
+    /* bot is 310 */
+    /* 80 110 */
+        //void ctx.drawImage(image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight);
+
     }
 
     animateAttack(x, y) {
@@ -51,7 +75,9 @@ class Crono {
 
         this.x = x
         this.y = y
+        
         this.ctx.drawImage(this.cronothrust, 0, 0, 500, 500, this.x, this.y + 50, 500, 500)
+        
         this.lastaction = this.cronothrust
     }
     
@@ -102,7 +128,7 @@ class Crono {
             this.lastaction = this.cronoupimg
         } 
 
-        if ( !left && !up && !right && !right && !down ) {
+        if ( !left && !up && !right && !right && !down && !this.takingDamage ) {
             this.ctx.drawImage(this.lastaction, 0, 0, 500, 500, this.x, this.y, 500, 500)
         }
     }
