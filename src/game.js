@@ -7,11 +7,11 @@ class Game {
     }
 
         document.body.addEventListener("keydown", function (e) {
-            keys[e.keyCode] = true;
+            this.keys[e.keyCode] = true;
         });
 
         document.body.addEventListener("keyup", function (e) {
-            keys[e.keyCode] = false;
+            this.keys[e.keyCode] = false;
             //console.log(keys)
         });
     

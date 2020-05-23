@@ -32,6 +32,7 @@ import Enemy from './enemy';
 import Crono from './crono';
 // import Game from './game';
 // import Actor from './actor';
+//https://ezgif.com/gif-to-sprite CONVERT walking gif into a spritesheet
 
 
 let canvas;

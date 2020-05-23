@@ -13,7 +13,7 @@ class Enemy{
         this.standStill = false
         this.bluepaint = bluepaint;
 
-        console.log(this.word)
+        // console.log(this.word)
         // Math.random(canvas.width)
         // enemyId++
         // each enemy: 

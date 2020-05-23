@@ -1,3 +1,82 @@
+// utf-8 all ascii chars is 1byte at most
+// all other chars in utf=8 require 2 bytes
+
+// 1. useeffect and asnyc await funcs 
+// 2. rewrite fetchALL and then fetch single things
+// 3. put in a progress bar with suspense react on bonethrow
+
+
+// int x = 5
+// int* a = malloc( 5*sizeof(int)) malloc returns a ptr to a 8byte address (void *)
+// so is a is a pointer (*a is nothing its just symbol for pointer, write it int* var next time)
+//cs50 on dnyamic allocation finlaly understnad it kidna
+//int m
+// int* a => pointer in stack called "a", that pts to an integer; NOT an integer itself
+// int* b = malloc(sizeof(int))   => b is a pointer to unnamed malloced address on the heap
+// a = &m => a gets m's address; a points to m, does the fact that i was made a int* a pointer matter? dunno
+// a = b => a and b point to the same addy 
+// m = 10 puts "10" in m's box
+// *b = m+2 => dereference b and put a value in there
+// free(b) => the pointer b is freed
+// *a = 11 => pointer b was same as a so theres segmentation fault
+
+// int* pa, *pb or int *pa, *pb
+//float stack_array[5]
+// vs float* heap_array = malloc(5*sizeof(float))
+// runtime vs compiletime will be same in practice if theres nothing stateful about at the runtime
+// like user input or other varying things like time or i dont know whos gonna run wat 
+// so dynamic allocation is for when its not known at compiletime what will happen exactly 
+//pass by value unless you 
+// string is a char* ptr to
+// 64 bit addresses in 64bit machines are gonna be 8 bytes, 4 bytes on 32bit
+
+// #include < stdio.h >
+
+//     int main()
+// {
+//     char array[4];
+//     for (int i = 0; i < 4; i++) {
+//         array[i] = "a";
+//     }
+//     int x = * array;
+//     printf("%x", x);
+//     // char asdf[5]; //really a char * called asdf
+//     // scanf("%s", asdf);
+//     // printf("%s", asdf);
+//     // int x;
+//     // printf("x: "); 
+//     // scanf("%i",&x);
+//     // printf("x: %i\n",x);
+
+//     // int x = sizeof(char);
+//     // printf("%i",x);
+
+//     // int x = 1;
+//     // char *y = &x;
+//     // printf("%s", y);
+//     // *y = 5;
+//     // printf("%i",x);
+
+//     // int a = 1;
+//     // int b = 2;
+//     // printf("Hello World %i, %i ", a,b );
+//     // swap(&a, &b);
+//     // printf("Hello World %i, %i ", a,b );
+
+
+//     return 0;
+// }
+
+// void swap(int * pa, int * pb) {
+//     int tmp = * pa; 
+//     * pa = * pb;
+//     * pb = tmp;
+// }
+
+// 0xff you can use hex directly in javascipt
+
+// iF EXISTS(SELECT TOP 1 1 FROM ...WHERE. 
+
 class Crono {
     constructor(x, y, canvas, ctx, cronoleftimg, cronorightimg, cronoupimg, cronodownimg, cronothrust, keys, enemies) {
         this.canvas = canvas
@@ -16,7 +95,9 @@ class Crono {
         this.keys = keys
         this.enemies = enemies
 
-        setInterval(this.checkCollision.bind(this), 1000)
+        this.collisionIntervalChecker = setInterval(this.checkCollision.bind(this), 1000)
+
+        this.asdf = document.getElementById('sprites') 
 
         this.takingDamage = false
     }
@@ -41,9 +122,9 @@ class Crono {
     takeDamage() {
         console.log(42354235)
         this.takingDamage = true
-        let asdf = document.getElementById('sprites') 
+        // let asdf = document.getElementById('sprites') 
         // this.ctx.drawImage(asdf, 80, 250, 30, 60, this.x, this.y + 50, 500, 500)
-        this.ctx.drawImage(asdf, 0, 0, 30, 60, this.x, this.y + 50, 50, 50)
+        // this.ctx.drawImage(asdf, 0, 0, 30, 60, this.x, this.y + 50, 50, 50)
 
         // this.lastaction = document.getElementById('sprites') 
         // this.ctx.drawImage(this.lastaction, 80, 250, 30, 60, this.x, this.y + 50, 500, 500)
@@ -82,6 +163,12 @@ class Crono {
     }
     
     animate() {
+        if (this.takingDamage = true) {
+            this.ctx.drawImage(this.asdf, 0, 0, 500, 500, this.x, this.y, 500, 500)
+
+        }
+
+
         let up = this.keys[38]
         let down = this.keys[40]
         let left = this.keys[37]
