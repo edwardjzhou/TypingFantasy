@@ -19,11 +19,11 @@ class Crono extends Actor{
         this.keys = keys
         this.enemies = enemies
 
-        this.collisionIntervalChecker = setInterval(this.checkCollision.bind(this), 1000)
+        // this.collisionIntervalChecker = setInterval(this.checkCollision.bind(this), 1000)
 
         this.asdf = document.getElementById('sprites') 
 
-        this.takingDamage = false
+        // this.takingDamage = false
     }
 
     poll() {

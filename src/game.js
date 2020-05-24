@@ -43,16 +43,16 @@ class Game {
 
     drawMap(ctx, canvas){
         // 1024x768 background render
-        ctx.drawImage(forestbg, 0, 0, 500, 350, 0, 0, canvas.width, canvas.height - 50)
+        ctx.drawImage(this.forestbg, 0, 0, 500, 350, 0, 0, canvas.width, canvas.height - 50)
     }
 
-    drawEnemies(enemies){
+    drawEnemies(enemies, player){
         for (let i = 0; i < enemies.length; i++) {
             enemies[i].animate(player.x, player.y); // move towards player
         }
     }
 
-    drawTypingArea(ctx,canvas) {
+    drawTypingArea(ctx,canvas, fontSize) {
         this.fontSize = 50;
 
         //handles deleting old characters 
@@ -67,23 +67,52 @@ class Game {
         //user input word
         ctx.fillStyle = "blue";
         ctx.font = `bold ${fontSize}px ChronoType`;
-        ctx.fillText(word.join(''), 0, (canvas.height));
+        ctx.fillText(this.word.join(''), 0, (canvas.height));
         //end user input word
         // console.log(canvas.width/fontSize) = 25.6 atm but it can fit approx 44 charss-- all in arial 50s on a 1280 width
 
     }
  
     drawWPM(ctx, canvas, fontSize) { //bunch of global variables needs fixing
-        if (then === undefined) {
-            then = Date.now()
+        if (this.then === undefined) {
+            this.then = Date.now()
         }
 
-        now = Date.now()
-        time = parseInt((now - then) / 1000)
-        wpm = parseInt(destroyedCount / (time / 60))
+        this.now = Date.now()
+        this.time = parseInt((this.now - this.then) / 1000)
+        this.wpm = parseInt(this.destroyedCount / (this.time / 60))
         ctx.fillStyle = "blue";
         ctx.font = `bold ${fontSize}px ChronoType`;
-        ctx.fillText('Time: ' + time + '   WPM: ' + wpm, canvas.width - 600, (canvas.height));
+        ctx.fillText('Time: ' + this.time + '   WPM: ' + this.wpm, canvas.width - 600, (canvas.height));
+    }
+
+    drawHeart(ctx) {
+        //THIS IS THE HEART ANIMATION FOR HP
+
+        let context = ctx
+        context.beginPath()
+        context.strokeStyle = "#000000";
+        context.strokeWeight = 3;
+        context.shadowOffsetX = 4.0;
+        context.shadowOffsetY = 4.0;
+        context.lineWidth = 10.0;
+        context.fillStyle = "#FF0000";
+        var d = 30
+        var k = 100;
+
+        context.moveTo(k, k + d / 4);
+        context.quadraticCurveTo(k, k, k + d / 4, k);
+        context.quadraticCurveTo(k + d / 2, k, k + d / 2, k + d / 4);
+        context.quadraticCurveTo(k + d / 2, k, k + d * 3 / 4, k);
+        context.quadraticCurveTo(k + d, k, k + d, k + d / 4);
+        context.quadraticCurveTo(k + d, k + d / 2, k + d * 3 / 4, k + d * 3 / 4);
+        context.lineTo(k + d / 2, k + d);
+        context.lineTo(k + d / 4, k + d * 3 / 4);
+        context.quadraticCurveTo(k, k + d / 2, k, k + d / 4);
+        context.stroke();
+        context.fill();
+        context.closePath();
+        // end heart animation
     }
 
     animate(frameCount) {
@@ -95,75 +124,33 @@ class Game {
         
         this.drawMap(this.ctx, this.canvas)
         this.drawAttackArc(this.ctx, this.player)
-        this.drawEnemies(this.enemies)
-        this.drawTypingArea(this.ctx,this.canvas);
+        this.drawEnemies(this.enemies, this.player)
+        this.drawTypingArea(this.ctx,this.canvas, this.fontSize);
         this.drawWPM(this.ctx, this.canvas, this.fontSize);
+        this.drawHeart(this.ctx)
         this.player.animate();
 
         frameCount++
-        request = requestAnimationFrame(() => animate(frameCount)) //will not call the CB until the batch of animations inside current call stack frame animates at once
-    }
-
-
-
-
-
-
-drawHeart(){
-     //THIS IS THE HEART ANIMATION FOR HP
-
-    let context = ctx
-    context.beginPath()
-    context.strokeStyle = "#000000";
-    context.strokeWeight = 3;
-    context.shadowOffsetX = 4.0;
-    context.shadowOffsetY = 4.0;
-    context.lineWidth = 10.0;
-    context.fillStyle = "#FF0000";
-    var d = 30
-    var k = 100;
-
-    context.moveTo(k, k + d / 4);
-    context.quadraticCurveTo(k, k, k + d / 4, k);
-    context.quadraticCurveTo(k + d / 2, k, k + d / 2, k + d / 4);
-    context.quadraticCurveTo(k + d / 2, k, k + d * 3 / 4, k);
-    context.quadraticCurveTo(k + d, k, k + d, k + d / 4);
-    context.quadraticCurveTo(k + d, k + d / 2, k + d * 3 / 4, k + d * 3 / 4);
-    context.lineTo(k + d / 2, k + d);
-    context.lineTo(k + d / 4, k + d * 3 / 4);
-    context.quadraticCurveTo(k, k + d / 2, k, k + d / 4);
-    context.stroke();
-    context.fill();
-    context.closePath();
-     // end heart animation
-
-}
-
-
-
-}
-
-
+        this.request = requestAnimationFrame(() => this.animate(frameCount)) //will not call the CB until the batch of animations inside current call stack frame animates at once. global
     }
 
 
     gameLoop(){ //responsible for spawning initial actors, creating new actors, and calling animate
         this.rate = this.rate || 1 //per second
         this.enemies = []
-        spawnEnemy(this.rate)
-        function spawnEnemy(rate) {
-            enemies.push(new Enemy(Math.floor(Math.random() * this.canvas.width + 1), Math.floor(Math.random() * this.canvas.height + 1), this.canvas, this.ctx, this.imp, 1, this.bluepaint))
-            setTimeout(() => spawnEnemy(rate), 1000 / rate)
-        }
+        this.spawnEnemy(this.rate)
         this.player = new Crono(300, 300, this.canvas, this.ctx, this.cronoleftimg, this.cronorightimg, this.cronoupimg, this.cronodownimg, this.cronothrust, this.keys, this.enemies)
+        if (!this.isGameover && !this.isPaused) this.animate()
+    }
 
-        while (!this.isGameover && !this.isPaused) animate(this.player, this.enemies)
-
+    spawnEnemy(rate) {
+        this.enemies.push(new Enemy(Math.floor(Math.random() * this.canvas.width + 1), Math.floor(Math.random() * this.canvas.height + 1), this.canvas, this.ctx, this.imp, 1, this.bluepaint))
+        setTimeout( ()=> this.spawnEnemy(rate), 1000 / rate)
     }
 
     getResources(){
         this.canvas = document.getElementById('canvas');
-        this.ctx = canvas.getContext('2d');
+        this.ctx = this.canvas.getContext('2d');
         this.cronoleftimg = document.getElementById('cronoleft')
         this.cronorightimg = document.getElementById('cronoright')
         this.cronodownimg = document.getElementById('cronodown')
