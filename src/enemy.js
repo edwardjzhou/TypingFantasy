@@ -1,9 +1,11 @@
-class Enemy{
+import Actor from './actor';
+
+class Enemy extends Actor{
     constructor(x, y, canvas, ctx, imp, difficulty, bluepaint){
+        super(x,y)
         this.canvas = canvas
         this.ctx = ctx
-        this.x = x
-        this.y = y
+
         this.alive = true;
         this.animate = this.animate.bind(this)
         this.animateDeath = this.animateDeath.bind(this)
