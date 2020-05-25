@@ -102,26 +102,27 @@
                 height: 600px;               
             }
 
-            @media only screen and (min-width: 1280px) and (min-height: 720px) {
-                [id^="phone"] {
-                    display: none;
-                }
-            } 
+            [id^="phone"] {
+                display: none;
+            }
 
+            @media only screen and (min-width: 1280px) and (min-height: 720px) {
+               /* tbd */
+            } 
 
             @media only screen and (max-height: 720px) {
                 #canvas, #instructions {
                     max-width: 300px;
-                    max-height: 400px;                   
+                    max-height: 500px;                   
                 }
-                /* reasoning is to avoid sprites being too large; map isn't changed */
+                /* reasoning is to avoid sprites being too large; map isn't changed ** MIGHT NOT BE WORKING because of default canvas load **  */
                 img:not(#bg){
                     max-width: 30px;
                     max-height: 30px;
                 }
                 /* the input to activate the phone's soft keyboard appears so body's keypress listener can be used*/ 
-                [id^="phone"] {
-                    display: initial;
+                [id="phone-input"] {
+                    display: block;
                 }
             }
         </style>
@@ -141,9 +142,7 @@
 
     <body>
         
-        <!-- to be able to type on a smartphone's onscreen keyboard but not autozoom the input from it being 16px-->
-        <input type='text' id='phone-keyboard'><div id="phone-input" style="font-size:17px;" 
-        onClick="(function(){document.querySelector(`#phone-keyboard`).focus();})();">↵Keyboard</div>
+    
 
         <h1 id="Title">
             <ruby>
@@ -155,6 +154,11 @@
         </h1>
 
         <canvas id="canvas" width=800px height=600 tabindex="1"></canvas>
+            <!-- to be able to type on a smartphone's onscreen keyboard but not autozoom the input from it being 16px-->
+        <input type='text' id='phone-keyboard'>
+        <div id="phone-input" style="font-size:17px;"
+            onClick="(function(){document.querySelector(`#phone-keyboard`).focus();})();">↵Keyboard</div>
+
         <div id="instructions">Instructions: 
             <br>1. Type the word above the monster's head to attack it!
             <br>2. Keep typing until you're bored!
