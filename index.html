@@ -121,9 +121,12 @@
                     max-height: 30px;
                 }
                 /* the input to activate the phone's soft keyboard appears so body's keypress listener can be used*/ 
-                [id="phone-input"] {
-                    display: block;
+                [id^="phone"] {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
                 }
+
             }
         </style>
         
@@ -155,9 +158,10 @@
 
         <canvas id="canvas" width=800px height=600 tabindex="1"></canvas>
             <!-- to be able to type on a smartphone's onscreen keyboard but not autozoom the input from it being 16px-->
-        <input type='text' id='phone-keyboard'>
         <div id="phone-input" style="font-size:17px;"
-            onClick="(function(){document.querySelector(`#phone-keyboard`).focus();})();">↵Keyboard</div>
+            onClick="(function(){document.querySelector(`#phone-keyboard`).focus();})();">
+                <input type='text' id='phone-keyboard'>
+        ↵Keyboard</div>
 
         <div id="instructions">Instructions: 
             <br>1. Type the word above the monster's head to attack it!
