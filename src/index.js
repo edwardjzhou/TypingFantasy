@@ -64,5 +64,7 @@ let bluepaint;
 
 document.addEventListener('DOMContentLoaded', () => {
     let game = new Game()
+    let game2 = new Game()
+
 })
 

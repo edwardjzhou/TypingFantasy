@@ -1,5 +1,6 @@
 import Enemy from './enemy';
 import Crono from './crono';
+import Trie from './trie';
 
 // TBD 1. Add a monster Try data strcuture to highlight in red possible targets as a sort of demo of tries and like a targeting system to warn a user he
 // messed up in typing a monsters word
@@ -7,6 +8,10 @@ import Crono from './crono';
 //could a "Game isntance" have more than 1 context and 1 canvas? if not, then dont pass this.ctx to every helper func that needs it. just directly reference this.ctx
 //can we do UTF-8 support so we can do Chinese words?
 // i overmodularized things with classes-- no need because i dont have multiple games or multiple chronos in one game
+// im reading now that there should be a logic function, a controller fucn, and a display func for little OOP games -- whoops
+
+
+
 
 class Game {
     constructor() {
