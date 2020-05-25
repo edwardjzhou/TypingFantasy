@@ -5,7 +5,10 @@ export default class Actor {
     }
 
     animate(){
-        
+        // 1. determine what image we want to animate.
+        // 2. i feel like there should be a (move 1 step in time) method or should it just be animate
+    
+
     }
 
 }

@@ -5,10 +5,8 @@ class Crono extends Actor{
         super(x,y)
         this.canvas = canvas
         this.ctx = ctx
-        // this.x = x
-        // this.y = y
         this.alive = true ;
-        this.animate = this.animate.bind(this)
+        this.animate = this.animate
         this.animateDeath = this.animateDeath.bind(this)
         this.cronoleftimg = cronoleftimg
         this.cronorightimg= cronorightimg
@@ -22,8 +20,7 @@ class Crono extends Actor{
         // this.collisionIntervalChecker = setInterval(this.checkCollision.bind(this), 1000)
 
         this.asdf = document.getElementById('sprites') 
-
-        // this.takingDamage = false
+        this.takingDamage = false
     }
 
     poll() {
@@ -35,9 +32,9 @@ class Crono extends Actor{
     checkCollision() {
         for (let enemy in this.enemies) {
             // console.log(enemy)
-            if ( (enemy.x - this.x)^2 + (enemy.y - this.y)^2  < 10) {
+            if ( (enemy.x - this.x)^2 + (enemy.y - this.y)^2  < 5) {
              this.takeDamage()
-             console.log('asdf')
+             console.log('collision with enemy detected')
 
             }
         }

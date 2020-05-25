@@ -4,6 +4,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <meta name="description" content="TypingFantasy is a fun typing game made with ES6 Javascript and HTML5 Canvas">
         <title>Typing Fantasy</title>
         <link rel="icon" type="image/png" href="/src/Blue_Imp.png">
         <style>
@@ -31,17 +32,27 @@
 
             #canvas{
                 /* width: 1500px;  */
+                border: 2px solid silver;
+                border-radius: 5px;
+
             }
 
             body{
                 text-align: center;
                 background: antiquewhite;
+                background-image: url('/src/520448.jpg'); 
+                background-size: cover;"
             }
+
+            html, body {
+                min-height: 100%;
+            }
+
 
             #instructions{
                 box-sizing: border-box;
                 margin: auto;
-                background-image: linear-gradient(#736c72,black);
+                background-image: linear-gradient(#736c72,#C0C0C0);
                 width: 800px;
                 padding: 20px;
                 border: 2px solid black;
@@ -52,7 +63,7 @@
 
             #contact{
                 display: flex;
-                justify-content:center;                
+                justify-content: center;                
             }
             
             .child{
@@ -64,23 +75,10 @@
                 text-decoration: none;
                 color:antiquewhite; 
             }
+ 
+       
 
-            @media (min-width: 1280px) and (min-height: 720px) {
 
-
-            }
-
-            @media screen and (max-width: 992px) {
-                body {
-                    background-color: blue;
-                }
-            }
-
-            @media screen and (max-width: 600px) {
-                body {
-                    background-color: olive;
-                }
-            }
 
             #Title{
                 margin-top: 1.5%;
@@ -97,6 +95,35 @@
                 /* bot is 310 */
                 /* 80 110 */
             }
+
+
+            #canvas {
+                width: 800px;
+                height: 600px;               
+            }
+
+            @media only screen and (min-width: 1280px) and (min-height: 720px) {
+                [id^="phone"] {
+                    display: none;
+                }
+            } 
+
+
+            @media only screen and (max-height: 720px) {
+                #canvas, #instructions {
+                    max-width: 300px;
+                    max-height: 400px;                   
+                }
+                /* reasoning is to avoid sprites being too large; map isn't changed */
+                img:not(#bg){
+                    max-width: 30px;
+                    max-height: 30px;
+                }
+                /* the input to activate the phone's soft keyboard appears so body's keypress listener can be used*/ 
+                [id^="phone"] {
+                    display: initial;
+                }
+            }
         </style>
         
         <img src="/src/ChronoTrigger1000GuardiaForestBG.png" id="forest">
@@ -109,20 +136,36 @@
         <img src="/src/cronodownthrust.gif" id="cronothrust">
         <img src="/src/blue.png" id="bluepaint">
         <img src="/src/chrono.png" id="sprites">
-
+        <img src="/src/520448.jpg" id="bg">
     </head>
 
     <body>
         
-        <h1 id="Title">TYPING FANTASY</h1>
-        <canvas id="canvas" width="800" height="600"></canvas>
+        <!-- to be able to type on a smartphone's onscreen keyboard but not autozoom the input from it being 16px-->
+        <input type='text' id='phone-keyboard'><div id="phone-input" style="font-size:17px;" 
+        onClick="(function(){document.querySelector(`#phone-keyboard`).focus();})();">↵Keyboard</div>
+
+        <h1 id="Title">
+            <ruby>
+                <rb>TYPING FANTASY</rb>
+                <rp>(</rp>
+                <rt>打字幻想</rt>
+                <rp>)</rp>
+            </ruby>
+        </h1>
+
+        <canvas id="canvas" width=800px height=600 tabindex="1"></canvas>
         <div id="instructions">Instructions: 
             <br>1. Type the word above the monster's head to attack it!
             <br>2. Keep typing until you're bored!
             <div id="contact">
-                <div class="child"><a href="https://www.linkedin.com/in/edzhou/">My Linkedin</a></div>&nbsp;|&nbsp;
-                <div class="child"><a href="https://github.com/featurerich1/">My Github</a></div>&nbsp;|&nbsp;
-                <div class="child"><a href="mailto:edward@utexas.edu">Email me!</a></div>
+                <!-- target=_blank is because game progress would be lost otherwise; the phone# is from google -->
+                <div class="child">
+                    <a href="https://www.linkedin.com/in/edzhou/" target="_blank">My Linkedin</a>&nbsp;|&nbsp;
+                    <a href="https://github.com/featurerich1/" target="_blank">My Github</a>&nbsp;|&nbsp;
+                    <a href="mailto:edward@utexas.edu" target="_blank">Email me!</a>&nbsp;|&nbsp;
+                    <a href="tel:281-401-9473" target="_blank">Call me</a>‪
+                </div>
             </div>
             <audio controls id="myAudio" preload="auto">
                 <source src="/src/TechnodeChocobo.mp3" type="audio/mpeg">
