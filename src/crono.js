@@ -85,7 +85,7 @@ class Crono extends Actor{
     
     animate() {
         if (this.takingDamage = true) {
-            this.ctx.drawImage(this.asdf, 0, 0, 500, 500, this.x, this.y, 500, 500)
+            this.ctx.drawImage(this.sprites, 0, 0, 500, 500, this.x, this.y, 500, 500)
 
         }
 
