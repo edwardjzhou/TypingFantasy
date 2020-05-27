@@ -1,5 +1,8 @@
+// inspired by AP Commputer Science's GridWorld
+
 export default class Actor {
     constructor(x,y) {
+        // this.x = x
         this.x = x
         this.y = y
     }
@@ -10,6 +13,14 @@ export default class Actor {
     
 
     }
+    
+    get location(){
+        return {
+            x: this.x,
+            y: this.y
+        }
+    }
+
 
 }
 

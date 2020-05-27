@@ -1,11 +1,10 @@
 import Actor from './actor';
 
 class Enemy extends Actor{
-    constructor(x, y, canvas, ctx, imp, difficulty, bluepaint){
+    constructor(x, y, canvas, ctx, imp, difficulty, bluepaint) {
         super(x,y)
         this.canvas = canvas
         this.ctx = ctx
-
         this.alive = true;
         this.animate = this.animate.bind(this)
         this.animateDeath = this.animateDeath.bind(this)
@@ -14,15 +13,13 @@ class Enemy extends Actor{
         this.difficulty = difficulty;
         this.standStill = false
         this.bluepaint = bluepaint;
-
-        // console.log(this.word)
-        // Math.random(canvas.width)
-        // enemyId++
-        // each enemy: 
-        // 1. has a rendered pic at random location
-        // 2. has a word in enemieswords array thats checked per keypress
-        
     }
+
+    static CreateEnemy() {
+        
+
+    }
+
     animate(cronoX,cronoY){
         if (this.alive === true && this.standStill === false){
             let randomMove = Math.random()

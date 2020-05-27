@@ -15,19 +15,21 @@ import Trie from './trie';
 
 class Game {
     constructor() {
-        this._getResources()
-        this._addListeners()
+        this._getResources();
+        this._addListeners();
         // animate start menu/screen then ask for difficulty
         // ensure settings have default values? with a method call here?
 
-    
-        this.isGameover = false 
-        this.isPaused = false
-        this.gameLoop()
+        this._ensureDefaultSettings();
+        this.gameLoop();
         // gameloop on gameover calls stuff to stop animating
         // gameloop animates and makes game events happen
     }
 
+    _ensureDefaultSettings() {
+        this.isGameover = this.isGameover || false;
+        this.isPaused = this.isPaused || false;
+    }
 
     drawAttackArc(){  // this remains static after an attack until a new attack. could let chrono class take care of this.
         // THIS IS WHERE THE ARC IS DRAWN)
@@ -107,9 +109,10 @@ class Game {
         this.ctx.lineWidth = 10.0;
         this.ctx.fillStyle = "#FF0000";
 
-        let d = 30
-        let k = 100;
+        let d = 30 // this is like the size
+        let k = 560 // this is where it is on diagonal
         this.ctx.moveTo(k, k + d / 4);
+
         this.ctx.quadraticCurveTo(k, k, k + d / 4, k);
         this.ctx.quadraticCurveTo(k + d / 2, k, k + d / 2, k + d / 4);
         this.ctx.quadraticCurveTo(k + d / 2, k, k + d * 3 / 4, k);
@@ -124,12 +127,13 @@ class Game {
         // end heart animation
     }
 
-    animate(frameCount) {
+    animate(time) {
+        // console.log(time)
         // animate this.player, this.enemies, and maybe track framecount
         // whoever goes first is drawn on top of. so more important comes last
         // furthermore, chrono should only give up 1 image of himself to animate not many 
 
-        if (frameCount === undefined) frameCount = 0
+        // if (frameCount === undefined) frameCount = 0
         
         this.drawMap(this.ctx, this.canvas)
         this.drawAttackArc(this.ctx, this.player)
@@ -139,25 +143,28 @@ class Game {
         this.drawHeart(this.ctx)
         this.player.animate();
 
-        frameCount++
-        this.request = requestAnimationFrame(() => {
-            if (!this.isPaused) {
-                this.animate(frameCount)
+        this.request = requestAnimationFrame((time) => {
+            if (!this.isPaused && !this.isGameOver) {
+                this.animate(time)
             }
         }) //will not call the CB until the batch of animations inside current call stack frame animates at once. global
     }
 
 
     gameLoop(){ //responsible for spawning initial actors, creating new actors, and calling animate-- will eventually stick all game logic in here including calls to "move/act" rather than letting animate take care of that implicitly
+        this.trie = new Trie()
         this.rate = this.rate || 1 //per second
         this.enemies = []
         this.spawnEnemy()
         this.player = new Crono(300, 300, this.canvas, this.ctx, this.cronoleftimg, this.cronorightimg, this.cronoupimg, this.cronodownimg, this.cronothrust, this.keys, this.enemies)
-        if (!this.isGameover && !this.isPaused) this.animate()
+        this.animate()
     }
 
     spawnEnemy() {
-        this.enemies.push(new Enemy(Math.floor(Math.random() * this.canvas.width + 1), Math.floor(Math.random() * this.canvas.height + 1), this.canvas, this.ctx, this.imp, 1, this.bluepaint))
+        let newEnemy = new Enemy(Math.floor(Math.random() * this.canvas.width + 1),
+            Math.floor(Math.random() * this.canvas.height + 1), this.canvas, this.ctx, this.imp, 1, this.bluepaint)
+        this.enemies.push(newEnemy)
+        this.trie.addWord(newEnemy.word)
         setTimeout( ()=> this.spawnEnemy(this.rate), 1000 / this.rate)
     }
 
@@ -214,16 +221,17 @@ class Game {
 
     pause() {
         this.isPaused = true 
+        // this.ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
+        // this.ctx.fillRect(this.canvas.height, this.canvas.width);
         cancelAnimationFrame(this.request)
-        ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
-        ctx.fillRect(this.canvas.height, this.canvas.width);        
+        
         console.log(`game paused`)
     }
 
     unpause(){
         this.isPaused = false
-        requestAnimationFrame(this.request)
-        console.log(`game unpasued`)
+        this.animate()
+        console.log(`game unpaused`)
     }
     
     handleSubmit() {
