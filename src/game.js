@@ -131,9 +131,8 @@ class Game {
         // console.log(time)
         // animate this.player, this.enemies, and maybe track framecount
         // whoever goes first is drawn on top of. so more important comes last
-        // furthermore, chrono should only give up 1 image of himself to animate not many 
-
-        // if (frameCount === undefined) frameCount = 0
+        // furthermore, chrono should only give up 1 image of himself to animate not many CAN WE USE PASSING STRINGS THAT ARE EVALED HERE?
+        // OR DO WE JUST STRAIGHT UP CALL ANIMAATE IN THE CHRONO CLASS METHOD
         
         this.drawMap(this.ctx, this.canvas)
         this.drawAttackArc(this.ctx, this.player)
@@ -147,10 +146,10 @@ class Game {
             if (!this.isPaused && !this.isGameOver) {
                 this.animate(time)
             }
-        }) //will not call the CB until the batch of animations inside current call stack frame animates at once. global
+        }) //will not call the CB until the batch of animations inside current call stack frame animates at once. 
     }
 
-
+    // almost a misnomer at this point -- all game logic will be in animation from now on
     gameLoop(){ //responsible for spawning initial actors, creating new actors, and calling animate-- will eventually stick all game logic in here including calls to "move/act" rather than letting animate take care of that implicitly
         this.trie = new Trie()
         this.rate = this.rate || 1 //per second
@@ -221,6 +220,7 @@ class Game {
 
     pause() {
         this.isPaused = true 
+        // render a tint over the screen so there's feedback re: pause state
         // this.ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
         // this.ctx.fillRect(this.canvas.height, this.canvas.width);
         cancelAnimationFrame(this.request)
@@ -235,12 +235,10 @@ class Game {
     }
     
     handleSubmit() {
-        console.log(this.word)
         for (let i = 0; i < this.enemies.length; i++) {
             if (this.enemies[i].word === this.word.join(``) && this.enemies[i].alive === true) {
                 this.player.animateAttack(this.enemies[i].x, this.enemies[i].y - 50, this.cronothrust)
                 this.enemies[i].alive = false;
-                // enemies[i].animateDeath();
                 this.destroyedCount >= 0 ? this.destroyedCount++ : this.destroyedCount = 0
             }
         }

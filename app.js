@@ -16,8 +16,8 @@ app.get('/src/ChronoTrigger1000GuardiaForestBG.png', (req, res) => {
     res.sendFile(path.join(__dirname + '/src/ChronoTrigger1000GuardiaForestBG.png'))
 });
 
-app.get('/src/chrono.png', (req, res) => {
-    res.sendFile(path.join(__dirname + '/src/chrono.png'))
+app.get('/src/chrono.gif', (req, res) => {
+    res.sendFile(path.join(__dirname + '/src/chrono.gif'))
 });
 
 app.get('/src/cronobattleleft.gif', (req, res) => {
