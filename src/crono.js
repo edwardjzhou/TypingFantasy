@@ -142,6 +142,7 @@ class Crono extends Actor{
     }
     
     animateDeath() {
+        // if I have time
     }
 
 

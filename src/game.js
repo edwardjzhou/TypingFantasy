@@ -2,16 +2,13 @@ import Enemy from './enemy';
 import Crono from './crono';
 import Trie from './trie';
 
+// too many ideas in head: clarify and transform ideas into actionable actions in a sequence to proceed, otherwise paralysis and deadlock!
+// indecision under uncertainty so make it certain what needs to happen
+
 // TBD 1. Add a monster Try data strcuture to highlight in red possible targets as a sort of demo of tries and like a targeting system to warn a user he
 // messed up in typing a monsters word
 
-//could a "Game isntance" have more than 1 context and 1 canvas? if not, then dont pass this.ctx to every helper func that needs it. just directly reference this.ctx
-//can we do UTF-8 support so we can do Chinese words?
-// i overmodularized things with classes-- no need because i dont have multiple games or multiple chronos in one game
-// im reading now that there should be a logic function, a controller fucn, and a display func for little OOP games -- whoops
-
-
-
+// 2. can we do UTF-8 support so we can do Chinese words?
 
 class Game {
     constructor() {
@@ -60,9 +57,14 @@ class Game {
     }
 
     drawEnemies(){
+        const possibilities = this.trie.possibilities(this.word.join(``))
+
+        // really shouldve used a enemies hash where enemies[`enemy.word`] = enemy object; a hash where the submitted word maps to the enemy object
         for (let i = 0; i < this.enemies.length; i++) {
             this.enemies[i].animate(this.player.x, this.player.y); // move towards player
+
         }
+
     }
 
     drawTypingArea() {
@@ -93,7 +95,7 @@ class Game {
 
         this.now = Date.now()
         this.time = parseInt((this.now - this.then) / 1000)
-        this.wpm = parseInt(this.destroyedCount / (this.time / 60))
+        this.wpm = parseInt(this.destroyedCount / (this.time / 60)) || 0 //0 to get rid of NaN
         this.ctx.fillStyle = "blue";
         this.ctx.font = `bold ${this.fontSize}px ChronoType`;
         this.ctx.fillText('Time: ' + this.time + '   WPM: ' + this.wpm, this.canvas.width - 600, (this.canvas.height));
@@ -224,7 +226,6 @@ class Game {
         // this.ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
         // this.ctx.fillRect(this.canvas.height, this.canvas.width);
         cancelAnimationFrame(this.request)
-        
         console.log(`game paused`)
     }
 

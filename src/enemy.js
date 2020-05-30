@@ -1,4 +1,5 @@
 import Actor from './actor';
+import {chineseDictionary as dictionary} from './chineseexpansionpack'
 
 class Enemy extends Actor{
     constructor(x, y, canvas, ctx, imp, difficulty, bluepaint) {
@@ -16,11 +17,11 @@ class Enemy extends Actor{
     }
 
     static CreateEnemy() {
-        
-
+        // if I have time 
     }
 
     animate(cronoX,cronoY){
+        // will this monster move
         if (this.alive === true && this.standStill === false){
             let randomMove = Math.random()
             if(cronoX > this.x){
@@ -62,59 +63,36 @@ class Enemy extends Actor{
                 }
             } 
         }
-            if (this.alive === true){
+        // if alive draw the word above it and the monster itself
+        if (this.alive === true){
             this.ctx.drawImage(this.imp, 0, 0, 200, 300, this.x, this.y, 500, 500)
             this.ctx.fillStyle = "white";
             this.ctx.font = `bold 50px ChronoType`;
-            // this.ctx.rotate(2)
             this.ctx.fillText(this.word, this.x, this.y, 500, 500)
-            } 
-            
-            if (this.alive === false){
-                this.ctx.drawImage(this.bluepaint, 0, 0, 500, 500, this.x, this.y, 60, 60)
-            }
+        } 
+        // if dead draw a blue splat instead
+        else if (this.alive === false){
+            this.ctx.drawImage(this.bluepaint, 0, 0, 500, 500, this.x, this.y, 60, 60)
+        }
 
-            // this.ctx.drawImage(this.imp, 0, 0, 200, 300, this.x, this.y, 500, 500)
-            // this.ctx.fillStyle = "white";
-            // this.ctx.font = `bold 50px ChronoType`;
-            // this.ctx.rotate(2)
-            // this.ctx.fillText(this.word, this.x, this.y, 500, 500)
-        //     this.ctx.rotate(Math.PI);
-        //     this.ctx.save()
-        //     this.ctx.save();
-        //     let degrees = 180
-        //     let image = this.imp
-        //     // move to the center of the canvas
-        //     this.ctx.translate(canvas.width / 2, canvas.height / 2);
-
-        //     // rotate the canvas to the specified degrees
-        //    this.ctx.rotate(degrees * Math.PI / 180);
-
-        //     // draw the image
-        //     // since the context is rotated, the image will be rotated also
-        //     // this.ctx.drawImage(image, this.x, this.y, 50, 100);
-
-        //     // we’re done with the rotating so restore the unrotated context
-        //     this.ctx.restore();
-            // this.ctx.drawImage(this.imp, 0, 0, 200, 300, this.x, this.y, 500, 500)
-        
     }
 
-    animateDeath(){}
+    animateDeath(){
+        // if I have time I can animate the death
+    }
+
     wander() {
-        // if( Math.random()
-
+        //if I have time I can do collision detection
     }
-
-
 
 }
 
-
 export default Enemy
 
+// this is closed over when the class is exported 
 //https://www-cs-faculty.stanford.edu/~knuth/sgb-words.txt
-let dictionary = ['which',
+const dictionary1 = 
+['which',
 'there',
 'their',
 'about',

@@ -19,14 +19,15 @@ export default class Trie {
 
     possibilities(substring) {
         const possibilities = []
+        if (substring.length === 0) return possibilities //wait until at least 1 letter is typed
         let current = this.trie
         for (const char of substring) {
-            if (!current.hasOwnProperty(char)) return []
+            if (!current.hasOwnProperty(char)) return possibilities 
             current = current[char]
         }        
         dfs(current)
         function dfs(current) {
-            for (const key of Object.keys(current)) {
+            for (const key in current) {
                 if (key === `finished`) possibilities.push(current[key])
                 else dfs(current[key])
             }

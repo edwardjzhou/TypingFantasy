@@ -37,32 +37,10 @@
 
 import Game from './game';
 
-// let canvas;
-// let ctx;
-// let word;
-// let keys;
-// let fontSize;
-// let enemies;
-// let cronorightimg;
-// let cronoleftimg;
-// let cronodownimg;
-// let cronoupimg;
-// let cronothrust;
-// let forestbg;
-// let player;
-// let imp;
-// let request;
-// let wpm;
-// let time;
-// let then;
-// let now;
-// let firstTime = 0;
-// let destroyedCount = 0;
-// let bluepaint;
-
 
 document.addEventListener('DOMContentLoaded', () => {
-    let game = new Game()
+    window.game = new Game() // window for testing
+    
     // Notification.requestPermission()
     // setTimeout(()=> { 
     //     if(Notification.permission === "granted") new Notification("You've played for 5 minutes!")
