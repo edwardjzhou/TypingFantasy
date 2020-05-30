@@ -64,9 +64,15 @@ app.get('/src/chronotype/ChronoType.ttf', (req, res) => {
 app.get('/src/chronotype/ChronoType.svg', (req, res) => {
     res.sendFile(path.join(__dirname + '/src/chronotype/ChronoType.svg'))
 });
-
 app.get('/src/blue.png', (req, res) => {
     res.sendFile(path.join(__dirname + '/src/blue.png'))
+});
+
+app.get('/src/splash.jpg', (req, res) => {
+    res.sendFile(path.join(__dirname + '/src/splash.jpg'))
+});
+app.get('/src/squarereticle.png', (req, res) => {
+    res.sendFile(path.join(__dirname + '/src/squarereticle.png'))
 });
 
 

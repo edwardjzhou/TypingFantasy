@@ -1,5 +1,5 @@
 import Actor from './actor';
-import {chineseDictionary as dictionary} from './chineseexpansionpack'
+// import {chineseDictionary as dictionary} from './chineseexpansionpack'
 
 class Enemy extends Actor{
     constructor(x, y, canvas, ctx, imp, difficulty, bluepaint) {
@@ -20,6 +20,10 @@ class Enemy extends Actor{
         // if I have time 
     }
 
+    animateReticle(){
+
+    }
+    
     animate(cronoX,cronoY){
         // will this monster move
         if (this.alive === true && this.standStill === false){
@@ -91,7 +95,7 @@ export default Enemy
 
 // this is closed over when the class is exported 
 //https://www-cs-faculty.stanford.edu/~knuth/sgb-words.txt
-const dictionary1 = 
+const dictionary = 
 ['which',
 'there',
 'their',

@@ -12,20 +12,54 @@ import Trie from './trie';
 
 class Game {
     constructor() {
+
+
         this._getResources();
         this._addListeners();
+
+        this.onSplash = true
+        this.gameMode = `english`
+        this.animateSplash();
+
         // animate start menu/screen then ask for difficulty
         // ensure settings have default values? with a method call here?
-
-        this._ensureDefaultSettings();
-        this.gameLoop();
+        let interval = setInterval( ()=> {
+            if (!this.onSplash) {
+                clearInterval(interval)
+                this._ensureDefaultSettings();
+                this.gameLoop();
+        }}, 2000)
         // gameloop on gameover calls stuff to stop animating
         // gameloop animates and makes game events happen
+    }
+
+    animateSplash(timeElapsed){
+        this.ctx.drawImage(document.getElementById(`splash`), 0, 0, 1200, 900, 0, 0, this.canvas.width, this.canvas.height) //add credits of where i took image from
+        this.ctx.font = `bold 100px ChronoType`;
+        this.ctx.fillStyle = "black";
+        this.ctx.strokeStyle = 'white';
+        this.ctx.strokeText('TYPING FANTASY!', this.canvas.width * .1-2, 97);
+        this.ctx.font = `bold 100px ChronoType`;
+        this.ctx.fillText('TYPING FANTASY!', this.canvas.width * .1, 100);
+      
+
+
+        this.ctx.font = `bold 35px ChronoType`;
+        this.ctx.fillStyle = "purple";
+        this.ctx.strokeStyle = 'black';
+        this.ctx.fillText('Choose a language and hit ENTER!', this.canvas.width * .1, (this.canvas.height * .5));
+        this.ctx.strokeText('Choose a language and hit ENTER!', this.canvas.width * .1, (this.canvas.height * .5));
+
+
+        requestAnimationFrame(()=> {
+            if (this.onSplash === true) this.animateSplash(timeElapsed)
+        })
     }
 
     _ensureDefaultSettings() {
         this.isGameover = this.isGameover || false;
         this.isPaused = this.isPaused || false;
+        this.gameMode = this.gameMode || `english` 
     }
 
     drawAttackArc(){  // this remains static after an attack until a new attack. could let chrono class take care of this.
@@ -62,7 +96,7 @@ class Game {
         // really shouldve used a enemies hash where enemies[`enemy.word`] = enemy object; a hash where the submitted word maps to the enemy object
         for (let i = 0; i < this.enemies.length; i++) {
             this.enemies[i].animate(this.player.x, this.player.y); // move towards player
-
+            if (possibilities.includes(this.enemies[i].word)) this.enemies[i].animateReticle
         }
 
     }
@@ -197,9 +231,12 @@ class Game {
             }
             else if (key === 8) this.word.pop();
             else if (key === 13) {
-                console.log(this.word)
-                this.handleSubmit()
-                this.word = [];
+                if (this.onSplash) {
+                    this.onSplash = false
+                } else {
+                    this.handleSubmit()
+                    this.word = [];
+                }
             }
         });
 

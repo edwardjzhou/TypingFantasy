@@ -19,7 +19,7 @@ export default class Trie {
 
     possibilities(substring) {
         const possibilities = []
-        if (substring.length === 0) return possibilities //wait until at least 1 letter is typed
+        if (substring.length === 0) return possibilities //wait until at least 1 letter is typed otherwise possibilities are EVERY word
         let current = this.trie
         for (const char of substring) {
             if (!current.hasOwnProperty(char)) return possibilities 
