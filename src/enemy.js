@@ -1,19 +1,27 @@
 import Actor from './actor';
-// import {chineseDictionary as dictionary} from './chineseexpansionpack'
+import {chineseDictionary as dictionary2} from './chineseexpansionpack'
 
 class Enemy extends Actor{
-    constructor(x, y, canvas, ctx, imp, difficulty, bluepaint) {
-        super(x,y)
-        this.canvas = canvas
-        this.ctx = ctx
+    constructor(x, y, canvas, ctx, imp, difficulty, bluepaint, gameMode) {
+        super(x,y);
+        this.canvas = canvas;
+        this.ctx = ctx;
         this.alive = true;
-        this.animate = this.animate.bind(this)
-        this.animateDeath = this.animateDeath.bind(this)
-        this.imp = imp
-        this.word = dictionary[Math.floor(Math.random() * dictionary.length)];
+        this.animate = this.animate.bind(this);
+        this.animateDeath = this.animateDeath.bind(this);
+        this.imp = imp;
         this.difficulty = difficulty;
-        this.standStill = false
+        this.standStill = false;
         this.bluepaint = bluepaint;
+        this.gameMode = gameMode;
+
+        if (this.gameMode===`english`)
+        this.word = dictionary[Math.floor(Math.random() * dictionary.length)];
+
+        if (this.gameMode===`chinese`)
+        this.word = dictionary2[Math.floor(Math.random() * dictionary2.length)];
+        
+
     }
 
     static CreateEnemy() {
@@ -23,7 +31,7 @@ class Enemy extends Actor{
     animateReticle(){
 
     }
-    
+
     animate(cronoX,cronoY){
         // will this monster move
         if (this.alive === true && this.standStill === false){

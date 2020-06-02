@@ -9,6 +9,8 @@ import Trie from './trie';
 // messed up in typing a monsters word
 
 // 2. can we do UTF-8 support so we can do Chinese words?
+// 3. add splat sounds for kicks
+// 4. finish collision detection and taking damage 
 
 class Game {
     constructor() {
@@ -17,8 +19,10 @@ class Game {
         this._getResources();
         this._addListeners();
 
-        this.onSplash = true
-        this.gameMode = `english`
+
+        this._ensureDefaultSettings();
+
+
         this.animateSplash();
 
         // animate start menu/screen then ask for difficulty
@@ -26,7 +30,6 @@ class Game {
         let interval = setInterval( ()=> {
             if (!this.onSplash) {
                 clearInterval(interval)
-                this._ensureDefaultSettings();
                 this.gameLoop();
         }}, 2000)
         // gameloop on gameover calls stuff to stop animating
@@ -34,22 +37,34 @@ class Game {
     }
 
     animateSplash(timeElapsed){
+
         this.ctx.drawImage(document.getElementById(`splash`), 0, 0, 1200, 900, 0, 0, this.canvas.width, this.canvas.height) //add credits of where i took image from
+
         this.ctx.font = `bold 100px ChronoType`;
         this.ctx.fillStyle = "black";
         this.ctx.strokeStyle = 'white';
-        this.ctx.strokeText('TYPING FANTASY!', this.canvas.width * .1-2, 97);
-        this.ctx.font = `bold 100px ChronoType`;
+        this.ctx.strokeText('TYPING FANTASY!', this.canvas.width * .1-2, 100-3);
         this.ctx.fillText('TYPING FANTASY!', this.canvas.width * .1, 100);
-      
+
+        this.ctx.font = `bold 50px ChronoType`;
+        this.ctx.fillStyle = "black";
+        this.ctx.strokeStyle = 'white';
+        this.ctx.strokeText('Choose a TYPING LANGUAGE and hit ENTER!', this.canvas.width * .05 - 2, (this.canvas.height * .5) - 3);
+        this.ctx.fillText('Choose a TYPING LANGUAGE and hit ENTER!', this.canvas.width * .05, (this.canvas.height * .5));
+        this.ctx.strokeText('ENGLISH 5-letter words', this.canvas.width * .1-2, (this.canvas.height * .6)-3);
+        this.ctx.fillText('ENGLISH 5-letter words', this.canvas.width * .1, (this.canvas.height * .6));
+        this.ctx.strokeText('CHINESE idioms', this.canvas.width * .1 -2, (this.canvas.height * .7)-3);
+        this.ctx.fillText('CHINESE idioms', this.canvas.width * .1, (this.canvas.height * .7));
 
 
-        this.ctx.font = `bold 35px ChronoType`;
-        this.ctx.fillStyle = "purple";
-        this.ctx.strokeStyle = 'black';
-        this.ctx.fillText('Choose a language and hit ENTER!', this.canvas.width * .1, (this.canvas.height * .5));
-        this.ctx.strokeText('Choose a language and hit ENTER!', this.canvas.width * .1, (this.canvas.height * .5));
 
+        let up = this.keys[38]
+        let down = this.keys[40]
+        if (down && this.gameMode===`english`) this.gameMode=`chinese`
+        if (up && this.gameMode===`chinese`) this.gameMode=`english`
+
+        if (this.gameMode === `english`) this.ctx.drawImage(document.getElementById(`cursor`), 0, 0, 32, 32, 25, 320, 50, 50 ) //add credits of where i took image from
+        else if (this.gameMode === `chinese`) this.ctx.drawImage(document.getElementById(`cursor`), 0, 0, 32, 32, 25, 380, 50, 50)
 
         requestAnimationFrame(()=> {
             if (this.onSplash === true) this.animateSplash(timeElapsed)
@@ -60,6 +75,7 @@ class Game {
         this.isGameover = this.isGameover || false;
         this.isPaused = this.isPaused || false;
         this.gameMode = this.gameMode || `english` 
+        this.onSplash = true
     }
 
     drawAttackArc(){  // this remains static after an attack until a new attack. could let chrono class take care of this.
@@ -197,7 +213,7 @@ class Game {
 
     spawnEnemy() {
         let newEnemy = new Enemy(Math.floor(Math.random() * this.canvas.width + 1),
-            Math.floor(Math.random() * this.canvas.height + 1), this.canvas, this.ctx, this.imp, 1, this.bluepaint)
+            Math.floor(Math.random() * this.canvas.height + 1), this.canvas, this.ctx, this.imp, 1, this.bluepaint, this.gameMode)
         this.enemies.push(newEnemy)
         this.trie.addWord(newEnemy.word)
         setTimeout( ()=> this.spawnEnemy(this.rate), 1000 / this.rate)

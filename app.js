@@ -74,6 +74,9 @@ app.get('/src/splash.jpg', (req, res) => {
 app.get('/src/squarereticle.png', (req, res) => {
     res.sendFile(path.join(__dirname + '/src/squarereticle.png'))
 });
+app.get('/src/cursor.png', (req, res) => {
+    res.sendFile(path.join(__dirname + '/src/cursor.png'))
+});
 
 
 

@@ -41,6 +41,7 @@ import Game from './game';
 document.addEventListener('DOMContentLoaded', () => {
     window.game = new Game() // window for testing
     
+
     // Notification.requestPermission()
     // setTimeout(()=> { 
     //     if(Notification.permission === "granted") new Notification("You've played for 5 minutes!")

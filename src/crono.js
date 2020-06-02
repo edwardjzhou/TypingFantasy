@@ -16,6 +16,7 @@ class Crono extends Actor{
         this.cronothrust = cronothrust
         this.keys = keys
         this.enemies = enemies
+        this.hp = 100
 
         // this.collisionIntervalChecker = setInterval(this.checkCollision.bind(this), 1000)
 
