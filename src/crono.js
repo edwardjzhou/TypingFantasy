@@ -33,7 +33,7 @@ class Crono extends Actor{
     checkCollision() { // can use leetcodes overlapping rectangles to detect. want to add a get method for this.x,this.y and this.x + canvaswidthtakenupbycrono, etc.
         for (let enemy in this.enemies) {
             // console.log(enemy)
-            if ( (enemy.x - this.x)**2 + (enemy.y - this.y)**2  < 5) {
+            if ( ((enemy.x - this.x)**2 + (enemy.y - this.y)**2)**.5  < 5) {
              this.takeDamage()
              console.log('collision with enemy detected')
 

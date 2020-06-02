@@ -1,8 +1,8 @@
 import Actor from './actor';
-import {chineseDictionary as dictionary2} from './chineseexpansionpack'
+import { chineseDictionary as dictionary2 } from './chineseexpansionpack'
 
-class Enemy extends Actor{
-    constructor(x, y, canvas, ctx, imp, difficulty, bluepaint, gameMode) {
+class Enemy extends Actor {
+    constructor(x, y, canvas, ctx, imp, difficulty, bluepaint, gameMode, squarereticle) {
         super(x,y);
         this.canvas = canvas;
         this.ctx = ctx;
@@ -14,11 +14,12 @@ class Enemy extends Actor{
         this.standStill = false;
         this.bluepaint = bluepaint;
         this.gameMode = gameMode;
+        this.squarereticle = squarereticle;
 
         if (this.gameMode===`english`)
         this.word = dictionary[Math.floor(Math.random() * dictionary.length)];
 
-        if (this.gameMode===`chinese`)
+        else if (this.gameMode===`chinese`)
         this.word = dictionary2[Math.floor(Math.random() * dictionary2.length)];
         
 
@@ -29,6 +30,7 @@ class Enemy extends Actor{
     }
 
     animateReticle(){
+        this.ctx.drawImage(this.squarereticle, 0, 0, 400, 400, this.x-5, this.y-5, 55, 55)
 
     }
 
