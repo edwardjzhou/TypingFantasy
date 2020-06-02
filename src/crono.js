@@ -18,16 +18,13 @@ class Crono extends Actor{
         this.enemies = enemies
         this.hp = 100
 
-        // this.collisionIntervalChecker = setInterval(this.checkCollision.bind(this), 1000)
+        this.collisionIntervalChecker = setInterval(this.checkCollision.bind(this), 1000)
 
         this.sprites = document.getElementById('sprites') 
         this.takingDamage = false
     }
 
     poll() {
-        //animate whatever is polled in terms of importance
-        // taking damage > moving > passive action ? 
-        
     }
 
     checkCollision() { // can use leetcodes overlapping rectangles to detect. want to add a get method for this.x,this.y and this.x + canvaswidthtakenupbycrono, etc.
@@ -43,21 +40,12 @@ class Crono extends Actor{
 
     takeDamage() {
         console.log(42354235)
-        this.takingDamage = true
-        // let asdf = document.getElementById('sprites') 
-        // this.ctx.drawImage(asdf, 80, 250, 30, 60, this.x, this.y + 50, 500, 500)
-        // this.ctx.drawImage(asdf, 0, 0, 30, 60, this.x, this.y + 50, 50, 50)
-
-        // this.lastaction = document.getElementById('sprites') 
-        // this.ctx.drawImage(this.lastaction, 80, 250, 30, 60, this.x, this.y + 50, 500, 500)
-    /* top is 250 */
-    /* bot is 310 */
-    /* 80 110 */
-        //void ctx.drawImage(image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight);
+        // this.takingDamage = true
+   
 
     }
 
-    animateAttack(x, y) {
+    animateAttack(x, y, attackPicture) {
         let leftsY
         let leftsX
         // x bigger the more right, y bigger the lower, arclength, 1
@@ -79,16 +67,15 @@ class Crono extends Actor{
         this.x = x
         this.y = y
         
-        this.ctx.drawImage(this.cronothrust, 0, 0, 500, 500, this.x, this.y + 50, 500, 500)
+        this.ctx.drawImage(attackPicture, 0, 0, 500, 500, this.x, this.y + 50, 500, 500)
         
-        this.lastaction = this.cronothrust
+        this.lastaction = attackPicture
     }
     
     animate() {
-        if (this.takingDamage = true) {
-            this.ctx.drawImage(this.sprites, 80, 80, 500, 500, this.x, this.y, 500, 500)
-
-        }
+        // if (this.takingDamage = true) {
+        //     this.ctx.drawImage(this.sprites, 80, 80, 500, 500, this.x, this.y, 500, 500)
+        // }
 
 
         let up = this.keys[38]
@@ -139,6 +126,11 @@ class Crono extends Actor{
 
         if ( !left && !up && !right && !right && !down && !this.takingDamage ) {
             this.ctx.drawImage(this.lastaction, 0, 0, 500, 500, this.x, this.y, 500, 500)
+        }
+
+        if (this.takingDamage) {
+            this.ctx.drawImage(this.lastaction, 0, 0, 500, 500, this.x, this.y, 500, 500)
+
         }
     }
     

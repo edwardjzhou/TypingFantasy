@@ -9,6 +9,7 @@ import Trie from './trie';
 // 2. add chinese input into they key-area
 // 3. add splat sounds for kicks
 // 4. finish collision detection and taking damage 
+// 5. implement a high score table with a notepad file or firebase or something with express
 
 //BUGS I Just created: time needs to stop (timeElapsed ) when game is paused so wpm doesnt go to 0 and the next one enemy doesnt instaspawn after pause
 // MAYBE IF have time: animate the splash screen with words flying in / also maybe fade to black in the 0-2000 ms transition
@@ -54,8 +55,8 @@ class Game {
         let down = this.keys[40];
         if (down && this.gameMode ===`english`) this.gameMode=`chinese`;
         else if (up && this.gameMode===`chinese`) this.gameMode=`english`;
-        if (this.gameMode === `english`) this.ctx.drawImage(document.getElementById(`cursor`), 0, 0, 32, 32, 25, 320, 50, 50 ); //add credits of where i took image from
-        else if (this.gameMode === `chinese`) this.ctx.drawImage(document.getElementById(`cursor`), 0, 0, 32, 32, 25, 380, 50, 50);
+        if (this.gameMode === `english`) this.ctx.drawImage(this.cursor, 0, 0, 32, 32, 25, 320, 50, 50 ); 
+        else if (this.gameMode === `chinese`) this.ctx.drawImage(this.cursor, 0, 0, 32, 32, 25, 380, 50, 50);
 
         requestAnimationFrame(()=> {
             if (this.onSplash === true) this.animateSplash(timeElapsed);
@@ -236,6 +237,7 @@ class Game {
         this.cronothrust = document.getElementById('cronothrust');
         this.bluepaint = document.getElementById('bluepaint');
         this.splash = document.getElementById(`splash`);
+        this.cursor = document.getElementById(`cursor`)
         this.squarereticle = document.getElementById(`squarereticle`);
     }
 
@@ -284,6 +286,8 @@ class Game {
 
     pause() {
         this.isPaused = true 
+        this.ctx.font = `bold 50px ChronoType`;
+        this.ctx.fillStyle = "red";
         this.ctx.fillText('PRESS SPACEBAR TO UNPAUSE', this.canvas.width * .2, this.canvas.height * .5);
     }
 
