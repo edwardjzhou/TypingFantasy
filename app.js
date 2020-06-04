@@ -2,6 +2,9 @@ var express = require('express');
 var app = express();
 var path = require('path');
 var port = process.env.PORT || 3001;
+var bodyParser = require('body-parser')
+app.use(bodyParser.json())
+
 
 
 app.get('/', function (req, res) {
@@ -77,6 +80,67 @@ app.get('/src/squarereticle.png', (req, res) => {
 app.get('/src/cursor.png', (req, res) => {
     res.sendFile(path.join(__dirname + '/src/cursor.png'))
 });
+
+// stuff for high score
+// fs.readFile('./src/highscores.txt', 'utf8', function (err, data) {
+//     if (err) {
+//         return console.log(err);
+//     }
+//     console.log(data);
+// });
+
+
+// 1. read the json {1: [name, score],... 5:}
+
+//can we FS the chinese string w downloadble definitions as well as post high scores to a notepad file?    
+const fs = require('fs');
+
+app.get('/highscore', (req, res)=> {
+
+    let data = JSON.parse(fs.readFileSync(`./src/highscores.json`))
+
+
+    //add new score into it
+    //sort for top 5
+    //write top 5
+    //{"key1": "value1", "key2": "value2"} vs [{"key1": "value1"}, {"key2": "value2"}]
+
+    // console.log(data)
+
+    
+    res.send(data[`highScores`]
+)
+})
+
+app.post(`/highscore`, (req,res) => {
+    // console.log(req.body)
+    fs.writeFileSync(`./src/highscores.json`, JSON.stringify(data))
+
+})
+
+//    fetch('http://localhost:3001/highscore', {
+//             method: 'POST',
+//             headers: {
+//                 'Accept': 'application/json',
+//                 'Content-Type': 'application/json'
+//             },
+//             body: JSON.stringify({ a: 1, b: 'Textual content' })
+//     });
+       
+
+
+   // console.log(req.params) // params is the route so it should be {} since we're still in root directory /highscore
+    // console.log(req.query) //http://localhost:3001/highscore?asdf=5 would give { asdf: '5' }
+    // console.log(req.body) //no body is undefined    
+    // fs.write(fd, buffer, offset, length, position, callback) //theres a string ver too 
+    // fs.appendFile('./src/highscores.txt', `hi`, (err, fd) => {
+    //     if (err) throw err;
+    //     console.log(fd)
+    //     res.send(JSON.stringify()) 
+    // });
+    // fs.writeFile(file, data[, options], callback) //overwrites. synchronous. cant use multiple times.
+    // let data = fs.readFileSync(`./src/highscores.txt`)//buffered stuff like 65 65
+    // console.log(data)
 
 
 

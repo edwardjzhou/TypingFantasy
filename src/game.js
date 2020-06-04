@@ -282,6 +282,17 @@ class Game {
         this._detachListeners()
 
         // animate GAMEOVER in text
+
+        // fetch('./highscore', {
+        //     method: 'post',
+        //     body: "hi"
+        // })
+
+        // var tenure = prompt("Please enter preferred tenure in years", "15");
+
+        // if (tenure != null) {
+        //     alert("You have entered " + tenure + " years");
+        // }
     }
 
     pause() {
@@ -293,7 +304,17 @@ class Game {
 
     unpause(){
         this.isPaused = false
+        fetch('http://localhost:3001/highscore', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ a: 1, b: 'Textual content' })
+        });
         this.animate()
+
+           
     }
     
     handleSubmit() {
