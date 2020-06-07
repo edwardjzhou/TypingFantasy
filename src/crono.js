@@ -18,29 +18,40 @@ class Crono extends Actor{
         this.enemies = enemies
         this.hp = 100
 
-        this.collisionIntervalChecker = setInterval(this.checkCollision.bind(this), 1000)
 
         this.sprites = document.getElementById('sprites') 
         this.takingDamage = false
+        this.animateGrimace = false
     }
 
     poll() {
     }
-
+    
+    // checkcollision is called every animate() in GAME CLASS
     checkCollision() { // can use leetcodes overlapping rectangles to detect. want to add a get method for this.x,this.y and this.x + canvaswidthtakenupbycrono, etc.
-        for (let enemy in this.enemies) {
-            // console.log(enemy)
-            if ( ((enemy.x - this.x)**2 + (enemy.y - this.y)**2)**.5  < 5) {
-             this.takeDamage()
-             console.log('collision with enemy detected')
+        for (const enemy of this.enemies) {
+            if (enemy.alive === false) continue
+
+            if ( ( (enemy.x - this.x)**2 + (enemy.y - this.y)**2 )**.5  < 20) {
+                this.takeDamage()
+            //  console.log('collision with enemy detected')
 
             }
         }
     }
 
     takeDamage() {
-        console.log(42354235)
-        // this.takingDamage = true
+        if (this.takingDamage === false) {
+            this.hp-- 
+            this.takingDamage = true
+            this.animateGrimace = true
+            setTimeout( () => {
+                this.takingDamage = false
+            }, 5000)
+        } else if (this.takingDamage = true && this.animateGrimace===true) {
+            this.ctx.drawImage(this.sprites, 80, 80, 30, 30, this.x, this.y, 50, 50)            
+            setTimeout(()=>this.animateGrimace = false,500)
+        }
    
 
     }
@@ -72,12 +83,9 @@ class Crono extends Actor{
         this.lastaction = attackPicture
     }
     
+    // animate unfortuantely controls movement so i wnet with if(!this.animateGrimace)
     animate() {
-        // if (this.takingDamage = true) {
-        //     this.ctx.drawImage(this.sprites, 80, 80, 500, 500, this.x, this.y, 500, 500)
-        // }
-
-
+       
         let up = this.keys[38]
         let down = this.keys[40]
         let left = this.keys[37]
@@ -86,7 +94,7 @@ class Crono extends Actor{
         if (right){
             if (this.x < this.canvas.width - 30 && (!down && !up)) {
                 this.x += 4
-                this.ctx.drawImage(this.cronorightimg, 0, 0, 500, 500, this.x, this.y, 500, 500)
+                if(!this.animateGrimace) this.ctx.drawImage(this.cronorightimg, 0, 0, 500, 500, this.x, this.y, 500, 500)
             } else if (this.x > 0 - 30 && (down || up)) {
                 this.x += 2.8
             }
@@ -96,7 +104,7 @@ class Crono extends Actor{
         if (left) {
             if (this.x > 0 - 30 && (!down && !up)) {
                 this.x -= 4
-                this.ctx.drawImage(this.cronoleftimg, 0, 0, 500, 500, this.x, this.y, 500, 500)
+                if (!this.animateGrimace)this.ctx.drawImage(this.cronoleftimg, 0, 0, 500, 500, this.x, this.y, 500, 500)
             } else if (this.x > 0 - 30 && (down || up)) {
                 this.x -= 2.8
             }
@@ -110,7 +118,7 @@ class Crono extends Actor{
             } else if (this.y < this.canvas.height - 30 && (left || right)) {
                 this.y += 2.8
             }
-            this.ctx.drawImage(this.cronodownimg, 0, 0, 500, 500, this.x, this.y, 500, 500)
+            if (!this.animateGrimace)this.ctx.drawImage(this.cronodownimg, 0, 0, 500, 500, this.x, this.y, 500, 500)
             this.lastaction = this.cronodownimg
         }
 
@@ -120,18 +128,17 @@ class Crono extends Actor{
             } else if (this.y > 0 - 30 && (left || right)) {
                 this.y -= 2.8
             }
-            this.ctx.drawImage(this.cronoupimg, 0, 0, 500, 500, this.x, this.y, 500, 500)
+            if (!this.animateGrimace)this.ctx.drawImage(this.cronoupimg, 0, 0, 500, 500, this.x, this.y, 500, 500)
             this.lastaction = this.cronoupimg
         } 
 
         if ( !left && !up && !right && !right && !down && !this.takingDamage ) {
-            this.ctx.drawImage(this.lastaction, 0, 0, 500, 500, this.x, this.y, 500, 500)
+            if (!this.animateGrimace) this.ctx.drawImage(this.lastaction, 0, 0, 500, 500, this.x, this.y, 500, 500)
         }
 
-        if (this.takingDamage) {
-            this.ctx.drawImage(this.lastaction, 0, 0, 500, 500, this.x, this.y, 500, 500)
-
-        }
+        // if (this.takingDamage) {
+        //     this.ctx.drawImage(this.lastaction, 0, 0, 500, 500, this.x, this.y, 500, 500)
+        // }
     }
     
     animateDeath() {

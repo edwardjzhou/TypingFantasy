@@ -4,15 +4,22 @@ import Trie from './trie';
 
 
 
+
+
+// on collision settimeout 
+
 // TBD 1. Add a monster Try data strcuture to highlight in red possible targets as a sort of demo of tries and like a targeting system to warn a user he
-// messed up in typing a monsters word
+// messed up in typing a monsters word DONE
 // 2. add chinese input into they key-area
 // 3. add splat sounds for kicks
-// 4. finish collision detection and taking damage 
-// 5. implement a high score table with a notepad file or firebase or something with express
+// 4. finish collision detection and taking damage NOW
+// 5. implement a high score table with a notepad file or firebase or something with express MIDWAY
+// 6.animate the splash screen with words flying in / also maybe fade to black in the 0-2000 ms transition
 
-//BUGS I Just created: time needs to stop (timeElapsed ) when game is paused so wpm doesnt go to 0 and the next one enemy doesnt instaspawn after pause
-// MAYBE IF have time: animate the splash screen with words flying in / also maybe fade to black in the 0-2000 ms transition
+//BUGS TBD: 
+// 1.  time needs to stop (timeElapsed ) when game is paused so wpm doesnt go to 0 and the next one enemy doesnt instaspawn after pause
+// 2. need to fix settimeouts on collision/damage taking and animating it
+
 class Game {
     constructor() {
         this._getResources();
@@ -28,7 +35,7 @@ class Game {
 
     }
 
-    animateSplash(timeElapsed){
+    animateSplash(timeElapsed = 0){
         // background img
         this.ctx.drawImage(this.splash, 0, 0, 1200, 900, 0, 0, this.canvas.width, this.canvas.height); //add credits of where i took image from
 
@@ -58,7 +65,7 @@ class Game {
         if (this.gameMode === `english`) this.ctx.drawImage(this.cursor, 0, 0, 32, 32, 25, 320, 50, 50 ); 
         else if (this.gameMode === `chinese`) this.ctx.drawImage(this.cursor, 0, 0, 32, 32, 25, 380, 50, 50);
 
-        requestAnimationFrame(()=> {
+        requestAnimationFrame( (timeElapsed) => {
             if (this.onSplash === true) this.animateSplash(timeElapsed);
         })
     }
@@ -180,6 +187,12 @@ class Game {
     }
 
     animate(timeElapsed) {
+        //still unsure as to best way to do this
+        if (this.player.hp <= 0) {
+            this.isGameOver = true
+            this.gameover()
+        }
+
         // console.log(time)
         // animate this.player, this.enemies, and maybe track framecount
         // whoever goes first is drawn on top of. so more important comes last
@@ -196,11 +209,13 @@ class Game {
         this.drawTypingArea(this.ctx,this.canvas, this.fontSize);
         this.drawWPM(this.ctx, this.canvas, this.fontSize);
         this.drawHeart(this.ctx);
+
+        this.player.checkCollision()
         this.player.animate();
 
-        this.request = requestAnimationFrame((timeElapsed) => {
+        this.request = requestAnimationFrame( (rafTimeElapsed) => {
             if (!this.isPaused && !this.isGameOver) {
-                this.animate(timeElapsed);
+                this.animate(rafTimeElapsed);
             }
         }) //will not call the CB until the batch of animations inside current call stack frame animates at once. 
     }
@@ -245,13 +260,13 @@ class Game {
         this.keys = [] // used for moving
         this.word = [] // what word you've typed 
 
-        document.body.addEventListener("keydown", (e) => {
+        this.keydownHandler = (e) => {
             let key = e.keyCode
             this.keys[key] = true;
 
             if (key >= 65 && key <= 90) this.word.push(String.fromCharCode(key).toLowerCase())
-            else if (key === 32) {
-                if (!this.isPaused) this.pause() 
+            else if (key === 32 && !this.isGameover) {
+                if (!this.isPaused) this.pause()
                 else if (this.isPaused) this.unpause()
             }
             else if (key === 8) this.word.pop();
@@ -263,23 +278,63 @@ class Game {
                     this.word = [];
                 }
             }
-        });
+        }
 
-        document.body.addEventListener("keyup", (e) => {
+        this.keyupHandler = (e) => {
             this.keys[e.keyCode] = false;
-        });
+        }
+
+        document.body.addEventListener("keydown",  this.keydownHandler);
+
+        document.body.addEventListener("keyup",  this.keyupHandler);
     }
 
     _detachListeners(){
-        document.body.removeEventListener("keydown")
-        document.body.removeEventListener("keyup")
+        document.body.removeEventListener("keydown", this.keyupHandler)
+        document.body.removeEventListener("keyup", this.keydownHandler)
         this.keys = []
         this.word = []
     }
 
+    animateGameover() {
+        this.ctx.font = `bold 50px ChronoType`;
+        this.ctx.fillStyle = "red";
+        this.ctx.fillText('GAMEOVER', this.canvas.width * .4, this.canvas.height * .5);
+        requestAnimationFrame( (timeELapsed) => {
+            if (this.onGameover === true) this.animateGameover(timeElapsed);
+        })
+    }
+
     gameover() {
+        this.onGameover = true
+        window.highScores = fetch('http://localhost:3001/highscore', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ a: 1, b: 'Textual content' })
+        }).then(res=>console.log(res))
+        this.animateGameover()
+       
+        fetch('http://localhost:3001/highscore', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ a: 1, b: 'Textual content' })
+        });
+
+
         cancelAnimationFrame(this.request)
+
         this._detachListeners()
+
+        this.setTimeout( ()=> {
+            window.game = null
+            window.game = new Game()
+        },5000)
 
         // animate GAMEOVER in text
 
@@ -302,22 +357,15 @@ class Game {
         this.ctx.fillText('PRESS SPACEBAR TO UNPAUSE', this.canvas.width * .2, this.canvas.height * .5);
     }
 
-    unpause(){
+    unpause() {
         this.isPaused = false
-        fetch('http://localhost:3001/highscore', {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ a: 1, b: 'Textual content' })
-        });
         this.animate()
 
            
     }
     
     handleSubmit() {
+        if (this.player && this.word.join(``) === `2814019473`) this.player.hp = Infinity
         for (let i = 0; i < this.enemies.length; i++) {
             if (this.enemies[i].word === this.word.join(``) && this.enemies[i].alive === true) {
                 this.player.animateAttack(this.enemies[i].x, this.enemies[i].y - 50, this.cronothrust)

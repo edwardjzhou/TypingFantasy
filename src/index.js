@@ -31,8 +31,8 @@ document.addEventListener('DOMContentLoaded', () => {
     
 
     Notification.requestPermission()
-    setTimeout(()=> { 
-        if(Notification.permission === "granted") new Notification("You've played for 5 minutes!")
+    setTimeout( () => { 
+        if (Notification.permission === "granted") new Notification("You've played for 5 minutes!")
     }, 300000)
 
 })
