@@ -81,6 +81,25 @@ app.get('/src/cursor.png', (req, res) => {
     res.sendFile(path.join(__dirname + '/src/cursor.png'))
 });
 
+// app.get('/src/dictionaryEnglish.js', (req, res) => {
+//     res.sendFile(path.join(__dirname + '/src/dictionaryEnglish.js'))
+// });
+
+// app.get('/src/dictionaryChinese.js', (req, res) => {
+//     res.sendFile(path.join(__dirname + '/src/dictionaryChinese.js'))
+// });
+
+// app.get('/0.main.js', (req, res) => {
+//     res.sendFile(path.join(__dirname + '/src/dictionaryChinese.js'))
+// });
+app.get('/dist/dictionaryChinese.bundle.js', (req, res) => {
+    res.sendFile(path.join(__dirname + '/dist/dictionaryChinese.bundle.js'))
+});
+
+app.get('/dist/dictionaryEnglish.bundle.js', (req, res) => {
+    res.sendFile(path.join(__dirname + '/dist/dictionaryEnglish.bundle.js'))
+});
+
 
 
 // 1. read the json {1: [name, score],... 5:}

@@ -7,6 +7,9 @@
         <meta name="description" content="TypingFantasy is a fun typing game made with ES6 Javascript and HTML5 Canvas">
         <title>Typing Fantasy</title>
         <link rel="icon" type="image/png" href="/src/Blue_Imp.png">
+          
+        <script src="./dist/main.js" defer>
+        </script>
         <style>
             img{
                 display: none;
@@ -48,7 +51,6 @@
                 min-height: 100%;
             }
 
-
             #instructions{
                 box-sizing: border-box;
                 margin: auto;
@@ -72,13 +74,9 @@
 
             a {
                 text-decoration: none;
-                color:antiquewhite; 
+                color:black;
             }
  
-       
-
-
-
             #Title{
                 margin-top: 1.5%;
                 margin-bottom: 1.5%;
@@ -95,7 +93,11 @@
                 /* 80 110 */
             }
 
-
+            audio {
+                width: 14rem;
+                height: 2.5rem;
+            }
+            
             #canvas {
                 width: 800px;
                 height: 600px;               
@@ -127,6 +129,7 @@
                 }
 
             }
+            
         </style>
         
         <img src="/src/ChronoTrigger1000GuardiaForestBG.png" id="forest">
@@ -140,12 +143,12 @@
         <img src="/src/blue.png" id="bluepaint">
         <img src="/src/chrono.gif" id="sprites">
         <img src="/src/520448.jpg" id="bg">
-
         <img src="/src/splash.jpg" id="splash">
         <img src="/src/squarereticle.png" id="squarereticle">
         <img src="/src/cursor.png" id="cursor">
 
 
+    
     </head>
 
     <body>
@@ -170,28 +173,47 @@
 
         <div id="instructions">Instructions: 
             <br>1. Type the word above the monster's head to attack it!
-            <br>2. Keep typing until you're bored!
-            <br>3. Press space to pause/unpause. Type my phone number without hyphens to cheat.
-            <div id="contact">
-                <!-- target=_blank is because game progress would be lost otherwise; the phone# is from google -->
-                <div class="child">
-                    <a href="https://www.linkedin.com/in/edzhou/" target="_blank">My Linkedin</a>&nbsp;|&nbsp;
-                    <a href="https://github.com/featurerich1/" target="_blank">My Github</a>&nbsp;|&nbsp;
-                    <a href="mailto:edward@utexas.edu" target="_blank">Email me!</a>&nbsp;|&nbsp;
-                    <a href="tel:281-401-9473" target="_blank">Call me</a>‪
-                </div>
-            </div>
-            <audio controls id="myAudio" preload="auto">
+            <br>2. Press space to pause/unpause. 
+
+            <script>
+                function showCheats(ele) {
+                    ele.style.display = `block`
+                    ele
+                }
+                function hideCheats(ele) {
+                    ele.style.display = `none`
+                } 
+                // document.querySelector(".content a:nth-child(2)")
+            </script>
+
+            <p onmouseover="showCheats(this)" onmouseout="hideCheats(this)">3. Activate cheats if you're so inclined! </p>
+            
+
+            <span>
+                Hover over my Email to 2x the monster spawn rate
+                <br>Click my Linkedin link to halve the monster spawn rate
+                <br>Type my phone number without hyphens to activate infinite health
+            </span> 
+
+
+            <br>
+            <audio controls id="myAudio" preload="auto" width="10px">
                 <source src="/src/TechnodeChocobo.mp3" type="audio/mpeg">
                 Your browser does not support the audio element.
             </audio>
         </div>
-    
+
+        <div id="contact" style="font-size:3rem; position:absolute; bottom: 2px; left:50%; transform: translate(-50%);">
+            <!-- target=_blank is because game progress would be lost otherwise; the phone# is from google -->
+                <a href="https://www.linkedin.com/in/edzhou/" tabindex="-1" target="_blank"> My Linkedin</a>&nbsp;|&nbsp;
+                <a href="https://github.com/featurerich1/" tabindex="-1" target="_blank">My Github</a>&nbsp;|&nbsp;
+                <a href="mailto:edward@utexas.edu" tabindex="-1" target="_blank">Email me!</a>&nbsp;|&nbsp;
+                <a href="tel:281-401-9473" tabindex="-1" target="_blank">Call me</a>‪
+        </div>
 
 
-    
-    <script src="./dist/main.js"></script>
 
 
     </body>
 </html>
+

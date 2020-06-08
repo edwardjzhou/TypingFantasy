@@ -4,7 +4,27 @@ import Trie from './trie';
 
 
 
+// // if (this.gameMode === `english`) {
+// import(/* webpackChunkName: "./dictionaryEnglish" */ './dictionaryEnglish').then(({ englishDictionary }) => {
+//     this.dictionary = englishDictionary
+//     console.log(this.dictionary)
+//     this.gameLoop();
 
+// }).catch((err) => {
+//     console.log(err)
+// })
+// // } else if (this.gameMode === `chinese`) {
+// import(/* webpackChunkName: "./dictionaryChinese" */ './dictionaryChinese').then(({ chineseDictionary }) => {
+//     this.dictionary = chineseDictionary
+
+//     console.log(this.dictionary)
+
+//     this.gameLoop();
+
+// }).catch((err) => {
+//     console.log(err)
+// })
+//                 // }
 
 // on collision settimeout 
 
@@ -19,20 +39,47 @@ import Trie from './trie';
 //BUGS TBD: 
 // 1.  time needs to stop (timeElapsed ) when game is paused so wpm doesnt go to 0 and the next one enemy doesnt instaspawn after pause
 // 2. need to fix settimeouts on collision/damage taking and animating it
+const qs = document.querySelector
 
 class Game {
     constructor() {
         this._getResources();
-        this._addListeners();
         this._ensureDefaultSettings();
+        this._addListeners();
         this.animateSplash();
-        let interval = setInterval( ()=> {
+        let interval = setInterval(  () => {
             if (!this.onSplash) {
                 clearInterval(interval);
-                this.gameLoop();
+                this.dynamicallyLoadLanguageModule()
             }
         }, 2000);
 
+    }
+
+    dynamicallyLoadLanguageModule() {
+        if (this.gameMode === `english`) {
+            import(/* webpackChunkName: "./dictionaryEnglish", webpackPrefetch: true */ './dictionaryEnglish').then(({ englishDictionary }) => {
+                this.dictionary = englishDictionary
+                this.gameLoop();
+            }).catch((err) => {
+                alert(err)
+            })
+        } else if (this.gameMode === `chinese`) {
+            import(/* webpackChunkName: "./dictionaryChinese", webpackPrefetch: true */ './dictionaryChinese').then(({ chineseDictionary }) => {
+                this.dictionary = chineseDictionary
+                this.gameLoop();
+            }).catch((err) => {
+                alert(err)
+            })
+        }
+    }
+
+    get hasGameStarted(){
+        return !this.onSplash
+    }
+
+    get language(){
+        return this.gameMode
     }
 
     animateSplash(timeElapsed = 0){
@@ -65,8 +112,8 @@ class Game {
         if (this.gameMode === `english`) this.ctx.drawImage(this.cursor, 0, 0, 32, 32, 25, 320, 50, 50 ); 
         else if (this.gameMode === `chinese`) this.ctx.drawImage(this.cursor, 0, 0, 32, 32, 25, 380, 50, 50);
 
-        requestAnimationFrame( (timeElapsed) => {
-            if (this.onSplash === true) this.animateSplash(timeElapsed);
+        requestAnimationFrame( (rafTimeElapsed) => {
+            if (this.onSplash === true) this.animateSplash(rafTimeElapsed);
         })
     }
 
@@ -186,7 +233,7 @@ class Game {
         
     }
 
-    animate(timeElapsed) {
+    animate(timeElapsed = 0) {
         //still unsure as to best way to do this
         if (this.player.hp <= 0) {
             this.isGameOver = true
@@ -222,6 +269,10 @@ class Game {
 
     // almost a misnomer at this point -- all game logic will be in animation from now on
     gameLoop(){ //responsible for spawning initial actors, creating new actors, and calling animate-- will eventually stick all game logic in here including calls to "move/act" rather than letting animate take care of that implicitly
+        if (this.gameMode === `chinese`) {
+            this._detachListeners()
+            this._addListeners()       
+        }
         this.trie = new Trie();
         this.enemies = [];
         this.player = new Crono(300, 300, this.canvas, this.ctx, this.cronoleftimg, this.cronorightimg, this.cronoupimg, this.cronodownimg, this.cronothrust, this.keys, this.enemies);
@@ -230,7 +281,7 @@ class Game {
 
     spawnEnemy() {
         let newEnemy = new Enemy(Math.floor(Math.random() * this.canvas.width + 1),
-            Math.floor(Math.random() * this.canvas.height + 1), this.canvas, this.ctx, this.imp, 1, this.bluepaint, this.gameMode, this.squarereticle)
+            Math.floor(Math.random() * this.canvas.height + 1), this.canvas, this.ctx, this.imp, 1, this.bluepaint, this.gameMode, this.squarereticle, this.dictionary)
         this.enemies.push(newEnemy)
         this.trie.addWord(newEnemy.word)
         if (this.isGameover) return  //breaks spawning on gameover
@@ -259,23 +310,57 @@ class Game {
     _addListeners(){
         this.keys = [] // used for moving
         this.word = [] // what word you've typed 
+        if (this.gameMode===`english`) {
+            this.keydownHandler = (e) => {
+                let key = e.keyCode
+                this.keys[key] = true;
 
-        this.keydownHandler = (e) => {
-            let key = e.keyCode
-            this.keys[key] = true;
-
-            if (key >= 65 && key <= 90) this.word.push(String.fromCharCode(key).toLowerCase())
-            else if (key === 32 && !this.isGameover) {
-                if (!this.isPaused) this.pause()
-                else if (this.isPaused) this.unpause()
+                if (key >= 65 && key <= 90) this.word.push(String.fromCharCode(key).toLowerCase())
+                else if (key === 32 && !this.isGameover) {
+                    if (!this.isPaused) this.pause()
+                    else if (this.isPaused) this.unpause()
+                }
+                else if (key === 8) this.word.pop();
+                else if (key === 13) {
+                    if (this.onSplash) {
+                        this.onSplash = false
+                    } else {
+                        this.handleSubmit()
+                        this.word = [];
+                    }
+                }
             }
-            else if (key === 8) this.word.pop();
-            else if (key === 13) {
-                if (this.onSplash) {
-                    this.onSplash = false
-                } else {
-                    this.handleSubmit()
-                    this.word = [];
+
+        } else if (this.gameMode ===`chinese`) {
+                this.chineseInput = document.createElement(`input`)
+                this.chineseInput.setAttribute(`placeholder`,`饱经沧桑`)
+                this.chineseInput.style.height = "40px"
+                this.chineseInput.style.width = "200px"
+                this.chineseInput.style.margin = "5px"
+
+                this.chineseAdvisoryText = document.createTextNode("Type chinese here");
+                this.linebreak = document.createElement("br");
+
+                this.canvas.insertAdjacentElement(`afterend`, this.chineseInput);
+                this.chineseInput.insertAdjacentElement(`beforebegin`, this.linebreak);
+
+                this.keydownHandler = (e) => {
+                let key = e.keyCode
+                this.keys[key] = true;
+
+                if (key >= 65 && key <= 90) this.word.push(String.fromCharCode(key).toLowerCase())
+                else if (key === 32 && !this.isGameover) {
+                    if (!this.isPaused) this.pause()
+                    else if (this.isPaused) this.unpause()
+                }
+                else if (key === 8) this.word.pop();
+                else if (key === 13) {
+                    if (this.onSplash) {
+                        this.onSplash = false
+                    } else {
+                        this.handleSubmit()
+                        this.word = [];
+                    }
                 }
             }
         }
@@ -284,14 +369,14 @@ class Game {
             this.keys[e.keyCode] = false;
         }
 
-        document.body.addEventListener("keydown",  this.keydownHandler);
-
-        document.body.addEventListener("keyup",  this.keyupHandler);
+        document.body.addEventListener("keydown",  this.keydownHandler, true);
+        document.body.addEventListener("keyup",  this.keyupHandler, true);
     }
 
     _detachListeners(){
-        document.body.removeEventListener("keydown", this.keyupHandler)
-        document.body.removeEventListener("keyup", this.keydownHandler)
+        document.body.removeEventListener("keydown", this.keydownHandler, true)
+        document.body.removeEventListener("keyup", this.keyupHandler, true)
+        console.log(`detacehd english listener`)
         this.keys = []
         this.word = []
     }

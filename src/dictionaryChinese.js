@@ -12976,6 +12976,17 @@ const chineseIdiomsString =
 13000,"做张做势","zuò  zhāng  zuò shì","装模作样，故意做出一种姿态。",,"沈琼枝看那两个妇人时，一个二十六七岁光景，一个十七八岁，乔素打扮，～。（清·吴敬梓《儒林外史》第四十一回）","zzzs"
 13033,"哀哀父母","āi  āi  fù  mǔ","可哀呀可哀，我的父母啊！原指古时在暴政下人民终年在外服劳役，对父母病痛、老死不能照料而悲哀。","《诗经·小雅·蓼莪》：“蓼蓼者莪，匪莪伊蒿，哀哀父母，生我劬劳。”","咱人有子方知不孝娘，岂不问～情肠！（元·无名氏《小张屠》第一折）","aafm"`
 
-export const chineseDictionary = chineseIdiomsString.split(`\n`).map(line => line.split(`"`)[1]).filter(idiom => /\p{Script=Han}/u.test(idiom))
+export const chineseDictionary =chineseIdiomsString.split(`\n`).map(line => line.split(`"`)[1]).filter(idiom => /\p{Script=Han}/u.test(idiom))
+// module.exports = chineseIdiomsString.split(`\n`).map(line => line.split(`"`)[1]).filter(idiom => /\p{Script=Han}/u.test(idiom))
+// const dictionary = chineseIdiomsString.split(`\n`).map(line => line.split(`"`)[1]).filter(idiom => /\p{Script=Han}/u.test(idiom))
+
 // when I grow up my wish is to turn this into regex :)
 //https://raw.githubusercontent.com/by-syk/chinese-idiom-db/master/chinese-idioms-12976.txt
+
+// if i wanna rewrite it to the atm useful parts:
+// var fs = require('fs');
+
+// var file = fs.createWriteStream('array.txt');
+// file.on('error', function (err) { /* error handling */ });
+// arr.forEach(function (v) { file.write(v.join(', ') + '\n'); });
+// file.end();

@@ -21,15 +21,27 @@
 
 
 //https://ezgif.com/gif-to-sprite CONVERT walking gif into a spritesheet
-
+const qs = document.querySelector.bind(document)
 
 import Game from './game';
 
-
 document.addEventListener('DOMContentLoaded', () => {
-    window.game = new Game() // window for testing
-    
 
+    window.game = new Game() // window for testing
+
+
+ 
+    // vanilla javascript to manipulate html events to activate cheats!
+    let linkedin = qs("a[href='https://www.linkedin.com/in/edzhou/']");
+    linkedin.addEventListener(`click`, () => {
+        if (!window.game.onSplash) window.game.player.hp = Infinity
+    })
+    
+    let cheatTooltip = qs(`span`)
+    cheatTooltip.style.display =`none`
+    // end cheats
+
+    // ill make this an event listener too
     Notification.requestPermission()
     setTimeout( () => { 
         if (Notification.permission === "granted") new Notification("You've played for 5 minutes!")
