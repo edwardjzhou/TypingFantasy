@@ -107,35 +107,74 @@ app.get('/dist/dictionaryEnglish.bundle.js', (req, res) => {
 //can we FS the chinese string w downloadble definitions as well as post high scores to a notepad file?    
 const fs = require('fs');
 
-app.get('/highscore', (req, res)=> {
-    let data = JSON.parse(fs.readFileSync(`./src/highscores.json`))
-    res.send(data[`highScores`]
-)
+
+
+app.get('/highscore', (req, res) => {
+    sendHighScores(req, res);
 })
 
-app.post(`/highscore`, (req,res) => {
-    let data = JSON.parse(fs.readFileSync(`./src/highscores.json`))
-    // req.body = {123:"Pro"}
-    // data[`highScores`] = [[5,"Edward"],[1,"John"]]
-    const newHighScores = [...data[`highScores`], ] 
-    const sortedNewHighScores = newHighScores.sort( () => {} )
-    fs.writeFileSync(`./src/highscores.json`, JSON.stringify(data))
+//this makes the new high score 
+app.post(`/highscore`, (req, res) => {
+    const [score, name] = req.body
+    // if (shouldHighScoresUpdate(req.body[]) )
+    // const newHighScores = [...data[`highScores`], ] 
+    // const sortedNewHighScores = newHighScores.sort( () => {} )
+    // fs.writeFileSync(`./src/highscores.json`, JSON.stringify(data))
     console.log(req.body)
 })
 
-function handleScore (score) {
-    const data = JSON.parse(fs.readFileSync(`./src/highscores.json`))
-    console.log(data[`highScores`])
-    if (data[`highScores`].length < 10 ) return true
+// this is the user asking if he should be considered for a high score
+app.post(`/newhighscore`, (req, res) => {
+    // req.body = [3434,`player`]
+    const [score = Number.MIN_SAFE_INTEGER, _ ] = req.body  // its a number and string despite JSON.stringify without using JSON.parse because of JSON body parser module? 
+    res.send(shouldHighScoresUpdate(score))
+
+    // fetch('./newhighscore', {
+    //     method: 'POST',
+    //     headers: {
+    //         'Accept': 'application/json',
+    //         'Content-Type': 'application/json'
+    //     },
+    //     body: JSON.stringify([230, 'Edward'])
+    // });
+})
+
+function updateHighScores (score) {
+    const data = readCurrentHighScores().highScores
 
 }
+
+function sortHighScores() {
+
+}
+
+//    if (readCurrentHighScores().highScores?.length) return false 
+function shouldHighScoresUpdate (tentativeScore) {
+    const data = readCurrentHighScores().highScores
+    //data =  [[123, "Edward"], [50, "John"], [30, "Crono"], [25, "Scala"], [15, "Robo"]]
+    const comparator = ([score, _]) => tentativeScore > score
+    // highscores arent full yet (10 max scores) || if its higher than the lowest score
+    if ( data.length < 10 || data.some(comparator) ) return true
+    else return false
+}
+
+function readCurrentHighScores () {
+    return JSON.parse(fs.readFileSync(`./src/highscores.json`))
+}
+
+// error : closures are formed from where the function was WRITTEN not where its invoked 
+function sendHighScores(req, res) {
+    const data = readCurrentHighScores()
+    res.send(data[`highScores`])
+}
+
 // pseudocode for POST route:
-// someone posts us a new score
-// check if its a new high score
+// ALL gameovered users post us their score
+// check if its a new high score; 
 // if its a new high score
-//      we 1. update the high score and 2. send it to him 3. send him news its new high score
+//      we 1. update the high score and 2. send it to him
 // else 
-//      jsut reutrn current high scores and news its not new high
+//      jsut reutrn current high scores and news its not a high score 
 
 //or do we check if his score warrants it in the first place FIRST then get his info only AFTER that so eh doesnt waste time entering name/score?
 

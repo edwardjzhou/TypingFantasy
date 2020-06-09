@@ -188,9 +188,10 @@
 
 
                 }
-                function hideCheats(ele) {
+                function hideCheats(tooltip) {
                     // console.log(ele.children)
-                    ele.children[0].style.display = `none`
+                    tooltip.children[0].style.display = `none`
+                    document.querySelector(tooltip)
                 } 
                 // document.querySelector(".content a:nth-child(2)")
             </script>
@@ -230,11 +231,16 @@
             <script>
 
                 const ensureSorted = (scores) => {
-                    return scores.sort( (a, b) => b[0] - a[0])
+                    const sorted = scores.sort( (a, b) => b[0] - a[0] )
+
+                    return ({
+                        sorted,
+                        'noInconsistency': ( JSON.stringify(sorted) === JSON.stringify(scores) )
+                    })
                 }
 
                 const createScoreTable = function (scores) {
-                    scores = ensureSorted(scores)
+                    scores = ensureSorted(scores).noInconsistency ? scores : ensureSorted(scores).sorted
                     const textNode = document.createTextNode.bind(document)
                     const lineBreak = () => document.createElement(`br`)
                     const table = document.querySelector(`#highscore`)

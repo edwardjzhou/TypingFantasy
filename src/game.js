@@ -37,6 +37,9 @@ import Trie from './trie';
 // 6.animate the splash screen with words flying in / also maybe fade to black in the 0-2000 ms transition
 // 7. add in upload your own words
 // 8. draw the tracers for the reticle
+// 9. add symbols to make hp immutable (almost) w const HP = Symbol()
+// this[HP] = 100; Reflect.ownKeys() or Object.getOwnPropertySymbols() can detect
+// 10. https://developers.redhat.com/blog/2017/01/17/data-encapsulation-vs-immutability-in-javascript/ make a factory for enemys? for like a boss rather than inheritanc
 //BUGS TBD: 
 // 1.  time needs to stop (timeElapsed ) when game is paused so wpm doesnt go to 0 and the next one enemy doesnt instaspawn after pause
 // 2. need to fix settimeouts on collision/damage taking and animating it
