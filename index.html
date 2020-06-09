@@ -227,7 +227,7 @@
 
         <!-- use 9007199254740997n instead of inf if users viewport is 5000 res or somethign funny-->
         <div title="High Score Table" id="highscore"> 
-            <h1> High Score Table </h1>
+            <h1 PRIMARY data-hi = "5" bye='123'> High Score Table </h1>
             <script>
 
                 const ensureSorted = (scores) => {
@@ -245,9 +245,9 @@
                     const lineBreak = () => document.createElement(`br`)
                     const table = document.querySelector(`#highscore`)
 
-                    for (const [index, [score, name]] of Object.entries(scores) ) {
+                    for (let [index, [score, name]] of Object.entries(scores) ) {
                         table.appendChild(
-                            textNode(`${name} scored ${score}`)
+                            textNode(`${++index}. ${name} scored ${score}`)
                         )
                         table.appendChild(lineBreak())
                     }
@@ -261,7 +261,7 @@
                     let data = { "highScores": [[123, "Edward"], [50, "John"], [30, "Crono"], [25, "Scala"], [15, "Robo"]] }
                     try {
                         // console.log(`inside try`) //happens second
-                        data = await fetch(`./highscore`).then(console.log(`not a cb`)).then(res=>res.json()) //final return in then cb is the returned value   res => res.json() 
+                        data = await fetch(`./highscore`).then(console.log(`not a cb`)).then(res => res.json()) //final return in then cb is the returned value   res => res.json() 
                         // my udnerstanding:
                         // the second we hit a fetch call that fetch goes to the webAPI for XHR off main call stack
                         // (ALTHOUGH non cb's inside then get run sync and are skipped over in turns of its return)

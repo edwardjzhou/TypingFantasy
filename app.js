@@ -107,8 +107,6 @@ app.get('/dist/dictionaryEnglish.bundle.js', (req, res) => {
 //can we FS the chinese string w downloadble definitions as well as post high scores to a notepad file?    
 const fs = require('fs');
 
-
-
 app.get('/highscore', (req, res) => {
     sendHighScores(req, res);
 })
@@ -116,11 +114,18 @@ app.get('/highscore', (req, res) => {
 //this makes the new high score 
 app.post(`/highscore`, (req, res) => {
     const [score, name] = req.body
-    // if (shouldHighScoresUpdate(req.body[]) )
+    const answer = JSON.stringify({ 
+        highScores: calcHighScores([score, name])
+    })
+
+    fs.writeFileSync(`./src/highscores.json`, answer)
+    sendHighScores(req, res);
+
+
     // const newHighScores = [...data[`highScores`], ] 
     // const sortedNewHighScores = newHighScores.sort( () => {} )
     // fs.writeFileSync(`./src/highscores.json`, JSON.stringify(data))
-    console.log(req.body)
+    // console.log(req.body)
 })
 
 // this is the user asking if he should be considered for a high score
@@ -139,18 +144,46 @@ app.post(`/newhighscore`, (req, res) => {
     // });
 })
 
-function updateHighScores (score) {
+function calcHighScores ( [score, name = "Unnamed"] ) {
     const data = readCurrentHighScores().highScores
-
+    console.log(`1`,data)
+    data.push([score, name])
+    data.sort( (a,b) => {
+        return b[0] - a[0]
+    })
+    console.log(data)
+    return data.slice(0,10)
 }
+//{"highScores":{"highScores":[[123,"Edward"],[50,"John"],[30,"Crono"],[25,"Scala"], [15,"Robo"]]}
 
-function sortHighScores() {
 
-}
+// cron https://github.com/ncb000gt/node-cron
+var CronJob = require('cron').CronJob;
+var request = require('request');
+
+// keep alive heroku/my django project dynamos with a CRON JOB
+new CronJob('0 * * * *', function () { //top o' the hour 0 * * * *
+    console.log('You will see this message every second w 6stars');
+    let res = {};
+    request('http://edwardpa.pythonanywhere.com/', function (error, response, body) {
+        // console.log('error:', error); 
+        console.log('statusCode:', response && response.statusCode); 
+        console.log(body)
+    });
+    // request('http://google.com/doodle.png').pipe(fs.createWriteStream('doodle.png'))
+
+    // console.log(__dirname)
+    // const answer = await fetch(`https://edwardpa.pythonanywhere.com/`).then(res => res)
+    // console.log(answer)
+}, null, true, 'America/Los_Angeles');
+
+
+
 
 //    if (readCurrentHighScores().highScores?.length) return false 
 function shouldHighScoresUpdate (tentativeScore) {
-    const data = readCurrentHighScores().highScores
+    // const data = readCurrentHighScores().highScores
+    const data =  { highScores } = readCurrentHighScores()
     //data =  [[123, "Edward"], [50, "John"], [30, "Crono"], [25, "Scala"], [15, "Robo"]]
     const comparator = ([score, _]) => tentativeScore > score
     // highscores arent full yet (10 max scores) || if its higher than the lowest score
@@ -165,6 +198,7 @@ function readCurrentHighScores () {
 // error : closures are formed from where the function was WRITTEN not where its invoked 
 function sendHighScores(req, res) {
     const data = readCurrentHighScores()
+    console.log(data)
     res.send(data[`highScores`])
 }
 
