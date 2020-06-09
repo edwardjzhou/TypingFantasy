@@ -28,7 +28,6 @@ class Enemy extends Actor {
         //             this.dictionary= dict
         //         });
         // }
-        console.log(this.dictionary.length)
 
         this.word = this.dictionary[Math.floor(Math.random() * this.dictionary.length)];
         // if (this.gameMode===`english`)

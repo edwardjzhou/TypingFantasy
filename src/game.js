@@ -35,7 +35,8 @@ import Trie from './trie';
 // 4. finish collision detection and taking damage NOW
 // 5. implement a high score table with a notepad file or firebase or something with express MIDWAY
 // 6.animate the splash screen with words flying in / also maybe fade to black in the 0-2000 ms transition
-
+// 7. add in upload your own words
+// 8. draw the tracers for the reticle
 //BUGS TBD: 
 // 1.  time needs to stop (timeElapsed ) when game is paused so wpm doesnt go to 0 and the next one enemy doesnt instaspawn after pause
 // 2. need to fix settimeouts on collision/damage taking and animating it
@@ -56,7 +57,8 @@ class Game {
 
     }
 
-    dynamicallyLoadLanguageModule() {
+    dynamicallyLoadLanguageModule() { 
+        // this may be all wrong as it seems after the main package is loaded BOTH of these are prefetched... or is the conditional not for prefetch but for  real load?
         if (this.gameMode === `english`) {
             import(/* webpackChunkName: "./dictionaryEnglish", webpackPrefetch: true */ './dictionaryEnglish').then(({ englishDictionary }) => {
                 this.dictionary = englishDictionary
@@ -150,7 +152,7 @@ class Game {
     }
 
     drawMap(){
-        // 1024x768 background render
+        // original image's 1024x768; we do a background render
         this.ctx.drawImage(this.forestbg, 0, 0, 500, 350, 0, 0, this.canvas.width, this.canvas.height - 50);
     }
 
@@ -236,7 +238,7 @@ class Game {
     animate(timeElapsed = 0) {
         //still unsure as to best way to do this
         if (this.player.hp <= 0) {
-            this.isGameOver = true
+            this.isGameover = true
             this.gameover()
         }
 
@@ -310,10 +312,28 @@ class Game {
     _addListeners(){
         this.keys = [] // used for moving
         this.word = [] // what word you've typed 
+
+        function preventDefaultViewportJiggling(e) {
+            const arrowsAndSpacebar = {
+                37: true,
+                38: true,
+                39: true,
+                40: true,
+                32: true,
+            }
+
+            Object.freeze(arrowsAndSpacebar)
+            if (arrowsAndSpacebar[e.keyCode]) e.preventDefault()
+        }
+
         if (this.gameMode===`english`) {
             this.keydownHandler = (e) => {
                 let key = e.keyCode
                 this.keys[key] = true;
+                
+            
+                preventDefaultViewportJiggling(e)
+
 
                 if (key >= 65 && key <= 90) this.word.push(String.fromCharCode(key).toLowerCase())
                 else if (key === 32 && !this.isGameover) {
@@ -345,23 +365,30 @@ class Game {
                 this.chineseInput.insertAdjacentElement(`beforebegin`, this.linebreak);
 
                 this.keydownHandler = (e) => {
-                let key = e.keyCode
-                this.keys[key] = true;
+                    let key = e.keyCode //should be nubmer
+                    this.keys[key] = true; //small range of keyboard keys means that this type of bucketing is acceptable
+                    // the larger the range of values in a set hte more costly it is to use bucket sort (just confused myself)
+                    // expense in meemory freom range and multiplying to get the right memory location from index ?
 
-                if (key >= 65 && key <= 90) this.word.push(String.fromCharCode(key).toLowerCase())
-                else if (key === 32 && !this.isGameover) {
-                    if (!this.isPaused) this.pause()
-                    else if (this.isPaused) this.unpause()
-                }
-                else if (key === 8) this.word.pop();
-                else if (key === 13) {
-                    if (this.onSplash) {
-                        this.onSplash = false
-                    } else {
-                        this.handleSubmit()
-                        this.word = [];
+                    //object freeze enum
+                    //prevent arrow keys from messsing with your viewport/scrolling 
+
+                    preventDefaultViewportJiggling(e)
+
+                    if (key >= 65 && key <= 90) this.word.push(String.fromCharCode(key).toLowerCase())
+                    else if (key === 32 && !this.isGameover) {
+                        if (!this.isPaused) this.pause()
+                        else if (this.isPaused) this.unpause()
                     }
-                }
+                    else if (key === 8) this.word.pop();
+                    else if (key === 13) {
+                        if (this.onSplash) {
+                            this.onSplash = false
+                        } else {
+                            this.handleSubmit()
+                            this.word = [];
+                        }
+                    }
             }
         }
 
@@ -392,27 +419,27 @@ class Game {
 
     gameover() {
         this.onGameover = true
-        window.highScores = fetch('http://localhost:3001/highscore', {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ a: 1, b: 'Textual content' })
-        }).then(res=>console.log(res))
+        // window.highScores = fetch('http://localhost:3001/highscore', {
+        //     method: 'POST',
+        //     headers: {
+        //         'Accept': 'application/json',
+        //         'Content-Type': 'application/json'
+        //     },
+        //     body: JSON.stringify({ a: 1, b: 'Textual content' })
+        // }).then(res=>console.log(res))
         this.animateGameover()
        
-        fetch('http://localhost:3001/highscore', {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ a: 1, b: 'Textual content' })
-        });
+        // fetch('http://localhost:3001/highscore', {
+        //     method: 'POST',
+        //     headers: {
+        //         'Accept': 'application/json',
+        //         'Content-Type': 'application/json'
+        //     },
+        //     body: JSON.stringify({ a: 1, b: 'Textual content' })
+        // });
 
 
-        cancelAnimationFrame(this.request)
+        // cancelAnimationFrame(this.request)
 
         this._detachListeners()
 

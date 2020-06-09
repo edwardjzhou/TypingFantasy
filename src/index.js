@@ -21,11 +21,14 @@
 
 
 //https://ezgif.com/gif-to-sprite CONVERT walking gif into a spritesheet
-const qs = document.querySelector.bind(document)
-
+var qs = document.querySelector.bind(document)
+// console.log(`this happens before body scripts`)
+// console.log(qs)
 import Game from './game';
 
 document.addEventListener('DOMContentLoaded', () => {
+    // console.log(`index.js execution`)
+    
 
     window.game = new Game() // window for testing
 
@@ -41,7 +44,7 @@ document.addEventListener('DOMContentLoaded', () => {
     cheatTooltip.style.display =`none`
     // end cheats
 
-    // ill make this an event listener too
+    // ill make this an event listener too. this might be overstepping the annoyance
     Notification.requestPermission()
     setTimeout( () => { 
         if (Notification.permission === "granted") new Notification("You've played for 5 minutes!")

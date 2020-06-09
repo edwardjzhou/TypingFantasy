@@ -117,10 +117,29 @@ app.post(`/highscore`, (req,res) => {
     let data = JSON.parse(fs.readFileSync(`./src/highscores.json`))
     // req.body = {123:"Pro"}
     // data[`highScores`] = [[5,"Edward"],[1,"John"]]
-    newHighScores = [...data[`highScores`], ] 
+    const newHighScores = [...data[`highScores`], ] 
+    const sortedNewHighScores = newHighScores.sort( () => {} )
     fs.writeFileSync(`./src/highscores.json`, JSON.stringify(data))
-
+    console.log(req.body)
 })
+
+function handleScore (score) {
+    const data = JSON.parse(fs.readFileSync(`./src/highscores.json`))
+    console.log(data[`highScores`])
+    if (data[`highScores`].length < 10 ) return true
+
+}
+// pseudocode for POST route:
+// someone posts us a new score
+// check if its a new high score
+// if its a new high score
+//      we 1. update the high score and 2. send it to him 3. send him news its new high score
+// else 
+//      jsut reutrn current high scores and news its not new high
+
+//or do we check if his score warrants it in the first place FIRST then get his info only AFTER that so eh doesnt waste time entering name/score?
+
+
 
 //    fetch('http://localhost:3001/highscore', {
 //             method: 'POST',

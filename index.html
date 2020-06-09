@@ -7,9 +7,7 @@
         <meta name="description" content="TypingFantasy is a fun typing game made with ES6 Javascript and HTML5 Canvas">
         <title>Typing Fantasy</title>
         <link rel="icon" type="image/png" href="/src/Blue_Imp.png">
-          
-        <script src="./dist/main.js" defer>
-        </script>
+        <script src="./dist/main.js" defer></script>
         <style>
             img{
                 display: none;
@@ -127,7 +125,6 @@
                     align-items: center;
                     justify-content: center;
                 }
-
             }
             
         </style>
@@ -147,14 +144,10 @@
         <img src="/src/squarereticle.png" id="squarereticle">
         <img src="/src/cursor.png" id="cursor">
 
-
-    
     </head>
 
     <body>
         
-    
-
         <h1 id="Title">
             <ruby>
                 <rb>TYPING FANTASY</rb>
@@ -168,39 +161,55 @@
             <!-- to be able to type on a smartphone's onscreen keyboard but not autozoom the input from it being 16px-->
         <div id="phone-input" style="font-size:17px;"
             onClick="(function(){document.querySelector(`#phone-keyboard`).focus();})();">
-                <input type='text' id='phone-keyboard'>
-        ↵Keyboard</div>
+                <input type='text' id='phone-keyboard'>↵Keyboard
+        </div>
 
         <div id="instructions">Instructions: 
             <br>1. Type the word above the monster's head to attack it!
             <br>2. Press space to pause/unpause. 
 
             <script>
-                function showCheats(ele) {
-                    ele.style.display = `block`
-                    ele
+                function showCheats(tooltip) {
+                    const poppedTooltipStyle = {
+                        display: `block`,
+                        position: `relative`,
+                    }
+                    
+                    const tooltipStyle = {
+                        position: `relative`,
+                        display: `inline-block`,
+                        borderBottom: `1px dotted`
+                    }
+
+                    let poppedTooltip = tooltip.children[0]
+                    poppedTooltip.style = poppedTooltipStyle
+                    
+                    tooltip.style = tooltipStyle
+
+
                 }
                 function hideCheats(ele) {
-                    ele.style.display = `none`
+                    // console.log(ele.children)
+                    ele.children[0].style.display = `none`
                 } 
                 // document.querySelector(".content a:nth-child(2)")
             </script>
 
-            <p onmouseover="showCheats(this)" onmouseout="hideCheats(this)">3. Activate cheats if you're so inclined! </p>
+            <p onmouseover="showCheats(this)" onmouseout="hideCheats(this)">
+                3. Activate cheats if you're so inclined!
+                <span>
+                    Hover over my Email to 2x the monster spawn rate
+                    <br>Click my Linkedin link to halve the monster spawn rate
+                    <br>Type my phone number without hyphens to activate infinite health
+                </span>
+            </p>
             
 
-            <span>
-                Hover over my Email to 2x the monster spawn rate
-                <br>Click my Linkedin link to halve the monster spawn rate
-                <br>Type my phone number without hyphens to activate infinite health
-            </span> 
-
-
-            <br>
-            <audio controls id="myAudio" preload="auto" width="10px">
+            <audio controls id="myAudio" preload="auto">
                 <source src="/src/TechnodeChocobo.mp3" type="audio/mpeg">
                 Your browser does not support the audio element.
             </audio>
+
         </div>
 
         <div id="contact" style="font-size:3rem; position:absolute; bottom: 2px; left:50%; transform: translate(-50%);">
@@ -212,8 +221,67 @@
         </div>
 
 
+        <!-- <input type="file" accept=".csv"> maybe accept csv or arrays or something just set window.game.dictionary=[array of ur choosing] set with my js</input>
+        <button primary value="z">asdf</button> -->
+
+        <!-- use 9007199254740997n instead of inf if users viewport is 5000 res or somethign funny-->
+        <div title="High Score Table" id="highscore"> 
+            <h1> High Score Table </h1>
+            <script>
+
+                const ensureSorted = (scores) => {
+                    return scores.sort( (a, b) => b[0] - a[0])
+                }
+
+                const createScoreTable = function (scores) {
+                    scores = ensureSorted(scores)
+                    const textNode = document.createTextNode.bind(document)
+                    const lineBreak = () => document.createElement(`br`)
+                    const table = document.querySelector(`#highscore`)
+
+                    for (const [index, [score, name]] of Object.entries(scores) ) {
+                        table.appendChild(
+                            textNode(`${name} scored ${score}`)
+                        )
+                        table.appendChild(lineBreak())
+                    }
+                }; // interesting; there has to be a  ; here because of the IIFE below
+                // it would have been like createScoreTable(async func...)()
+
+
+                // console.log(`above async`);
+                (async function fetchScores(){
+                    // console.log(`inside async iife fetch func`) // happens first
+                    let data = { "highScores": [[123, "Edward"], [50, "John"], [30, "Crono"], [25, "Scala"], [15, "Robo"]] }
+                    try {
+                        // console.log(`inside try`) //happens second
+                        data = await fetch(`./highscore`).then(console.log(`not a cb`)).then(res=>res.json()) //final return in then cb is the returned value   res => res.json() 
+                        // my udnerstanding:
+                        // the second we hit a fetch call that fetch goes to the webAPI for XHR off main call stack
+                        // (ALTHOUGH non cb's inside then get run sync and are skipped over in turns of its return)
+                        // AWAIT freezes execution inside this async func fetchscores. and main moves onto next thing outside of this async func etc until 
+                        // after a while, main is clear entirely then all the cbs in thens fire; then the value from teh last then cb's return is returned and asigned to data
+                        
+                        // console.log(`after data`, data) //happens fourth w data as array
+                        // promise.allsettled(array of promises) this replaces i think arrayofpromises.map
+                    } catch (err) {
+                        console.log(err)
+                    } finally {
+                        // console.log(`inside finally`) //happens fifth (last)
+                        createScoreTable(data)
+                    }
+                })();
+                // console.log(`right outside async iife fetch func`) //happens third
+                // var hi = () => {console.log(`hi`)}
+                // hi()
+            </script> 
+        </div>
 
 
     </body>
 </html>
 
+<!-- <script async defer>
+    console.log(`this happens before index.js top goes`)
+    console.log(qs)
+</script> -->
