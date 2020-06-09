@@ -3,31 +3,6 @@ import Crono from './crono';
 import Trie from './trie';
 
 
-
-// // if (this.gameMode === `english`) {
-// import(/* webpackChunkName: "./dictionaryEnglish" */ './dictionaryEnglish').then(({ englishDictionary }) => {
-//     this.dictionary = englishDictionary
-//     console.log(this.dictionary)
-//     this.gameLoop();
-
-// }).catch((err) => {
-//     console.log(err)
-// })
-// // } else if (this.gameMode === `chinese`) {
-// import(/* webpackChunkName: "./dictionaryChinese" */ './dictionaryChinese').then(({ chineseDictionary }) => {
-//     this.dictionary = chineseDictionary
-
-//     console.log(this.dictionary)
-
-//     this.gameLoop();
-
-// }).catch((err) => {
-//     console.log(err)
-// })
-//                 // }
-
-// on collision settimeout 
-
 // TBD 1. Add a monster Try data strcuture to highlight in red possible targets as a sort of demo of tries and like a targeting system to warn a user he
 // messed up in typing a monsters word DONE
 // 2. add chinese input into they key-area
@@ -43,7 +18,7 @@ import Trie from './trie';
 //BUGS TBD: 
 // 1.  time needs to stop (timeElapsed ) when game is paused so wpm doesnt go to 0 and the next one enemy doesnt instaspawn after pause
 // 2. need to fix settimeouts on collision/damage taking and animating it
-const qs = document.querySelector
+const qs = document.querySelector.bind(globalThis.document)
 
 class Game {
     constructor() {
@@ -192,6 +167,11 @@ class Game {
     }
  
     drawWPM() { 
+        if (this.isPaused && !this.timeOfPauseStart) this.timeOfPauseStart = Date.now()
+        if (!this.isPaused && this.timeOfPauseStart) {
+            this.then = this.then + (Date.now() - this.timeOfPauseStart)
+            this.timeOfPauseStart = null
+        }
         if (this.then === undefined) {
             this.then = Date.now();
         }
@@ -201,7 +181,7 @@ class Game {
         this.wpm = parseInt(this.destroyedCount / (this.time / 60)) || 0; //0 to get rid of NaN
         this.ctx.fillStyle = "blue";
         this.ctx.font = `bold ${this.fontSize}px ChronoType`;
-        this.ctx.fillText('Time: ' + this.time + '   WPM: ' + this.wpm, this.canvas.width - 600, (this.canvas.height));
+        this.ctx.fillText('Time: ' + this.time + '  WPM: ' + this.wpm, this.canvas.width - 600, (this.canvas.height));
     }
 
     drawHeart() {
@@ -420,16 +400,45 @@ class Game {
         })
     }
 
-    gameover() {
+    createHighscoreDialogBox() {
+
+    }
+
+     gameover() {
         this.onGameover = true
-        // window.highScores = fetch('http://localhost:3001/highscore', {
-        //     method: 'POST',
-        //     headers: {
-        //         'Accept': 'application/json',
-        //         'Content-Type': 'application/json'
-        //     },
-        //     body: JSON.stringify({ a: 1, b: 'Textual content' })
-        // }).then(res=>console.log(res))
+        
+        fetch('./newhighscore', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify([ this.destroyedCount, 'irrelevant!' ])
+        }).then(response => response.json() ).then( resolved => {
+            if (resolved === true) {
+                this.createHighscoreDialogBox()
+                // console.log(resolved)//resolved === false
+                // console.log(this) // window.game
+            }
+        }) 
+            // console.log(window.WARRANTNEWHIGHSCORE)
+    
+
+         
+
+        
+        fetch('./highscore', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify([ 654, 'test1' ])
+        }).then(res => {
+            console.log(res.json())
+            return window.highScoresNEW = res.json()
+        })
+
         this.animateGameover()
        
         // fetch('http://localhost:3001/highscore', {
@@ -467,6 +476,7 @@ class Game {
 
     pause() {
         this.isPaused = true 
+        this.drawWPM() // to ensure we get that one snapshot of PAUSE TIME so that drawWPM isnt messed up by pause
         this.ctx.font = `bold 50px ChronoType`;
         this.ctx.fillStyle = "red";
         this.ctx.fillText('PRESS SPACEBAR TO UNPAUSE', this.canvas.width * .2, this.canvas.height * .5);

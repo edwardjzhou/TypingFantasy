@@ -38,10 +38,10 @@ document.addEventListener('DOMContentLoaded', () => {
     let linkedin = qs("a[href='https://www.linkedin.com/in/edzhou/']");
     linkedin.addEventListener(`click`, () => {
         if (!window.game.onSplash) window.game.player.hp = Infinity
-    })
+    }, false)
     
-    let cheatTooltip = qs(`span`)
-    cheatTooltip.style.display =`none`
+    // let cheatTooltip = qs(`span`)
+    // cheatTooltip.style.display =`none`
     // end cheats
 
     // ill make this an event listener too. this might be overstepping the annoyance

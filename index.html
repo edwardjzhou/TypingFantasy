@@ -8,6 +8,15 @@
         <title>Typing Fantasy</title>
         <link rel="icon" type="image/png" href="/src/Blue_Imp.png">
         <script src="./dist/main.js" defer></script>
+
+        <meta property="og:url" content="http://cryptic-escarpment-31838.herokuapp.com/" />
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content="Typing Fantasy" />
+        <meta property="og:description" content="TypingFantasy is a fun typing game made with ES6 Javascript and HTML5 Canvas" />
+        <meta property="og:image" content="http://cryptic-escarpment-31838.herokuapp.com/Blue_Imp.png" />
+
+
+
         <style>
             img{
                 display: none;
@@ -169,36 +178,46 @@
             <br>2. Press space to pause/unpause. 
 
             <script>
-                function showCheats(tooltip) {
-                    const poppedTooltipStyle = {
-                        display: `block`,
-                        position: `relative`,
-                    }
-                    
-                    const tooltipStyle = {
+
+                    const tooltip = {
                         position: `relative`,
                         display: `inline-block`,
-                        borderBottom: `1px dotted`
+                        border-bottom: `1px dotted black`
+                    }
+                    const tooltiptext = {
+                        ...tooltip,
+                        visibility: `hidden`,
+                        width: `120px`,
+                        background-color: `black`,
+                        color: `#fff`,
+                        text-align: `center`,
+                        border-radius: `6px`,
+                        padding: `5px 0`,
+
+                        /* Position the tooltip */
+                        position: `absolute`,
+                        z-index: `1`,
                     }
 
+                function showCheats(tooltip) {
                     let poppedTooltip = tooltip.children[0]
-                    poppedTooltip.style = poppedTooltipStyle
+                    poppedTooltip.style = tooltiptext
                     
                     tooltip.style = tooltipStyle
 
 
                 }
-                function hideCheats(tooltip) {
-                    // console.log(ele.children)
-                    tooltip.children[0].style.display = `none`
-                    document.querySelector(tooltip)
-                } 
+                // function hideCheats(tooltip) {
+                //     // console.log(ele.children)
+                //     tooltip.children[0].style.visibility = `hidden`
+                //     document.querySelector(tooltip)
+                // } 
                 // document.querySelector(".content a:nth-child(2)")
             </script>
 
-            <p onmouseover="showCheats(this)" onmouseout="hideCheats(this)">
+            <p onmouseover="showCheats(this)" onmouseout="hideCheats(this)" style="position:relative; display: inline-block;">
                 3. Activate cheats if you're so inclined!
-                <span>
+                <span style="position:absolute; width:120px visibility:hidden;">
                     Hover over my Email to 2x the monster spawn rate
                     <br>Click my Linkedin link to halve the monster spawn rate
                     <br>Type my phone number without hyphens to activate infinite health
@@ -240,7 +259,9 @@
                 }
 
                 const createScoreTable = function (scores) {
-                    scores = ensureSorted(scores).noInconsistency ? scores : ensureSorted(scores).sorted
+                    const { noInconsistency, sorted } = ensureSorted(scores)
+                    if ( !noInconsistency) throw 'high scores broken'
+                    // scores = ensureSorted(scores).noInconsistency ? scores : ensureSorted(scores).sorted
                     const textNode = document.createTextNode.bind(document)
                     const lineBreak = () => document.createElement(`br`)
                     const table = document.querySelector(`#highscore`)
@@ -282,7 +303,16 @@
                 // hi()
             </script> 
         </div>
-
+        <!-- Load Facebook SDK for JavaScript -->
+        <div id="fb-root"></div>
+        <script async defer crossorigin="anonymous"
+            src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v3.0"></script>
+        
+        <!-- Your like button code -->
+        <div class="fb-like" data-href="http://cryptic-escarpment-31838.herokuapp.com/" 
+        data-colorscheme="dark"
+        data-layout="standard" data-action="like" data-share="true">
+        </div>
 
     </body>
 </html>

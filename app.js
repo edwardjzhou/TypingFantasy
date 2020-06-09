@@ -182,8 +182,8 @@ new CronJob('0 * * * *', function () { //top o' the hour 0 * * * *
 
 //    if (readCurrentHighScores().highScores?.length) return false 
 function shouldHighScoresUpdate (tentativeScore) {
-    // const data = readCurrentHighScores().highScores
-    const data =  { highScores } = readCurrentHighScores()
+    const data = readCurrentHighScores().highScores
+    // const data =  { highScores } = readCurrentHighScores()
     //data =  [[123, "Edward"], [50, "John"], [30, "Crono"], [25, "Scala"], [15, "Robo"]]
     const comparator = ([score, _]) => tentativeScore > score
     // highscores arent full yet (10 max scores) || if its higher than the lowest score
