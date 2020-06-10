@@ -5,9 +5,9 @@ import Trie from './trie';
 
 // TBD 1. Add a monster Try data strcuture to highlight in red possible targets as a sort of demo of tries and like a targeting system to warn a user he
 // messed up in typing a monsters word DONE
-// 2. add chinese input into they key-area
-// 3. add splat sounds for kicks
-// 4. finish collision detection and taking damage NOW
+// 2. add chinese input into they key-area HALFDONE
+// 3. add splat sounds for kicks TBD
+// 4. finish collision detection and taking damage NOW glitchy
 // 5. implement a high score table with a notepad file or firebase or something with express MIDWAY
 // 6.animate the splash screen with words flying in / also maybe fade to black in the 0-2000 ms transition
 // 7. add in upload your own words
@@ -16,12 +16,15 @@ import Trie from './trie';
 // this[HP] = 100; Reflect.ownKeys() or Object.getOwnPropertySymbols() can detect
 // 10. https://developers.redhat.com/blog/2017/01/17/data-encapsulation-vs-immutability-in-javascript/ make a factory for enemys? for like a boss rather than inheritanc
 //BUGS TBD: 
-// 1.  time needs to stop (timeElapsed ) when game is paused so wpm doesnt go to 0 and the next one enemy doesnt instaspawn after pause
-// 2. need to fix settimeouts on collision/damage taking and animating it
-// const qs = document.querySelector.bind(document)
-//globalThis.document
+// 1.  time needs to stop (timeElapsed ) when game is paused so wpm doesnt go to 0 and the next one enemy doesnt instaspawn after pause FIXED
+// 2. need to fix settimeouts on collision/damage taking and animating it TBD
+
 
 const EventEmitter = require('events'); // CAN this be done HERE?
+/* 
+ASAP: finish highscores inside gameover, finish up chinsee input and value changing 
+*/
+
 class Game {
     constructor() {
         this._getResources();
@@ -51,6 +54,8 @@ class Game {
                 this.dictionary = englishDictionary
                 this.word = []
                 this.gameLoop();
+                return
+
             }).catch((err) => {
                 alert(err)
             })
@@ -59,10 +64,16 @@ class Game {
                 this.dictionary = chineseDictionary
                 this.word = []
                 this.gameLoop();
+                return
+
             }).catch((err) => {
                 alert(err)
             })
         }
+    }
+
+    remakeGame (){
+        //basiclaly rerun constuctor here
     }
 
     get hasGameStarted(){
@@ -234,6 +245,7 @@ class Game {
         if (this.player.hp <= 0) {
             this.isGameover = true
             this.gameover()
+            return
         }
 
         // console.log(time)
@@ -275,6 +287,7 @@ class Game {
         this.enemies = [];
         this.player = new Crono(300, 300, this.canvas, this.ctx, this.cronoleftimg, this.cronorightimg, this.cronoupimg, this.cronodownimg, this.cronothrust, this.keys, this.enemies);
         this.animate();
+        return
     }
 
     spawnEnemy() {
@@ -387,6 +400,7 @@ class Game {
                     //prevent arrow keys from messsing with your viewport/scrolling 
 
                     preventDefaultViewportJiggling(e)
+                    this.chineseInput.focus()
 
                     if (key >= 65 && key <= 90) this.word.push(String.fromCharCode(key).toLowerCase())
                     else if (key === 32 && !this.isGameover) {
@@ -427,83 +441,64 @@ class Game {
         this.ctx.font = `bold 60px ChronoType`;
         this.ctx.fillStyle = "red";
         this.ctx.fillText('GAMEOVER', this.canvas.width * .4, this.canvas.height * .5);
-        requestAnimationFrame( (timeELapsed) => {
+        requestAnimationFrame( (timeElapsed) => {
             if (this.onGameover === true) this.animateGameover(timeElapsed);
         })
     }
 
-    createHighscoreDialogBox() {
-
+    async createHighscoreDialogBox() {
+        const username = prompt(`Please enter your moniker! You destroyed ${this.destroyedCount || 0} monsters!`, "Name");
+        await fetch('./highscore', {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify([ this.destroyedCount || 0, username ])
+                }).then(res => {
+                    console.log(res.json())
+                    return res.json()
+                })
     }
 
-     gameover() {
+     async gameover() {
         this.onGameover = true
-        
-        fetch('./newhighscore', {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify([ this.destroyedCount, 'irrelevant!' ])
-        }).then(response => response.json() ).then( resolved => {
-            if (resolved === true) {
-                this.createHighscoreDialogBox()
-                // console.log(resolved)//resolved === false
-                // console.log(this) // window.game
-            }
-        }) 
-            // console.log(window.WARRANTNEWHIGHSCORE)
-    
-
-         
-
-        
-        fetch('./highscore', {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify([ 654, 'test1' ])
-        }).then(res => {
-            console.log(res.json())
-            return window.highScoresNEW = res.json()
-        })
-
-        this.animateGameover()
-       
-        // fetch('http://localhost:3001/highscore', {
-        //     method: 'POST',
-        //     headers: {
-        //         'Accept': 'application/json',
-        //         'Content-Type': 'application/json'
-        //     },
-        //     body: JSON.stringify({ a: 1, b: 'Textual content' })
-        // });
-
-
-        // cancelAnimationFrame(this.request)
-
         this._detachListeners()
 
-        this.setTimeout( ()=> {
-            window.game = null
+        await fetch('./newhighscore', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify([ this.destroyedCount || 0, 'irrelevant!' ])
+        }).then(response => response.json() ).then( warrantsNewHighScore => {
+            if (warrantsNewHighScore === true) {
+                this.createHighscoreDialogBox()
+    
+            }
+        })     
+    
+        // cancelAnimationFrame(this.request)
+
+        setTimeout( ()=> {
+            this.onGameover = false
+            this.canvas.remove()
+            let current = window.game
+            current = {}
+            console.log(window.game)
+            console.log(`removed old canv`)
+            document.body.insertBefore(this.canvas, document.querySelector(`#instructions`) )
+            console.log(`inserted new canv`)
+
             window.game = new Game()
-        },5000)
 
-        // animate GAMEOVER in text
+        },3000)
+        
+        this.animateGameover()
 
-        // fetch('./highscore', {
-        //     method: 'post',
-        //     body: "hi"
-        // })
 
-        // var tenure = prompt("Please enter preferred tenure in years", "15");
-
-        // if (tenure != null) {
-        //     alert("You have entered " + tenure + " years");
-        // }
+  
     }
 
     pause() {
@@ -522,12 +517,12 @@ class Game {
     }
     
     handleSubmit() {
-        if (this.player && this.word.join(``) === `2814019473`) this.player.hp = Infinity
+        if (this.player && this.word.join(``) === `edward`) this.player.hp = Infinity
         for (let i = 0; i < this.enemies.length; i++) {
             if (this.enemies[i].word === this.word.join(``) && this.enemies[i].alive === true) {
                 this.player.animateAttack(this.enemies[i].x, this.enemies[i].y - 50, this.cronothrust)
                 this.enemies[i].alive = false;
-                this.destroyedCount >= 0 ? this.destroyedCount++ : this.destroyedCount = 0
+                this.destroyedCount >= 1 ? this.destroyedCount++ : this.destroyedCount = 1
             }
         }
     }

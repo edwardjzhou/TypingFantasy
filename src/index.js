@@ -28,14 +28,20 @@ document.addEventListener('DOMContentLoaded', () => {
     
 
     window.game = new Game() // window for testing
+    const linkedin = qs("a[href='https://www.linkedin.com/in/edzhou/']");
+    const github = qs("a[href='https://github.com/featurerich1/']");
+    const email = qs("a[href^='mailto']");
 
-
- 
-    // vanilla javascript to manipulate html events to activate cheats!
-    let linkedin = qs("a[href='https://www.linkedin.com/in/edzhou/']");
+    
     linkedin.addEventListener(`click`, () => {
-        if (!window.game.onSplash) window.game.player.hp = Infinity
+        if (!window.game.onSplash) window.game.rate = 2 * window.game.rate
+
     }, false)
+
+    email.addEventListener(`mouseenter`, () => {
+        if (!window.game.onSplash) window.game.rate = .66 * window.game.rate
+    }, false)
+
     
     // let cheatTooltip = qs(`span`)
     // cheatTooltip.style.display =`none`
