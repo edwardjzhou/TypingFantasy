@@ -18,14 +18,22 @@ import Trie from './trie';
 //BUGS TBD: 
 // 1.  time needs to stop (timeElapsed ) when game is paused so wpm doesnt go to 0 and the next one enemy doesnt instaspawn after pause
 // 2. need to fix settimeouts on collision/damage taking and animating it
-const qs = document.querySelector.bind(globalThis.document)
+// const qs = document.querySelector.bind(document)
+//globalThis.document
 
+const EventEmitter = require('events'); // CAN this be done HERE?
 class Game {
     constructor() {
         this._getResources();
         this._ensureDefaultSettings();
         this._addListeners();
-        this.animateSplash();
+        this.animateSplash(); 
+
+        const event = new EventEmitter();
+
+  
+
+        //animate stops recursively calling itself then 0-2 secs later we start downloading the full chosen lang pack THEN -> gameloop()
         let interval = setInterval(  () => {
             if (!this.onSplash) {
                 clearInterval(interval);
@@ -35,11 +43,13 @@ class Game {
 
     }
 
+   
     dynamicallyLoadLanguageModule() { 
         // this may be all wrong as it seems after the main package is loaded BOTH of these are prefetched... or is the conditional not for prefetch but for  real load?
         if (this.gameMode === `english`) {
             import(/* webpackChunkName: "./dictionaryEnglish", webpackPrefetch: true */ './dictionaryEnglish').then(({ englishDictionary }) => {
                 this.dictionary = englishDictionary
+                this.word = []
                 this.gameLoop();
             }).catch((err) => {
                 alert(err)
@@ -47,6 +57,7 @@ class Game {
         } else if (this.gameMode === `chinese`) {
             import(/* webpackChunkName: "./dictionaryChinese", webpackPrefetch: true */ './dictionaryChinese').then(({ chineseDictionary }) => {
                 this.dictionary = chineseDictionary
+                this.word = []
                 this.gameLoop();
             }).catch((err) => {
                 alert(err)
@@ -185,7 +196,7 @@ class Game {
     }
 
     drawHeart() {
-        //THIS IS THE HEART ANIMATION FOR HP
+        //THIS IS THE HEART ANIMATION FOR HP; add credits 
         this.ctx.beginPath();
         this.ctx.strokeStyle = "#000000";
         this.ctx.strokeWeight = 3;
@@ -258,6 +269,8 @@ class Game {
             this._detachListeners()
             this._addListeners()       
         }
+        // this.moveHighScoreTable();
+
         this.trie = new Trie();
         this.enemies = [];
         this.player = new Crono(300, 300, this.canvas, this.ctx, this.cronoleftimg, this.cronorightimg, this.cronoupimg, this.cronodownimg, this.cronothrust, this.keys, this.enemies);
@@ -337,15 +350,32 @@ class Game {
         } else if (this.gameMode ===`chinese`) {
                 this.chineseInput = document.createElement(`input`)
                 this.chineseInput.setAttribute(`placeholder`,`饱经沧桑`)
-                this.chineseInput.style.height = "40px"
-                this.chineseInput.style.width = "200px"
-                this.chineseInput.style.margin = "5px"
+                this.chineseInput.style.height = "0"
+                this.chineseInput.style.width = "0"
+                this.chineseInput.style.margin = "0"
 
                 this.chineseAdvisoryText = document.createTextNode("Type chinese here");
-                this.linebreak = document.createElement("br");
+                // this.linebreak = document.createElement("br");
+                
+                this.chineseInput.style.position = `absolute`
+                document.body.insertBefore(this.chineseInput, document.body.children[0])
+                this.chineseInput.style.height = "40px"
+                this.chineseInput.style.width = "180px"
+                this.chineseInput.style.margin = "2px"
 
-                this.canvas.insertAdjacentElement(`afterend`, this.chineseInput);
-                this.chineseInput.insertAdjacentElement(`beforebegin`, this.linebreak);
+                // this.canvas.insertAdjacentElement(`afterend`, this.chineseInput);
+                // this.chineseInput.insertAdjacentElement(`beforebegin`, this.linebreak);
+
+                //function here is hoisted to the top of _addListeners to a point before this.chineseinput was born
+                // hence ()=>{}ing it instead of doing function(){}
+                const attachChineseInputToCanvasBottomLeft = (yetToAttach = true) => {
+                    this.chineseInput.style.left = 3 + this.canvas.getBoundingClientRect().x + `px`
+                    this.chineseInput.style.top = this.canvas.getBoundingClientRect().bottom - (this.fontSize ? this.fontSize : 40) + `px`
+                    if (yetToAttach) window.addEventListener('resize', () => attachChineseInputToCanvasBottomLeft(false)) ;
+                }
+                attachChineseInputToCanvasBottomLeft()
+
+                
 
                 this.keydownHandler = (e) => {
                     let key = e.keyCode //should be nubmer
@@ -379,8 +409,10 @@ class Game {
             this.keys[e.keyCode] = false;
         }
 
+      
         document.body.addEventListener("keydown",  this.keydownHandler, true);
         document.body.addEventListener("keyup",  this.keyupHandler, true);
+        
     }
 
     _detachListeners(){
@@ -392,7 +424,7 @@ class Game {
     }
 
     animateGameover() {
-        this.ctx.font = `bold 50px ChronoType`;
+        this.ctx.font = `bold 60px ChronoType`;
         this.ctx.fillStyle = "red";
         this.ctx.fillText('GAMEOVER', this.canvas.width * .4, this.canvas.height * .5);
         requestAnimationFrame( (timeELapsed) => {

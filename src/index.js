@@ -20,14 +20,11 @@
 // 11. maybe huge melee limit break swing but will take a lot of either async/instance variables tracking/animationframes counting
 
 
-//https://ezgif.com/gif-to-sprite CONVERT walking gif into a spritesheet
-var qs = document.querySelector.bind(document)
-// console.log(`this happens before body scripts`)
-// console.log(qs)
+const qs = document.querySelector.bind(globalThis.document)
+
 import Game from './game';
 
 document.addEventListener('DOMContentLoaded', () => {
-    // console.log(`index.js execution`)
     
 
     window.game = new Game() // window for testing

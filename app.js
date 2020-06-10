@@ -81,22 +81,12 @@ app.get('/src/cursor.png', (req, res) => {
     res.sendFile(path.join(__dirname + '/src/cursor.png'))
 });
 
-// app.get('/src/dictionaryEnglish.js', (req, res) => {
-//     res.sendFile(path.join(__dirname + '/src/dictionaryEnglish.js'))
-// });
-
-// app.get('/src/dictionaryChinese.js', (req, res) => {
-//     res.sendFile(path.join(__dirname + '/src/dictionaryChinese.js'))
-// });
-
-// app.get('/0.main.js', (req, res) => {
-//     res.sendFile(path.join(__dirname + '/src/dictionaryChinese.js'))
-// });
-app.get('/dist/dictionaryChinese.bundle.js', (req, res) => {
+// this jsut bugged out duno why
+app.get('/dictionaryChinese.bundle.js', (req, res) => {
     res.sendFile(path.join(__dirname + '/dist/dictionaryChinese.bundle.js'))
 });
 
-app.get('/dist/dictionaryEnglish.bundle.js', (req, res) => {
+app.get('/dictionaryEnglish.bundle.js', (req, res) => {
     res.sendFile(path.join(__dirname + '/dist/dictionaryEnglish.bundle.js'))
 });
 
@@ -120,12 +110,6 @@ app.post(`/highscore`, (req, res) => {
 
     fs.writeFileSync(`./src/highscores.json`, answer)
     sendHighScores(req, res);
-
-
-    // const newHighScores = [...data[`highScores`], ] 
-    // const sortedNewHighScores = newHighScores.sort( () => {} )
-    // fs.writeFileSync(`./src/highscores.json`, JSON.stringify(data))
-    // console.log(req.body)
 })
 
 // this is the user asking if he should be considered for a high score
@@ -163,7 +147,7 @@ var request = require('request');
 
 // keep alive heroku/my django project dynamos with a CRON JOB
 new CronJob('0 * * * *', function () { //top o' the hour 0 * * * *
-    console.log('You will see this message every second w 6stars');
+    // console.log('You will see this message every second w 6stars');
     let res = {};
     request('http://edwardpa.pythonanywhere.com/', function (error, response, body) {
         // console.log('error:', error); 
@@ -172,15 +156,11 @@ new CronJob('0 * * * *', function () { //top o' the hour 0 * * * *
     });
     // request('http://google.com/doodle.png').pipe(fs.createWriteStream('doodle.png'))
 
-    // console.log(__dirname)
-    // const answer = await fetch(`https://edwardpa.pythonanywhere.com/`).then(res => res)
-    // console.log(answer)
 }, null, true, 'America/Los_Angeles');
 
 
 
 
-//    if (readCurrentHighScores().highScores?.length) return false 
 function shouldHighScoresUpdate (tentativeScore) {
     const data = readCurrentHighScores().highScores
     // const data =  { highScores } = readCurrentHighScores()
@@ -195,34 +175,12 @@ function readCurrentHighScores () {
     return JSON.parse(fs.readFileSync(`./src/highscores.json`))
 }
 
-// error : closures are formed from where the function was WRITTEN not where its invoked 
 function sendHighScores(req, res) {
     const data = readCurrentHighScores()
     console.log(data)
     res.send(data[`highScores`])
 }
 
-// pseudocode for POST route:
-// ALL gameovered users post us their score
-// check if its a new high score; 
-// if its a new high score
-//      we 1. update the high score and 2. send it to him
-// else 
-//      jsut reutrn current high scores and news its not a high score 
-
-//or do we check if his score warrants it in the first place FIRST then get his info only AFTER that so eh doesnt waste time entering name/score?
-
-
-
-//    fetch('http://localhost:3001/highscore', {
-//             method: 'POST',
-//             headers: {
-//                 'Accept': 'application/json',
-//                 'Content-Type': 'application/json'
-//             },
-//             body: JSON.stringify({ a: 1, b: 'Textual content' })
-//     });
-       
 
 
 

@@ -3,7 +3,7 @@ export default class Trie {
         this.trie = {}
     }
 
-    addWord(string) {
+    addWord (string) {
         let current = this.trie
         for (const char of string) {
             if (!current.hasOwnProperty(char)) {
@@ -14,10 +14,10 @@ export default class Trie {
         current[`finished`] = string
     }
 
-    removeWord(string) {
+    removeWord (string) {
     }
 
-    possibilities(substring) {
+    possibilities (substring) {
         const possibilities = []
         if (substring.length === 0) return possibilities //wait until at least 1 letter is typed otherwise possibilities are EVERY word
         let current = this.trie
@@ -26,7 +26,7 @@ export default class Trie {
             current = current[char]
         }        
         dfs(current)
-        function dfs(current) {
+        function dfs (current) {
             for (const key in current) {
                 if (key === `finished`) possibilities.push(current[key])
                 else dfs(current[key])

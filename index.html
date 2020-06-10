@@ -174,57 +174,23 @@
         </div>
 
         <div id="instructions">Instructions: 
-            <br>1. Type the word above the monster's head to attack it!
-            <br>2. Press space to pause/unpause. 
-
-            <script>
-
-                    const tooltip = {
-                        position: `relative`,
-                        display: `inline-block`,
-                        border-bottom: `1px dotted black`
-                    }
-                    const tooltiptext = {
-                        ...tooltip,
-                        visibility: `hidden`,
-                        width: `120px`,
-                        background-color: `black`,
-                        color: `#fff`,
-                        text-align: `center`,
-                        border-radius: `6px`,
-                        padding: `5px 0`,
-
-                        /* Position the tooltip */
-                        position: `absolute`,
-                        z-index: `1`,
-                    }
-
-                function showCheats(tooltip) {
-                    let poppedTooltip = tooltip.children[0]
-                    poppedTooltip.style = tooltiptext
-                    
-                    tooltip.style = tooltipStyle
+            <p>1. Type the word above the monster's head to attack it!</p>
+            <p>2. Press space to pause/unpause. </p>
 
 
-                }
-                // function hideCheats(tooltip) {
-                //     // console.log(ele.children)
-                //     tooltip.children[0].style.visibility = `hidden`
-                //     document.querySelector(tooltip)
-                // } 
-                // document.querySelector(".content a:nth-child(2)")
-            </script>
 
-            <p onmouseover="showCheats(this)" onmouseout="hideCheats(this)" style="position:relative; display: inline-block;">
+            <div id="cheat-tooltip" onmouseover="this.nextElementSibling.style.visibility='visible'" 
+            onmouseout="this.nextElementSibling.style.visibility='hidden'">
                 3. Activate cheats if you're so inclined!
-                <span style="position:absolute; width:120px visibility:hidden;">
-                    Hover over my Email to 2x the monster spawn rate
-                    <br>Click my Linkedin link to halve the monster spawn rate
-                    <br>Type my phone number without hyphens to activate infinite health
-                </span>
-            </p>
-            
+            </div>
 
+            <div id="cheat-tooltiptext">
+                <p>&bull;Hover over my Email to 2x the monster spawn rate</p>
+                <p>&bull;Click my Linkedin link to halve the monster spawn rate</p>
+                <p>&bull;Type my phone number without hyphens to activate infinite health</p>
+            </div>
+
+            <br>
             <audio controls id="myAudio" preload="auto">
                 <source src="/src/TechnodeChocobo.mp3" type="audio/mpeg">
                 Your browser does not support the audio element.
@@ -232,7 +198,7 @@
 
         </div>
 
-        <div id="contact" style="font-size:3rem; position:absolute; bottom: 2px; left:50%; transform: translate(-50%);">
+        <div id="contact" style="font-size:2.5rem; position:absolute; bottom: 2px; left:50%; transform: translate(-50%);">
             <!-- target=_blank is because game progress would be lost otherwise; the phone# is from google -->
                 <a href="https://www.linkedin.com/in/edzhou/" tabindex="-1" target="_blank"> My Linkedin</a>&nbsp;|&nbsp;
                 <a href="https://github.com/featurerich1/" tabindex="-1" target="_blank">My Github</a>&nbsp;|&nbsp;
@@ -246,9 +212,39 @@
 
         <!-- use 9007199254740997n instead of inf if users viewport is 5000 res or somethign funny-->
         <div title="High Score Table" id="highscore"> 
-            <h1 PRIMARY data-hi = "5" bye='123'> High Score Table </h1>
+            <h1 PRIMARY data-hi = "5" bye='123'> High Score Table </h1> 
+            <!-- tbd: I want to test reflectivity of html attrs -->
             <script>
+                // fun w javascript 
+                try {
+                        const tooltipStyle = {
+                            position: `relative`,
+                            display: `inline-block`,
+                        }
 
+                        const tooltiptextStyle = {
+                            ...tooltipStyle,
+                            visibility: `hidden`,
+                            width: `120px`,
+                            backgroundColor: `black`,
+                            color: `#fff`,
+                            textAlign: `center`,
+                            borderRadius: `6px`,
+                            padding: `5px 0`,
+
+                            /* Position the tooltip */
+                            position: `absolute`,
+                            zIndex: `1`,
+                        }
+
+                        Object.assign(document.querySelector(`#cheat-tooltiptext`).style, tooltiptextStyle)
+                        Object.assign(document.querySelector(`#cheat-tooltip`).style, tooltipStyle)
+
+                    } catch (err) {
+                        alert(err)
+                    }
+
+                                    
                 const ensureSorted = (scores) => {
                     const sorted = scores.sort( (a, b) => b[0] - a[0] )
 
@@ -257,11 +253,10 @@
                         'noInconsistency': ( JSON.stringify(sorted) === JSON.stringify(scores) )
                     })
                 }
-
+                //aliasing while object destrucing: as for import and : for const {} expression; how about params? DONT THINK can alias in params only set defArg
                 const createScoreTable = function (scores) {
-                    const { noInconsistency, sorted } = ensureSorted(scores)
-                    if ( !noInconsistency) throw 'high scores broken'
-                    // scores = ensureSorted(scores).noInconsistency ? scores : ensureSorted(scores).sorted
+                    const { noInconsistency: noInconsistency, sorted } = ensureSorted(scores)
+                    if ( !noInconsistency) throw `high scores' broken`
                     const textNode = document.createTextNode.bind(document)
                     const lineBreak = () => document.createElement(`br`)
                     const table = document.querySelector(`#highscore`)
@@ -272,37 +267,36 @@
                         )
                         table.appendChild(lineBreak())
                     }
-                }; // interesting; there has to be a  ; here because of the IIFE below
-                // it would have been like createScoreTable(async func...)()
+                    table.style.position = `absolute`
+                    attachTableToCanvasRight(table)
+                }; 
 
+                const attachTableToCanvasRight = (table, yetToAttach = true) => {
+                    const canvas = document.getElementById(`canvas`)
+                    table.style.left =  10 + canvas.getBoundingClientRect().right+`px`
+                    table.style.top = canvas.getBoundingClientRect().y+`px`
+                    if (yetToAttach) window.addEventListener('resize', () => attachTableToCanvasRight(table, false) );
+                }
 
-                // console.log(`above async`);
                 (async function fetchScores(){
-                    // console.log(`inside async iife fetch func`) // happens first
-                    let data = { "highScores": [[123, "Edward"], [50, "John"], [30, "Crono"], [25, "Scala"], [15, "Robo"]] }
+                    let data
+                    const defaultData = Object.freeze({ "highScores": [[123, "Edward"], [50, "John"], [30, "Crono"], [25, "Scala"], [15, "Robo"]] })
                     try {
-                        // console.log(`inside try`) //happens second
-                        data = await fetch(`./highscore`).then(console.log(`not a cb`)).then(res => res.json()) //final return in then cb is the returned value   res => res.json() 
-                        // my udnerstanding:
-                        // the second we hit a fetch call that fetch goes to the webAPI for XHR off main call stack
-                        // (ALTHOUGH non cb's inside then get run sync and are skipped over in turns of its return)
-                        // AWAIT freezes execution inside this async func fetchscores. and main moves onto next thing outside of this async func etc until 
-                        // after a while, main is clear entirely then all the cbs in thens fire; then the value from teh last then cb's return is returned and asigned to data
-                        
-                        // console.log(`after data`, data) //happens fourth w data as array
-                        // promise.allsettled(array of promises) this replaces i think arrayofpromises.map
+                        data = await fetch(`./highscore`).then(res => res.json()) 
                     } catch (err) {
                         console.log(err)
+                        data = defaultData
                     } finally {
-                        // console.log(`inside finally`) //happens fifth (last)
                         createScoreTable(data)
                     }
                 })();
-                // console.log(`right outside async iife fetch func`) //happens third
-                // var hi = () => {console.log(`hi`)}
-                // hi()
+             
             </script> 
         </div>
+
+
+
+
         <!-- Load Facebook SDK for JavaScript -->
         <div id="fb-root"></div>
         <script async defer crossorigin="anonymous"
@@ -316,8 +310,3 @@
 
     </body>
 </html>
-
-<!-- <script async defer>
-    console.log(`this happens before index.js top goes`)
-    console.log(qs)
-</script> -->

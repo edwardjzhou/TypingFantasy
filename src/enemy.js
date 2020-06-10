@@ -21,20 +21,10 @@ class Enemy extends Actor {
         this.squarereticle = squarereticle;
         this.dictionary = dictionary
 
-        // this.dictionary 
-        // if (window.mode === `chinese`) {
-        //     import('./dictionaryEnglish.js')
-        //         .then((dict) => {
-        //             this.dictionary= dict
-        //         });
-        // }
+      
 
         this.word = this.dictionary[Math.floor(Math.random() * this.dictionary.length)];
-        // if (this.gameMode===`english`)
-        // this.word = dictionary[Math.floor(Math.random() * dictionary.length)];
-
-        // else if (this.gameMode===`chinese`)
-        // this.word = dictionary2[Math.floor(Math.random() * dictionary2.length)];
+ 
         
 
     }
