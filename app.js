@@ -6,7 +6,7 @@ var bodyParser = require('body-parser')
 app.use(bodyParser.json())
 
 
-
+// STATIC files: this may be somewhat not DRY but I didnt want to expose any files unnecessarily while stil developing -- will refactor
 app.get('/', function (req, res) {
     res.sendFile(path.join(__dirname + '/index.html'));
 });
@@ -80,8 +80,9 @@ app.get('/src/squarereticle.png', (req, res) => {
 app.get('/src/cursor.png', (req, res) => {
     res.sendFile(path.join(__dirname + '/src/cursor.png'))
 });
+//end static files
 
-// this jsut bugged out duno why
+//  these are the split js bundles
 app.get('/dictionaryChinese.bundle.js', (req, res) => {
     res.sendFile(path.join(__dirname + '/dist/dictionaryChinese.bundle.js'))
 });
@@ -89,19 +90,18 @@ app.get('/dictionaryChinese.bundle.js', (req, res) => {
 app.get('/dictionaryEnglish.bundle.js', (req, res) => {
     res.sendFile(path.join(__dirname + '/dist/dictionaryEnglish.bundle.js'))
 });
-
-
+//end split budnles
 
 // 1. read the json {1: [name, score],... 5:}
 
-//can we FS the chinese string w downloadble definitions as well as post high scores to a notepad file?    
 const fs = require('fs');
 
+// this route sends out the current high scores
 app.get('/highscore', (req, res) => {
     sendHighScores(req, res);
 })
 
-//this makes the new high score 
+//this route makes the new high score and responds to requester with the new 10 high scores
 app.post(`/highscore`, (req, res) => {
     const [score, name] = req.body
     const answer = JSON.stringify({ 
@@ -130,7 +130,7 @@ app.post(`/newhighscore`, (req, res) => {
 
 function calcHighScores ( [score, name = "Unnamed"] ) {
     const data = readCurrentHighScores().highScores
-    console.log(`1`,data)
+    // console.log(`what i was given`,data)
     data.push([score, name])
     data.sort( (a,b) => {
         return b[0] - a[0]
@@ -138,40 +138,19 @@ function calcHighScores ( [score, name = "Unnamed"] ) {
     console.log(data)
     return data.slice(0,10)
 }
-//{"highScores":{"highScores":[[123,"Edward"],[50,"John"],[30,"Crono"],[25,"Scala"], [15,"Robo"]]}
+// HIGHSCORES.json IS: {"highScores":{"highScores":[[123,"Edward"],[50,"John"],[30,"Crono"],[25,"Scala"], [15,"Robo"]]}
 
-
-// cron https://github.com/ncb000gt/node-cron
-var CronJob = require('cron').CronJob;
-var request = require('request');
-
-// keep alive heroku/my django project dynamos with a CRON JOB
-new CronJob('0 * * * *', function () { //top o' the hour 0 * * * *
-    // console.log('You will see this message every second w 6stars');
-    let res = {};
-    request('http://edwardpa.pythonanywhere.com/', function (error, response, body) {
-        // console.log('error:', error); 
-        console.log('statusCode:', response && response.statusCode); 
-        console.log(body)
-    });
-    // request('http://google.com/doodle.png').pipe(fs.createWriteStream('doodle.png'))
-
-}, null, true, 'America/Los_Angeles');
-
-
-
-
-function shouldHighScoresUpdate (tentativeScore) {
+function shouldHighScoresUpdate(tentativeScore) {
     const data = readCurrentHighScores().highScores
     // const data =  { highScores } = readCurrentHighScores()
     //data =  [[123, "Edward"], [50, "John"], [30, "Crono"], [25, "Scala"], [15, "Robo"]]
     const comparator = ([score, _]) => tentativeScore > score
     // highscores arent full yet (10 max scores) || if its higher than the lowest score
-    if ( data.length < 10 || data.some(comparator) ) return true
+    if (data.length < 10 || data.some(comparator)) return true
     else return false
 }
 
-function readCurrentHighScores () {
+function readCurrentHighScores() {
     return JSON.parse(fs.readFileSync(`./src/highscores.json`))
 }
 
@@ -181,7 +160,21 @@ function sendHighScores(req, res) {
     res.send(data[`highScores`])
 }
 
+// cron https://github.com/ncb000gt/node-cron
+var CronJob = require('cron').CronJob;
+var request = require('request');
 
+// keep alive heroku/my django project dynamos with a CRON JOB
+new CronJob('0 * * * *', function () { //top o' the hour 0 * * * *
+    // console.log('You will see this message every second w 6stars');
+    request('http://edwardpa.pythonanywhere.com/', function (error, response, body) {
+        // console.log('error:', error); 
+        console.log('statusCode:', response && response.statusCode); 
+        console.log(body)
+    });
+    // request('http://google.com/doodle.png').pipe(fs.createWriteStream('doodle.png'))
+
+}, null, true, 'America/Los_Angeles');
 
 
 

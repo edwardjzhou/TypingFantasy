@@ -25,8 +25,7 @@ const qs = document.querySelector.bind(globalThis.document)
 import Game from './game';
 
 document.addEventListener('DOMContentLoaded', () => {
-    
-
+    //i do have access to function(){}, const func = ()=> in <script>s here
     window.game = new Game() // window for testing
     const linkedin = qs("a[href='https://www.linkedin.com/in/edzhou/']");
     const github = qs("a[href='https://github.com/featurerich1/']");
@@ -43,15 +42,12 @@ document.addEventListener('DOMContentLoaded', () => {
     }, false)
 
     
-    // let cheatTooltip = qs(`span`)
-    // cheatTooltip.style.display =`none`
-    // end cheats
+   
 
-    // ill make this an event listener too. this might be overstepping the annoyance
-    Notification.requestPermission()
-    setTimeout( () => { 
-        if (Notification.permission === "granted") new Notification("You've played for 5 minutes!")
-    }, 300000)
+    // Notification.requestPermission()
+    // setTimeout( () => { 
+    //     if (Notification.permission === "granted") new Notification("You've played for 5 minutes!")
+    // }, 300000)
 
 })
 

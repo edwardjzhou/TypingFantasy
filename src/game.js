@@ -19,7 +19,6 @@ import Trie from './trie';
 // 1.  time needs to stop (timeElapsed ) when game is paused so wpm doesnt go to 0 and the next one enemy doesnt instaspawn after pause FIXED
 // 2. need to fix settimeouts on collision/damage taking and animating it TBD
 
-
 const EventEmitter = require('events'); // CAN this be done HERE?
 /* 
 ASAP: finish highscores inside gameover, finish up chinsee input and value changing 
@@ -72,8 +71,9 @@ class Game {
         }
     }
 
+
     remakeGame (){
-        //basiclaly rerun constuctor here
+        //basiclaly rerun constuctor here i did it in gameover()
     }
 
     get hasGameStarted(){
@@ -113,9 +113,10 @@ class Game {
         else if (up && this.gameMode===`chinese`) this.gameMode=`english`;
         if (this.gameMode === `english`) this.ctx.drawImage(this.cursor, 0, 0, 32, 32, 25, 320, 50, 50 ); 
         else if (this.gameMode === `chinese`) this.ctx.drawImage(this.cursor, 0, 0, 32, 32, 25, 380, 50, 50);
-
+        
+        if (this.onSplash === true)
         requestAnimationFrame( (rafTimeElapsed) => {
-            if (this.onSplash === true) this.animateSplash(rafTimeElapsed);
+             this.animateSplash(rafTimeElapsed);
         })
     }
 
@@ -244,6 +245,9 @@ class Game {
         //still unsure as to best way to do this
         if (this.player.hp <= 0) {
             this.isGameover = true
+            this.ctx.font = `bold 60px ChronoType`;
+            this.ctx.fillStyle = "red";
+            this.ctx.fillText('GAMEOVER', this.canvas.width * .4, this.canvas.height * .5);
             this.gameover()
             return
         }
@@ -268,8 +272,9 @@ class Game {
         this.player.checkCollision()
         this.player.animate();
 
+        if (!this.isPaused && !this.isGameOver)
         this.request = requestAnimationFrame( (rafTimeElapsed) => {
-            if (!this.isPaused && !this.isGameOver) {
+            {
                 this.animate(rafTimeElapsed);
             }
         }) //will not call the CB until the batch of animations inside current call stack frame animates at once. 
@@ -437,28 +442,43 @@ class Game {
         this.word = []
     }
 
-    animateGameover() {
+    //         console.log(time) went from time=10420 to 13420
+    // REMEMBER THAT OLD STUFF THAT WAS ON SCREEN REMAINS ON SCREEN EVEN AFTER ITS NO LONGER BEING CALLED
+    animateGameover(time, timeToPass = 3) {
+        // console.log(time)
+        if (!this.initalAnimateGameoverTime) this.initialAnimateGameoverTime = time
+        const elapsed = timeToPass - ~~((time - this.initialAnimateGameoverTime)/1000)
+        console.log((this.initialAnimateGameoverTime))
         this.ctx.font = `bold 60px ChronoType`;
         this.ctx.fillStyle = "red";
         this.ctx.fillText('GAMEOVER', this.canvas.width * .4, this.canvas.height * .5);
+        // const displayedFlooredTime = ~~(time - this.initialAnimateGameoverTime)
+        this.ctx.fillText(`game resets in ${elapsed}`, this.canvas.width*.2, this.canvas.height*.6)
+        
+        
+        if (this.onGameover === true)
         requestAnimationFrame( (timeElapsed) => {
-            if (this.onGameover === true) this.animateGameover(timeElapsed);
+            this.animateGameover(timeElapsed);
         })
     }
 
     async createHighscoreDialogBox() {
         const username = prompt(`Please enter your moniker! You destroyed ${this.destroyedCount || 0} monsters!`, "Name");
-        await fetch('./highscore', {
+        const newScores = await fetch('./highscore', {
                     method: 'POST',
                     headers: {
                         'Accept': 'application/json',
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify([ this.destroyedCount || 0, username ])
+                    body: JSON.stringify([ this.destroyedCount || 0, username || `unnamed`])
                 }).then(res => {
-                    console.log(res.json())
+                    // console.log(`third`)
                     return res.json()
                 })
+        createScoreTable(newScores)
+
+        // console.log(`fourth`)
+
     }
 
      async gameover() {
@@ -475,23 +495,26 @@ class Game {
         }).then(response => response.json() ).then( warrantsNewHighScore => {
             if (warrantsNewHighScore === true) {
                 this.createHighscoreDialogBox()
-    
+                // console.log(` as soon as prompt finishes we are first`)
             }
         })     
-    
-        // cancelAnimationFrame(this.request)
+        //  console.log(`second`)
+
+        cancelAnimationFrame(this.request) //game animation is done for no matter what + returned 
 
         setTimeout( ()=> {
             this.onGameover = false
-            this.canvas.remove()
-            let current = window.game
-            current = {}
-            console.log(window.game)
+            // this.canvas.remove()
+            // let current = window.game
+            // current = {}
+            // console.log(window.game)
+            // console.log(this)
             console.log(`removed old canv`)
-            document.body.insertBefore(this.canvas, document.querySelector(`#instructions`) )
+            // document.body.insertBefore(this.canvas, document.querySelector(`#instructions`) )
             console.log(`inserted new canv`)
 
-            window.game = new Game()
+            window.game = new Game() // no more refs to old game so it hsould be garbage colelcted?
+            // its not ill figure htis out later its complicated
 
         },3000)
         
@@ -512,8 +535,6 @@ class Game {
     unpause() {
         this.isPaused = false
         this.animate()
-
-           
     }
     
     handleSubmit() {

@@ -209,7 +209,7 @@
 
         <!-- <input type="file" accept=".csv"> maybe accept csv or arrays or something just set window.game.dictionary=[array of ur choosing] set with my js</input>
         <button primary value="z">asdf</button> -->
-
+ 
         <!-- use 9007199254740997n instead of inf if users viewport is 5000 res or somethign funny-->
         <div title="High Score Table" id="highscore"> 
             <h1 PRIMARY data-hi = "5" bye='123'> High Score Table </h1> 
@@ -278,18 +278,32 @@
                     if (yetToAttach) window.addEventListener('resize', () => attachTableToCanvasRight(table, false) );
                 }
 
-                (async function fetchScores(){
-                    let data
-                    const defaultData = Object.freeze({ "highScores": [[123, "Edward"], [50, "John"], [30, "Crono"], [25, "Scala"], [15, "Robo"]] })
-                    try {
-                        data = await fetch(`./highscore`).then(res => res.json()) 
-                    } catch (err) {
-                        console.log(err)
-                        data = defaultData
-                    } finally {
-                        createScoreTable(data)
-                    }
-                })();
+                // (async function fetchScores(){
+                //     let data
+                //     const defaultData = Object.freeze({ "highScores": [[123, "Edward"], [50, "John"], [30, "Crono"], [25, "Scala"], [15, "Robo"]] })
+                //     try {
+                //         data = await fetch(`./highscore`).then(res => res.json()) // res is a response object and running res.json() returns a promsie on the body stream is async so cant access res
+                //     } catch (err) {
+                //         console.log(err)
+                //         data = defaultData
+                //     } finally {
+                //         createScoreTable(data)
+                //     }
+                // })();
+                async function fetchScores() {
+                        let data
+                        const defaultData = Object.freeze({ "highScores": [[123, "Edward"], [50, "John"], [30, "Crono"], [25, "Scala"], [15, "Robo"]] })
+                        try {
+                            data = await fetch(`./highscore`).then(res => res.json()) // res is a response object and running res.json() returns a promsie on the body stream is async so cant access res
+                        } catch (err) {
+                            console.log(err)
+                            data = defaultData
+                        } finally {
+                            createScoreTable(data)
+                        }
+                    };
+
+                fetchScores()
              
             </script> 
         </div>
