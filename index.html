@@ -200,13 +200,18 @@
 
         </div>
 
+<!--         
+          -->
+
         <div id="contact" style="font-size:2.5rem; 
-        /* position:absolute; */
-         /* bottom: 2px;  */
-         /* left:50%; 
-         transform: translate(-50%); */
-         margin-top: 50px;
-         ">
+        /* bottom: 500px; */
+        position: absolute;
+        /* margin-top: 50px; */
+        bottom: 2px;
+        left:50%;
+        transform: translate(-50%);
+
+        ">
             <!-- target=_blank is because game progress would be lost otherwise; the phone# is from google -->
                 <a href="https://www.linkedin.com/in/edzhou/" tabindex="-1" target="_blank"> My Linkedin</a>&nbsp;|&nbsp;
                 <a href="https://github.com/featurerich1/" tabindex="-1" target="_blank">My Github</a>&nbsp;|&nbsp;
@@ -227,7 +232,8 @@
             font-size: 1.5rem;
             color: black;
             opacity: 0.66;
-            z-index: -1;
+            z-index: 11;
+            -moz-user-select: initial;
             background-color: lightblue;
             box-shadow: rgba(69, 74, 99, 0.3) -1px -1px 0px 0px;
             backdrop-filter: blur(15px);
@@ -244,7 +250,9 @@
             
             <!-- Your like button code -->
             <div class="fb-like" data-href="http://cryptic-escarpment-31838.herokuapp.com/" data-colorscheme="dark"
-                data-layout="standard" data-action="like" data-share="true" width="180px" style="margin-bottom: 10px;">
+                data-layout="standard" data-action="like" data-share="true" width="180px" style="margin-bottom: 10px;
+                pointer-events:all
+                ">
             </div>
 
             <h1 PRIMARY data-hi = "5" bye='123'> High Scores  </h1> 
