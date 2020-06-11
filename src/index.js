@@ -27,6 +27,7 @@ import Game from './game';
 document.addEventListener('DOMContentLoaded', () => {
     //i do have access to function(){}, const func = ()=> in <script>s here
     window.game = new Game() // window for testing
+    window.memory = window.game
     const linkedin = qs("a[href='https://www.linkedin.com/in/edzhou/']");
     const github = qs("a[href='https://github.com/featurerich1/']");
     const email = qs("a[href^='mailto']");

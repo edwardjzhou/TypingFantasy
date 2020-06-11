@@ -7,8 +7,7 @@
         <meta name="description" content="TypingFantasy is a fun typing game made with ES6 Javascript and HTML5 Canvas">
         <title>Typing Fantasy</title>
         <link rel="icon" type="image/png" href="/src/Blue_Imp.png">
-        <script src="./dist/main.js" defer></script>
-
+        <script src="./dist/main.js" defer></script> 
         <meta property="og:url" content="http://cryptic-escarpment-31838.herokuapp.com/" />
         <meta property="og:type" content="website" />
         <meta property="og:title" content="Typing Fantasy" />
@@ -38,6 +37,8 @@
                 padding: 0;
                 border: 0; 
                 font-family:ChronoType;
+                                box-sizing: border-box;
+
             }
 
             #canvas{
@@ -59,15 +60,16 @@
             }
 
             #instructions{
-                box-sizing: border-box;
                 margin: auto;
                 background-image: linear-gradient(#736c72,#C0C0C0);
                 width: 800px;
                 padding: 20px;
-                border: 2px solid black;
+                /* border: 2px solid black; */
                 user-select: none;
                 color: antiquewhite;
                 font-size: 20px;    
+                border: 2px solid silver;
+                border-radius: 5px; 
             }
 
             #contact{
@@ -177,9 +179,10 @@
             <p>2. Press space to pause/unpause. </p>
 
 
-
-            <div id="cheat-tooltip" onmouseover="this.nextElementSibling.style.visibility='visible'" 
-            onmouseout="this.nextElementSibling.style.visibility='hidden'">
+            <div id="cheat-tooltip" onmouseover="this.nextElementSibling.style.display='block'"
+                onmouseout="this.nextElementSibling.style.display='none'">
+            <!-- <div id="cheat-tooltip" onmouseover="this.nextElementSibling.style.visibility='visible'" 
+            onmouseout="this.nextElementSibling.style.visibility='hidden'"> -->
                 3. Activate cheats if you're so inclined!
             </div>
 
@@ -197,7 +200,13 @@
 
         </div>
 
-        <div id="contact" style="font-size:2.5rem; position:absolute; bottom: 2px; left:50%; transform: translate(-50%);">
+        <div id="contact" style="font-size:2.5rem; 
+        /* position:absolute; */
+         /* bottom: 2px;  */
+         /* left:50%; 
+         transform: translate(-50%); */
+         margin-top: 50px;
+         ">
             <!-- target=_blank is because game progress would be lost otherwise; the phone# is from google -->
                 <a href="https://www.linkedin.com/in/edzhou/" tabindex="-1" target="_blank"> My Linkedin</a>&nbsp;|&nbsp;
                 <a href="https://github.com/featurerich1/" tabindex="-1" target="_blank">My Github</a>&nbsp;|&nbsp;
@@ -211,38 +220,66 @@
         <button primary value="z">asdf</button> -->
  
         <!-- use 9007199254740997n instead of inf if users viewport is 5000 res or somethign funny-->
-        <div title="High Score Table" id="highscore"> 
-            <h1 PRIMARY data-hi = "5" bye='123'> High Score Table </h1> 
+     
+        <div title="High Score Table" id="highscore" style="
+            font-weight: 400;
+            line-height: 2rem;
+            font-size: 1.5rem;
+            color: black;
+            opacity: 0.66;
+            z-index: -1;
+            background-color: lightblue;
+            box-shadow: rgba(69, 74, 99, 0.3) -1px -1px 0px 0px;
+            backdrop-filter: blur(15px);
+            text-align: left;
+            padding: 20px;
+            margin-left: 20px;
+            border: 2px solid silver;
+            border-radius: 5px;
+            "> 
+            <!-- Load Facebook SDK for JavaScript -->
+            <div id="fb-root"></div>
+            <script async defer crossorigin="anonymous"
+                src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v3.0"></script>
+            
+            <!-- Your like button code -->
+            <div class="fb-like" data-href="http://cryptic-escarpment-31838.herokuapp.com/" data-colorscheme="dark"
+                data-layout="standard" data-action="like" data-share="true" width="180px" style="margin-bottom: 10px;">
+            </div>
+
+            <h1 PRIMARY data-hi = "5" bye='123'> High Scores  </h1> 
             <!-- tbd: I want to test reflectivity of html attrs -->
+        </div>
+
             <script>
-                // fun w javascript 
+                // all functions defined here attach to window object
                 try {
-                        const tooltipStyle = {
-                            position: `relative`,
-                            display: `inline-block`,
-                        }
-
-                        const tooltiptextStyle = {
-                            ...tooltipStyle,
-                            visibility: `hidden`,
-                            width: `120px`,
-                            backgroundColor: `black`,
-                            color: `#fff`,
-                            textAlign: `center`,
-                            borderRadius: `6px`,
-                            padding: `5px 0`,
-
-                            /* Position the tooltip */
-                            position: `absolute`,
-                            zIndex: `1`,
-                        }
-
-                        Object.assign(document.querySelector(`#cheat-tooltiptext`).style, tooltiptextStyle)
-                        Object.assign(document.querySelector(`#cheat-tooltip`).style, tooltipStyle)
-
-                    } catch (err) {
-                        alert(err)
+                    const tooltipStyle = {
+                        position: `relative`,
+                        display: `inline-block`,
                     }
+
+                    const tooltiptextStyle = {
+                        ...tooltipStyle,
+                        // visibility: `hidden`,
+                        display: `none`,
+                        // width: `150px`,
+                        backgroundColor: `black`,
+                        color: `#fff`,
+                        textAlign: `left`,
+                        borderRadius: `6px`,
+                        padding: `5px 0`,
+                        /* Position the tooltip */
+                        position: `absolute`,
+                        zIndex: `1`,
+                    }
+
+                    Object.assign(document.querySelector(`#cheat-tooltiptext`).style, tooltiptextStyle)
+                    Object.assign(document.querySelector(`#cheat-tooltip`).style, tooltipStyle)
+
+                } catch (err) {
+                    alert(err)
+                }
 
                                     
                 const ensureSorted = (scores) => {
@@ -278,6 +315,17 @@
                     if (yetToAttach) window.addEventListener('resize', () => attachTableToCanvasRight(table, false) );
                 }
 
+                const deleteScores = () => {
+                    const table = document.querySelector(`#highscore`)
+                    table.innerHTML = table.innerHTML.split(`</h1>`)[0]
+
+                    // let child = table.lastElementChild;
+                    // while (child && table.children.length > 1) {
+                    //     table.removeChild(child);
+                    //     child = table.lastElementChild;
+                    // } 
+                    // table.innerHTML = 
+                }
                 // (async function fetchScores(){
                 //     let data
                 //     const defaultData = Object.freeze({ "highScores": [[123, "Edward"], [50, "John"], [30, "Crono"], [25, "Scala"], [15, "Robo"]] })
@@ -291,36 +339,33 @@
                 //     }
                 // })();
                 async function fetchScores() {
-                        let data
-                        const defaultData = Object.freeze({ "highScores": [[123, "Edward"], [50, "John"], [30, "Crono"], [25, "Scala"], [15, "Robo"]] })
-                        try {
-                            data = await fetch(`./highscore`).then(res => res.json()) // res is a response object and running res.json() returns a promsie on the body stream is async so cant access res
-                        } catch (err) {
-                            console.log(err)
-                            data = defaultData
-                        } finally {
-                            createScoreTable(data)
-                        }
-                    };
+                    let data
+                    const defaultData = Object.freeze([[123, "Edward"], [50, "John"], [30, "Crono"], [25, "Scala"], [15, "Robo"]])
+                    try {
+                        data = await fetch(`./highscore`).then(res => res.json()) // res is a response object and running res.json() returns a promsie on the body stream is async so cant access res
+                    } catch (err) {
+                        console.log(err)
+                        data = defaultData
+                    } finally {
+                        createScoreTable(data)
+                    }
+                };
 
                 fetchScores()
-             
+
+            //  this may be useless 
+                function destroyerOfObjects(){
+                    for (let prop in window.game) {
+                        eval(`delete window.game.${prop}`)
+                    }
+                    console.log(window.game)
+                }
             </script> 
-        </div>
 
 
 
 
-        <!-- Load Facebook SDK for JavaScript -->
-        <div id="fb-root"></div>
-        <script async defer crossorigin="anonymous"
-            src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v3.0"></script>
-        
-        <!-- Your like button code -->
-        <div class="fb-like" data-href="http://cryptic-escarpment-31838.herokuapp.com/" 
-        data-colorscheme="dark"
-        data-layout="standard" data-action="like" data-share="true">
-        </div>
+       
 
     </body>
 </html>

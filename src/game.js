@@ -45,11 +45,13 @@ class Game {
 
     }
 
-   
+    
     dynamicallyLoadLanguageModule() { 
         // this may be all wrong as it seems after the main package is loaded BOTH of these are prefetched... or is the conditional not for prefetch but for  real load?
         if (this.gameMode === `english`) {
             import(/* webpackChunkName: "./dictionaryEnglish", webpackPrefetch: true */ './dictionaryEnglish').then(({ englishDictionary }) => {
+                console.log(`ENG DICITONARY DLED`)
+
                 this.dictionary = englishDictionary
                 this.word = []
                 this.gameLoop();
@@ -60,6 +62,8 @@ class Game {
             })
         } else if (this.gameMode === `chinese`) {
             import(/* webpackChunkName: "./dictionaryChinese", webpackPrefetch: true */ './dictionaryChinese').then(({ chineseDictionary }) => {
+                console.log(`CN DICITONARY DLED`)
+
                 this.dictionary = chineseDictionary
                 this.word = []
                 this.gameLoop();
@@ -84,7 +88,29 @@ class Game {
         return this.gameMode
     }
 
+    set setHP (desiredHP){
+        this.player.hp = desiredHP
+    }
+
+    ensureDefaultCTX () {
+        this.ctx.lineWidth = 1
+        this.ctx.shadowOffsetX = 0
+        this.ctx.shadowOffsetY = 0
+        this.ctx.strokeWeight = null
+    }
+
+
     animateSplash(timeElapsed = 0){
+        console.log(`SPLASH ANIMATION`)
+        // ,timeElapsed)
+        // this.dynamicallyLoadLanguageModule()// SHOULD I PRE DOWNLOAD BASED OFF CURSOR CHOICE ON TTIMEELAPSED 0 && NOT DOWNLOADING?
+        // DOWNLOAD PROGRSS BAR 
+    //     req.on( 'response', function ( data ) {
+    //     console.log(data.headers['content-length']);
+    // } );
+        
+        this.ensureDefaultCTX()
+
         // background img
         this.ctx.drawImage(this.splash, 0, 0, 1200, 900, 0, 0, this.canvas.width, this.canvas.height); //add credits of where i took image from
 
@@ -158,6 +184,8 @@ class Game {
     }
 
     drawEnemies(){
+        this.ensureDefaultCTX()
+
         const possibilities = this.trie.possibilities(this.word.join(``));
 
         // really shouldve used a enemies hash where enemies[`enemy.word`] = enemy object; a hash where the submitted word maps to the enemy object
@@ -167,6 +195,44 @@ class Game {
         }
 
     }
+
+    drawChineseEnemies() {
+        this.ensureDefaultCTX()
+
+        const possibilities = this.trie.possibilities(this.word);
+
+        // really shouldve used a enemies hash where enemies[`enemy.word`] = enemy object; a hash where the submitted word maps to the enemy object
+        for (let i = 0; i < this.enemies.length; i++) {
+            this.enemies[i].animate(this.player.x, this.player.y); // move towards player
+            if (possibilities.includes(this.enemies[i].word) && this.enemies[i].alive === true) this.enemies[i].animateReticle();
+        }
+
+    }
+    drawChineseTypingArea() {
+        this.ensureDefaultCTX()
+
+        this.fontSize = this.fontSize || 50;
+
+        //handles deleting old characters 
+        this.ctx.clearRect(0, this.canvas.height - this.fontSize, this.canvas.width, this.fontSize);
+        //end deleting
+
+        //handles recoloring deleted user text area (maybe clearRect is redundant)
+        this.ctx.fillStyle = "grey";
+        this.ctx.fillRect(0, this.canvas.height - this.fontSize, this.canvas.width, this.fontSize);
+        //end recoloring
+
+        //user input word
+        this.ctx.fillStyle = "blue";
+        this.ctx.font = `bold ${this.fontSize}px ChronoType`;
+        // this.ctx.fillText(this.word.join(''), 0, (this.canvas.height));
+        //end user input word
+        // console.log(canvas.width/fontSize) = 25.6 atm but it can fit approx 44 charss-- all in arial 50s on a 1280 width
+
+
+
+    }
+
 
     drawTypingArea() {
         this.fontSize = this.fontSize || 50;
@@ -242,6 +308,7 @@ class Game {
     }
 
     animate(timeElapsed = 0) {
+        console.log(`ANIMATE`,timeElapsed)
         //still unsure as to best way to do this
         if (this.player.hp <= 0) {
             this.isGameover = true
@@ -251,6 +318,9 @@ class Game {
             this.gameover()
             return
         }
+
+        
+     
 
         // console.log(time)
         // animate this.player, this.enemies, and maybe track framecount
@@ -264,8 +334,21 @@ class Game {
 
         this.drawMap(this.ctx, this.canvas);
         this.drawAttackArc(this.ctx, this.player);
-        this.drawEnemies(this.enemies, this.player);
-        this.drawTypingArea(this.ctx,this.canvas, this.fontSize);
+
+        //to deal with all at once input in chinese vs piecemeal in english 
+        switch (this.language) {
+            case (`chinese`): {
+                this.drawChineseEnemies(this.enemies, this.player);
+                this.drawChineseTypingArea(this.ctx, this.canvas, this.fontSize);
+                break
+            }
+            case (`english`): {
+                this.drawEnemies(this.enemies, this.player);
+                this.drawTypingArea(this.ctx, this.canvas, this.fontSize);
+                break
+            }
+        }
+       
         this.drawWPM(this.ctx, this.canvas, this.fontSize);
         this.drawHeart(this.ctx);
 
@@ -364,19 +447,20 @@ class Game {
                     }
                 }
             }
-
+            // bad design i think i should have just made a chinese game or chinese fucns rather than if's in every key handling method
         } else if (this.gameMode ===`chinese`) {
                 this.chineseInput = document.createElement(`input`)
                 this.chineseInput.setAttribute(`placeholder`,`饱经沧桑`)
                 this.chineseInput.style.height = "0"
                 this.chineseInput.style.width = "0"
                 this.chineseInput.style.margin = "0"
+                this.chineseInput.style.display = "none"
 
                 this.chineseAdvisoryText = document.createTextNode("Type chinese here");
                 // this.linebreak = document.createElement("br");
                 
                 this.chineseInput.style.position = `absolute`
-                document.body.insertBefore(this.chineseInput, document.body.children[0])
+                document.body.insertBefore(this.chineseInput, document.body.children[document.body.children.length-1])
                 this.chineseInput.style.height = "40px"
                 this.chineseInput.style.width = "180px"
                 this.chineseInput.style.margin = "2px"
@@ -387,11 +471,15 @@ class Game {
                 //function here is hoisted to the top of _addListeners to a point before this.chineseinput was born
                 // hence ()=>{}ing it instead of doing function(){}
                 const attachChineseInputToCanvasBottomLeft = (yetToAttach = true) => {
-                    this.chineseInput.style.left = 3 + this.canvas.getBoundingClientRect().x + `px`
+                    this.chineseInput.style.left = this.canvas.getBoundingClientRect().x + `px`
                     this.chineseInput.style.top = this.canvas.getBoundingClientRect().bottom - (this.fontSize ? this.fontSize : 40) + `px`
-                    if (yetToAttach) window.addEventListener('resize', () => attachChineseInputToCanvasBottomLeft(false)) ;
+                    this.chineseInput.style.display = `block`
+                    if (yetToAttach) window.addEventListener('resize', 
+                    this.chineseListener = () => attachChineseInputToCanvasBottomLeft(false)) ;
                 }
                 attachChineseInputToCanvasBottomLeft()
+                //to fix a glitch of it being slightly off-center;unsure of root cause
+                setTimeout(()=> attachChineseInputToCanvasBottomLeft(false), 100) 
 
                 
 
@@ -407,18 +495,19 @@ class Game {
                     preventDefaultViewportJiggling(e)
                     this.chineseInput.focus()
 
-                    if (key >= 65 && key <= 90) this.word.push(String.fromCharCode(key).toLowerCase())
-                    else if (key === 32 && !this.isGameover) {
+
+                    // if (key >= 65 && key <= 90) this.word.push(String.fromCharCode(key).toLowerCase())
+                    // this.word = this.chineseInput.value
+                    if (key === 32 && !this.isGameover) {
                         if (!this.isPaused) this.pause()
                         else if (this.isPaused) this.unpause()
                     }
-                    else if (key === 8) this.word.pop();
+                    // else if (key === 8) this.word.pop();
                     else if (key === 13) {
                         if (this.onSplash) {
                             this.onSplash = false
                         } else {
-                            this.handleSubmit()
-                            this.word = [];
+                            this.handleChineseSubmit()                            
                         }
                     }
             }
@@ -431,13 +520,33 @@ class Game {
       
         document.body.addEventListener("keydown",  this.keydownHandler, true);
         document.body.addEventListener("keyup",  this.keyupHandler, true);
-        
     }
 
+    handleChineseSubmit() {
+        this.word = this.chineseInput.value
+        if (this.player && this.word === `edward`) this.player.hp = Infinity
+        for (let i = 0; i < this.enemies.length; i++) {
+            if (this.enemies[i].word === this.word && this.enemies[i].alive === true) {
+                this.player.animateAttack(this.enemies[i].x, this.enemies[i].y - 50, this.cronothrust)
+                this.enemies[i].alive = false;
+                this.destroyedCount >= 1 ? this.destroyedCount++ : this.destroyedCount = 1
+            }
+        }
+        this.chineseInput.value = ""
+    }
+    
+
+    // chinese exception to remove the 1. the input box 2. the event listener on that box
     _detachListeners(){
+        if (this.chineseInput) {
+            window.removeEventListener('resize', this.chineseListener); //REMOVE LISTENER BEFORE REMOVING THE HTTP ELEMENT
+            this.chineseInput.remove()
+        }
+
+
+
         document.body.removeEventListener("keydown", this.keydownHandler, true)
         document.body.removeEventListener("keyup", this.keyupHandler, true)
-        console.log(`detacehd english listener`)
         this.keys = []
         this.word = []
     }
@@ -446,9 +555,9 @@ class Game {
     // REMEMBER THAT OLD STUFF THAT WAS ON SCREEN REMAINS ON SCREEN EVEN AFTER ITS NO LONGER BEING CALLED
     animateGameover(time, timeToPass = 3) {
         // console.log(time)
-        if (!this.initalAnimateGameoverTime) this.initialAnimateGameoverTime = time
+        if (this.initialAnimateGameoverTime) this.initialAnimateGameoverTime = time
         const elapsed = timeToPass - ~~((time - this.initialAnimateGameoverTime)/1000)
-        console.log((this.initialAnimateGameoverTime))
+        console.log((this.initialAnimateGameoverTime)) // the last time this fires is AFTEr the game has been delteed in settimeout
         this.ctx.font = `bold 60px ChronoType`;
         this.ctx.fillStyle = "red";
         this.ctx.fillText('GAMEOVER', this.canvas.width * .4, this.canvas.height * .5);
@@ -460,10 +569,12 @@ class Game {
         requestAnimationFrame( (timeElapsed) => {
             this.animateGameover(timeElapsed);
         })
+        
     }
 
     async createHighscoreDialogBox() {
-        const username = prompt(`Please enter your moniker! You destroyed ${this.destroyedCount || 0} monsters!`, "Name");
+        const username = prompt(`NEW HIGH SCORE! Please enter your moniker!
+                                You destroyed ${this.destroyedCount || 0} monsters!`, "Name");
         const newScores = await fetch('./highscore', {
                     method: 'POST',
                     headers: {
@@ -475,6 +586,7 @@ class Game {
                     // console.log(`third`)
                     return res.json()
                 })
+        deleteScores()
         createScoreTable(newScores)
 
         // console.log(`fourth`)
@@ -498,6 +610,7 @@ class Game {
                 // console.log(` as soon as prompt finishes we are first`)
             }
         })     
+
         //  console.log(`second`)
 
         cancelAnimationFrame(this.request) //game animation is done for no matter what + returned 
@@ -509,10 +622,13 @@ class Game {
             // current = {}
             // console.log(window.game)
             // console.log(this)
-            console.log(`removed old canv`)
+            // console.log(`removed old canv`)
             // document.body.insertBefore(this.canvas, document.querySelector(`#instructions`) )
-            console.log(`inserted new canv`)
-
+            // console.log(`inserted new canv`)
+            // delete this 
+            destroyerOfObjects()
+            console.log(`insetTIMEOUT`)
+            
             window.game = new Game() // no more refs to old game so it hsould be garbage colelcted?
             // its not ill figure htis out later its complicated
 
