@@ -187,14 +187,14 @@ app.get('/sound', (req, res) => {
 
 
 // serve stuff up to DOWNLOAD for the user
-app.get('/download', function (req, res) {
-    // const file = `${__dirname}/upload-folder/dramaticpenguin.MOV`;
-    const file = `./app.js` 
-    res.download(file); // Set disposition and send it.
-});
+// app.get('/download', function (req, res) {
+//     // const file = `${__dirname}/upload-folder/dramaticpenguin.MOV`;
+//     const file = `./app.js` 
+//     res.download(file); // Set disposition and send it.
+// });
 
 
-// downloading a file
+// downloading a file to the server
 //https://stackoverflow.com/questions/11944932/how-to-download-a-file-with-node-js-without-using-third-party-libraries
 // const https = require('https');
 // app.get('/test', function (req,res) {
@@ -213,61 +213,59 @@ const https = require('https');
 app.get('/word/:word', function (req, res) {
 
     const dirCont = fs.readdirSync(`./words`); 
-    // console.log(dirCont)
-    if (dirCont.includes(req.params.word))
+
+    if (dirCont.includes(req.params.word+`.mp3`)) {
         res.sendFile(path.join(__dirname + `/words/${req.params.word}.mp3`))
-    else {
+    } else { 
         const file = fs.createWriteStream(`words/${req.params.word}.mp3`);
-        //superior voiced quality but some words are missing
-        const request = https.get(`https://ssl.gstatic.com/dictionary/static/sounds/20180430/${encodeURI(req.params.word)}--_us_1.mp3`, function (response) {
+        const language = req.params.word.match(/[\u3400-\u9FBF]/)
+
+        switch (!language){
+            case false: // CHINESE would be language =[anything]
+                handleChinese()
+                break;
+            case true: // ENGLISH would be language=null
+                handleEnglish();
+                break;
+        }
        
-            if (response.headers[`content-type`] === `audio/mpeg`){   //"text/html")
-                response.pipe(file);
-                file.on('finish', function () {
-                    file.close( () => res.sendFile(path.join(__dirname + `/words/${req.params.word}.mp3`)) );
-                });
-            } else {
-                const language = req.params.word.match(/[\u3400-\u9FBF]/) ? "zh-CN" : "en"
-                //backup voice
-                const request = https.get(`https://translate.google.com.vn/translate_tts?ie=UTF-8&q=${encodeURI(req.params.word)}&tl=${language}&client=tw-ob`, function (response) {
+            
+        function handleEnglish(){
+            const request = https.get(`https://ssl.gstatic.com/dictionary/static/sounds/20180430/${encodeURI(req.params.word)}--_us_1.mp3`, function (response) {
+                if (response.headers[`content-type`] === `audio/mpeg`) {   //"text/html")
                     response.pipe(file);
                     file.on('finish', function () {
-                        file.close(() => res.sendFile(path.join(__dirname + `/words/${req.params.word}.mp3`)))
+                        file.close(() => res.sendFile(path.join(__dirname + `/words/${req.params.word}.mp3`)));
                     });
+                } else {
+                    const secondRequest = https.get(`https://translate.google.com.vn/translate_tts?ie=UTF-8&q=${encodeURI(req.params.word)}&tl=en&client=tw-ob`, function (response) {
+                        response.pipe(file);
+                        file.on('finish', function () {
+                            file.close(() => res.sendFile(path.join(__dirname + `/words/${req.params.word}.mp3`)))
+                        });
+                    })
+                };
+            })
+        };
 
-                    // fs.unlink(`words/${req.params.word}.mp3`)
-                    // interesting: fs.createreadstream.pipe(res) ===== res.sendfile
-                })
-            }
-        });
+        function handleChinese(){
+            const request = https.get(`https://gss0.baidu.com/6KAZsjip0QIZ8tyhnq/text2audio?tex=${encodeURI(req.params.word)}&cuid=baike&lan=ZH&ctp=1&pdt=31&vol=9&spd=4&per=4100`, function (response) {
+                if (true) {   
+                    console.log(request.headers)
+                    response.pipe(file);
+                    file.on('finish', function () {
+                        file.close( () => res.sendFile(path.join(__dirname + `/words/${req.params.word}.mp3`) ) );
+                    });
+                } else {
+                    fs.unlink(`words/${req.params.word}.mp3`, ()=>{})
+                }
+            })
+        }
+
+
+
     }
-})
-//https://gss0.baidu.com/6KAZsjip0QIZ8tyhnq/text2audio?tex=CHINESEHERE&cuid=baike&lan=ZH&ctp=1&pdt=31&vol=9&spd=4&per=4100
-// BAIDU is slightly better for cn
-//https://www.google.com/speech-api/v1/synthesize?text=%E6%88%91%E7%88%B1%E4%BD%A0%E4%BD%A0%E4%B8%8D%E7%88%B1%E6%88%91%E4%BD%86%E6%98%AF%E6%88%91%E4%BB%AC%E9%83%BD%E6%98%AF%E5%A5%BD%E6%9C%8B%E5%8F%8B&enc=mpeg&lang=zh-cn&speed=0.4&client=lr-language-tts&use_google_only_voices=1
-// https://gss0.baidu.com/6KAZsjip0QIZ8tyhnq/text2audio?tex=%E6%88%91%E7%88%B1%E4%BD%A0%E4%BD%A0%E4%B8%8D%E7%88%B1%E6%88%91%E4%BD%86%E6%98%AF%E6%88%91%E4%BB%AC%E9%83%BD%E6%98%AF%E5%A5%BD%E6%9C%8B%E5%8F%8B&cuid=baike&lan=ZH&ctp=1&pdt=31&vol=9&spd=4&per=4100
-// app.get('/word/:word', function (req, res) {
-
-
-
-
-
-
-//     const dirCont = fs.readdirSync(`./words`);
-//     if (dirCont.includes(req.params.word))
-//         res.sendFile(path.join(__dirname + `/words/${req.params.word}.mp3`))
-//     else {
-//         const file = fs.createWriteStream(`words/${req.params.word}.mp3`);
-//         console.log(req.params.word)
-//         const language = req.params.word.match(/[\u3400-\u9FBF]/) ? "zh-CN" : "en"
-//         const request = https.get(`https://translate.google.com.vn/translate_tts?ie=UTF-8&q=${encodeURI(req.params.word)}&tl=${language}&client=tw-ob`, function (response) {
-//             response.pipe(file);
-//             file.on('finish', function () {
-//                 file.close(() => res.sendFile(path.join(__dirname + `/words/${req.params.word}.mp3`)))
-//             });
-//         });
-//     }
-// })
+});
 
 app.listen(port);
 

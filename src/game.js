@@ -308,7 +308,7 @@ class Game {
     }
 
     animate(timeElapsed = 0) {
-        console.log(`ANIMATE`,timeElapsed)
+        // console.log(`ANIMATE`,timeElapsed)
         if (this.isPaused || this.isGameover) return
         //still unsure as to best way to do this
         if (this.player.hp <= 0) {
@@ -452,6 +452,7 @@ class Game {
             }
             // bad design i think i should have just made a chinese game or chinese fucns rather than if's in every key handling method
         } else if (this.gameMode ===`chinese`) {
+                this.rate /= 1/4 // as the average idiom is like 4-8 cn chars and each char takes 2-4 leters for like 18 chars for one idiom submit
                 this.chineseInput = document.createElement(`input`)
                 this.chineseInput.setAttribute(`placeholder`,`饱经沧桑`)
                 this.chineseInput.style.height = "0"
@@ -639,7 +640,7 @@ class Game {
             // console.log(`inserted new canv`)
             // delete this 
             destroyerOfObjects()
-            console.log(`insetTIMEOUT`)
+            // console.log(`insetTIMEOUT`)
             
             window.game = new Game() // no more refs to old game so it hsould be garbage colelcted?
             // its not ill figure htis out later its complicated
@@ -657,15 +658,15 @@ class Game {
 // game.js: 315 ANIMATE 35254.477
 // game.js: 362 pause hits animation
     pause() {
-        console.log(`pause hits pasue func`)
+        // console.log(`pause hits pasue func`)
         this.isPaused = true 
-        console.log(`isPaused in pause() is set`)
+        // console.log(`isPaused in pause() is set`)
 
         this.drawWPM() // to ensure we get that one snapshot of PAUSE TIME so that drawWPM isnt messed up by pause
         this.ctx.font = `bold 50px ChronoType`;
         this.ctx.fillStyle = "red";
         this.ctx.fillText('PRESS SPACEBAR TO UNPAUSE', this.canvas.width * .2, this.canvas.height * .5);
-        console.log(`drawn pause text`)
+        // console.log(`drawn pause text`)
     }
 
     unpause() {
