@@ -170,11 +170,22 @@ new CronJob('0 * * * *', function () { //top o' the hour 0 * * * *
     request('http://edwardpa.pythonanywhere.com/', function (error, response, body) {
         // console.log('error:', error); 
         console.log('statusCode:', response && response.statusCode); 
-        console.log(body)
+        console.log(response.body)
     });
     // request('http://google.com/doodle.png').pipe(fs.createWriteStream('doodle.png'))
 
 }, null, true, 'America/Los_Angeles');
+
+app.get('/sound', (req, res) => {
+    request('https://ssl.gstatic.com/dictionary/static/sounds/20180430/chuck--_us_1.mp3', function (error, response, body) {
+        // console.log('error:', error); 
+        console.log('statusCode:', response && response.statusCode);
+        console.log(body)
+    });
+    res.send(body)
+})
+
+
 
 
 

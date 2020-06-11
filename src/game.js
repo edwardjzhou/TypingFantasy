@@ -309,6 +309,7 @@ class Game {
 
     animate(timeElapsed = 0) {
         console.log(`ANIMATE`,timeElapsed)
+        if (this.isPaused || this.isGameover) return
         //still unsure as to best way to do this
         if (this.player.hp <= 0) {
             this.isGameover = true
@@ -355,6 +356,8 @@ class Game {
         this.player.checkCollision()
         this.player.animate();
 
+        if (this.isPaused) console.log(`pause hits animation`)
+        
         if (!this.isPaused && !this.isGameOver)
         this.request = requestAnimationFrame( (rafTimeElapsed) => {
             {
@@ -495,7 +498,7 @@ class Game {
                     preventDefaultViewportJiggling(e)
                     this.chineseInput.focus()
 
-
+                    this.word = this.chineseInput.value
                     // if (key >= 65 && key <= 90) this.word.push(String.fromCharCode(key).toLowerCase())
                     // this.word = this.chineseInput.value
                     if (key === 32 && !this.isGameover) {
@@ -553,21 +556,30 @@ class Game {
 
     //         console.log(time) went from time=10420 to 13420
     // REMEMBER THAT OLD STUFF THAT WAS ON SCREEN REMAINS ON SCREEN EVEN AFTER ITS NO LONGER BEING CALLED
-    animateGameover(time, timeToPass = 3) {
+    animateGameover(time, timeToPass = 3, previousElapsed) {
+        this.ctx.font = `bold 100px`
         // console.log(time)
-        if (this.initialAnimateGameoverTime) this.initialAnimateGameoverTime = time
+        if (!this.initialAnimateGameoverTime) this.initialAnimateGameoverTime = time
+
         const elapsed = timeToPass - ~~((time - this.initialAnimateGameoverTime)/1000)
+        // console.log(previousElapsed , elapsed )
+        this.ctx.fillText('GAMEOVER!', this.canvas.width * .4, this.canvas.height * .5);
+        if (previousElapsed !== elapsed) {
+            // if (elapsed === timeToPass)
+            // this.ctx.fillText(`Restart in ${elapsed}`, this.canvas.width * .4, this.canvas.height * .8 - this.fontSize * elapsed)
+            // else {
+            this.ctx.fillText(`${elapsed}`, this.canvas.width * .5, this.canvas.height * .9 - this.fontSize * elapsed)
+            // }
+        }
         console.log((this.initialAnimateGameoverTime)) // the last time this fires is AFTEr the game has been delteed in settimeout
         this.ctx.font = `bold 60px ChronoType`;
         this.ctx.fillStyle = "red";
-        this.ctx.fillText('GAMEOVER', this.canvas.width * .4, this.canvas.height * .5);
         // const displayedFlooredTime = ~~(time - this.initialAnimateGameoverTime)
-        this.ctx.fillText(`game resets in ${elapsed}`, this.canvas.width*.2, this.canvas.height*.6)
         
         
         if (this.onGameover === true)
         requestAnimationFrame( (timeElapsed) => {
-            this.animateGameover(timeElapsed);
+            this.animateGameover(timeElapsed, timeToPass, elapsed);
         })
         
     }
@@ -639,13 +651,21 @@ class Game {
 
   
     }
-
+//     pause hits pasue func
+//     game.js: 652 isPaused in pause() is set
+// game.js: 658 drawn pause text
+// game.js: 315 ANIMATE 35254.477
+// game.js: 362 pause hits animation
     pause() {
+        console.log(`pause hits pasue func`)
         this.isPaused = true 
+        console.log(`isPaused in pause() is set`)
+
         this.drawWPM() // to ensure we get that one snapshot of PAUSE TIME so that drawWPM isnt messed up by pause
         this.ctx.font = `bold 50px ChronoType`;
         this.ctx.fillStyle = "red";
         this.ctx.fillText('PRESS SPACEBAR TO UNPAUSE', this.canvas.width * .2, this.canvas.height * .5);
+        console.log(`drawn pause text`)
     }
 
     unpause() {
