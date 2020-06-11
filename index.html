@@ -176,7 +176,7 @@
 
         <div id="instructions">Instructions: 
             <p>1. Type the word above the monster's head to attack it!</p>
-            <p>2. Press space to pause/unpause. </p>
+            <p>2. Press space to pause/unpause. <label> Toggle sound:<input type="checkbox" id="soundToggle" name="soundToggle" checked></label> </p>
 
 
             <div id="cheat-tooltip" onmouseover="this.nextElementSibling.style.display='block'"
@@ -215,8 +215,10 @@
             <!-- target=_blank is because game progress would be lost otherwise; the phone# is from google -->
                 <a href="https://www.linkedin.com/in/edzhou/" tabindex="-1" target="_blank"> My Linkedin</a>&nbsp;|&nbsp;
                 <a href="https://github.com/featurerich1/" tabindex="-1" target="_blank">My Github</a>&nbsp;|&nbsp;
-                <a href="mailto:edward@utexas.edu" tabindex="-1" target="_blank">Email me!</a>
-                <!-- &nbsp;|&nbsp; -->
+                <a href="mailto:edward@utexas.edu" tabindex="-1" target="_blank">Email me!</a> 
+                <img id="clipboard" title= "Click to copy my e-mail" src="/src/clipboard.png" style="display:inline-block; width:25px;vertical-align:top;"><img>
+
+                <!-- &nbsp;|&nbsp;  -->
                 <!-- <a href="tel:281-401-9473" tabindex="-1" target="_blank">Call me</a>‪ -->
         </div>
 
@@ -368,12 +370,31 @@
                     }
                     console.log(window.game)
                 }
+
+
+                function copyTextToClipboard(text) {
+                    navigator.clipboard.writeText(text).then( () => {
+                        console.log('Async: Copying to clipboard was successful!');
+                    }, (err) => {
+                        console.error('Async: Could not copy text: ', err);
+                    });
+                }
+
+                const clipboardImage = document.querySelector(`#clipboard`)
+                clipboardImage.addEventListener('click', function() {
+                    copyTextToClipboard('edward@utexas.edu');
+                    this.style.height = `30px`
+                    setTimeout(function(){
+                        this.style.height = `25px`
+                    }.bind(this),500)
+                    
+                });
+
             </script> 
 
 
 
 
-       
 
     </body>
 </html>

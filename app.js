@@ -80,6 +80,9 @@ app.get('/src/squarereticle.png', (req, res) => {
 app.get('/src/cursor.png', (req, res) => {
     res.sendFile(path.join(__dirname + '/src/cursor.png'))
 });
+app.get('/src/clipboard.png', (req, res) => {
+    res.sendFile(path.join(__dirname + '/src/clipboard.png'))
+});
 //end static files
 
 //  these are the split js bundles

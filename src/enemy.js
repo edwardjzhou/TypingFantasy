@@ -24,6 +24,8 @@ class Enemy extends Actor {
       
 
         this.word = this.dictionary[Math.floor(Math.random() * this.dictionary.length)];
+        
+        if(document.querySelector(`#soundToggle`).checked)
         new Audio(`http://localhost:3001/word/${this.word}`).play()
         
 
