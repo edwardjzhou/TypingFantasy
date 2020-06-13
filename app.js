@@ -30,9 +30,13 @@ io.on('connection', (socket) => {
     // console.log(socket)
     // console.log(socket.username)
     var clientIpAddress = socket.request.headers['x-forwarded-for'] || socket.request.connection.remoteAddress;
+    request(`http://ip-api.com/json/${ip}`, function (error, response, body) {
+        console.log(`GET IP`)
+        io.emit('a user connected', JSON.parse(response.body)[`city`])
+    })
     console.log(' new request from : ' + clientIpAddress);
     console.log('a user connected');
-    io.emit('a user connected', clientIpAddress)
+    // io.emit('a user connected', clientIpAddress)
 
     // console.log(socket)
     socket.on('word typed', (word) => {
@@ -59,10 +63,7 @@ app.get('/', function (req, res) {
     ip = `172.58.95.6`
 
 
-    // request(`http://ip-api.com/json/${ip}`, function (error, response, body) {
-        // console.log(`GET IP`)
-        //     io.emit('a user connected', JSON.parse(response.body)[`city`])
-    // })
+   
     res.sendFile(path.join(__dirname + '/index.html'));
 });
 
