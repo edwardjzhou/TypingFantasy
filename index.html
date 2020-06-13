@@ -280,11 +280,11 @@
                 .appendChild(document.createTextNode(`Someone typed: `+ word))
                 
             });
-             socket.on('a user connected', function () {
+             socket.on('a user connected', function (city) {
                     // console.log(word)
                     document.querySelector(`#chatroom`)
                         .appendChild(document.createElement("LI"))
-                        .appendChild(document.createTextNode(`A new user connected!` ))
+                        .appendChild(document.createTextNode(`A new user from ${city} connected!` ))
 
                 });
             socket.on('a user disconnected', function () {

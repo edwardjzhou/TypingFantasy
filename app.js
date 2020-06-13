@@ -20,8 +20,49 @@ app.use(bodyParser.json())
 
 
 
+var http = require('http').createServer(app);
+var io = require('socket.io')(http);
+const https = require('https');
+var request = require('request');
+
+
+io.on('connection', (socket) => {
+    // console.log(socket)
+    // console.log(socket.username)
+    var clientIpAddress = socket.request.headers['x-forwarded-for'] || socket.request.connection.remoteAddress;
+    console.log(' new request from : ' + clientIpAddress);
+    console.log('a user connected');
+    io.emit('a user connected', clientIpAddress)
+
+    // console.log(socket)
+    socket.on('word typed', (word) => {
+        // console.log('chat message: ' + word);
+        io.emit('word typed', word)
+    });
+
+    socket.on('disconnect', () => {
+        // console.log('user disconnected');
+        io.emit('a user disconnected')
+    });
+});
+
+
+
+
 
 app.get('/', function (req, res) {
+    // console.log(req.ip)
+    var ip = (req.headers['x-forwarded-for'] || '').split(',').pop().trim() ||
+        req.connection.remoteAddress ||
+        req.socket.remoteAddress ||
+        req.connection.socket.remoteAddress
+    ip = `172.58.95.6`
+
+
+    // request(`http://ip-api.com/json/${ip}`, function (error, response, body) {
+        // console.log(`GET IP`)
+        //     io.emit('a user connected', JSON.parse(response.body)[`city`])
+    // })
     res.sendFile(path.join(__dirname + '/index.html'));
 });
 
@@ -243,7 +284,6 @@ new CronJob('1 0 1 * *', () => { // 00:01 on every first day of a month '1 0 1 *
 //     });
 // })
 
-const https = require('https');
 app.get('/word/:word', function (req, res) {
 
     const dirCont = fs.readdirSync(`./words`); 
@@ -303,34 +343,10 @@ app.get('/word/:word', function (req, res) {
 
 
 
-var http = require('http').createServer(app);
-var io = require('socket.io')(http);
-
-
-io.on('connection', (socket) => {
-    console.log(socket)
-    console.log(socket.username)
-    io.emit('a user connected')
-    console.log('a user connected');
-
-    socket.on('word typed', (word) => {
-        console.log('chat message: ' + word);
-        io.emit('word typed', word)
-    });
-    
-    socket.on('disconnect', () => {
-        console.log('user disconnected');
-        io.emit('a user disconnected')
-    });
-});
 
 http.listen(port, () => {
     console.log(`listening on *:${port}`);
 });
-
-
-
-
 
 // app.listen(port, ()=> {
 //     console.log(`listening on`, port)
