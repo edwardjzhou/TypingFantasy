@@ -20,27 +20,36 @@
 // 11. maybe huge melee limit break swing but will take a lot of either async/instance variables tracking/animationframes counting
 
 
-const qs = document.querySelector.bind(globalThis.document)
+
+
+
 
 import Game from './game';
+import UI from './ui'
 
 document.addEventListener('DOMContentLoaded', () => {
-    //i do have access to function(){}, const func = ()=> in <script>s here
-    window.game = new Game() // window for testing
-    window.memory = window.game
-    const linkedin = qs("a[href='https://www.linkedin.com/in/edzhou/']");
-    const github = qs("a[href='https://github.com/featurerich1/']");
-    const email = qs("a[href^='mailto']");
-
     
-    linkedin.addEventListener(`click`, () => {
-        if (!window.game.onSplash) window.game.rate = 2 * window.game.rate
+    // UI.__proto__ is native code
+    // UI.prototype.constructor === UI === {staticmethod: func(){}, prototype: {instance methods here} } 
+    // UI.prototype = {constructor: UI, normalmethod: func(){} }
+    // cannot assign to this
+    // THe problem: A static method calls this.instanceMethod(). The this is UI.prototype.constructor NOT UI.prototype
+    // Fix: if (!this.hasOwnproperty(`constructor`)) \
 
-    }, false)
+    // classes always have a syntactic box around them i guess and are run in strict mode so they dont have access to qs
+    // GENERAL RULE IS THE CALLER OF A FUNCTION IS THE THIS INSIDE THE FUNCTION
+    // CALLING A METHOD WITHOUT AN OBJECT: Class.prototype.normalMethod 
+    // (THIS in normalMethod is going to be Class.prototype, the caller, normally it would the object)
+    // CALLING A STATIC METHOD WITH AN OBJECT: obj.__proto__.constructor.staticMETHOD
+    // Class.prototype.constructor.static methods here
+    // UI.prototype.constructor ==  UI
+    // window.UI = UI
+    UI.styleTooltip() //onetime
+    UI.handleClipboard() //onetime
+    UI.fetchScores()
 
-    email.addEventListener(`mouseenter`, () => {
-        if (!window.game.onSplash) window.game.rate = .66 * window.game.rate
-    }, false)
+    window.game = new Game() // window for testing
+ 
 
     
    

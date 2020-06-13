@@ -56,7 +56,8 @@
             }
 
             html, body {
-                min-height: 100%;
+                /* min-height: 100%; */
+                min-height: 100vh;
             }
 
             #instructions{
@@ -174,7 +175,7 @@
                 <input type='text' id='phone-keyboard'>↵Keyboard
         </div>
 
-        <div id="instructions">Instructions: 
+        <div id="instructions" style='padding-bottom:2.5rem;text-align:left;'>Instructions: 
             <p>1. Type the word above the monster's head to attack it!</p>
             <p>2. Press space to pause/unpause. <label> Toggle sound:<input type="checkbox" id="soundToggle" name="soundToggle" checked></label> </p>
 
@@ -186,7 +187,7 @@
                 3. Activate cheats if you're so inclined!
             </div>
 
-            <div id="cheat-tooltiptext">
+            <div id="cheat-tooltiptext" ">
                 <p>&bull;Hover over my Email link to add 50% to the monster spawn rate (repeatable)</p>
                 <p>&bull;Click my Linkedin link to halve the monster spawn rate (repeatable)</p>
                 <p>&bull;Type and enter my first name, edward, to activate infinite health</p>
@@ -198,29 +199,33 @@
                 Your browser does not support the audio element.
             </audio>
 
+            <div id="contact" style="font-size:2.5rem; 
+                    /* bottom: 500px; */
+                    /* position: absolute; */
+                    /* margin-top: 50px; */
+                    /* bottom: 2px; */
+                    /* margin-bottom: 2px; */
+                    /* left:50%;
+                    transform: translate(-50%); */
+                    margin-top: 20px;
+
+                    ">
+                <!-- target=_blank is because game progress would be lost otherwise; the phone# is from google -->
+                <a href="https://www.linkedin.com/in/edzhou/" tabindex="-1" target="_blank"> My Linkedin</a>&nbsp;|&nbsp;
+                <a href="https://github.com/featurerich1/" tabindex="-1" target="_blank">My Github</a>&nbsp;|&nbsp;
+                <a href="mailto:edward@utexas.edu" tabindex="-1" target="_blank">Email me!</a>
+                <img id="clipboard" title="Click to copy my e-mail" src="/src/clipboard.png"
+                    style="display:inline-block; width:25px;vertical-align:top;"><img>
+
+                <!-- &nbsp;|&nbsp;  -->
+                <!-- <a href="tel:281-401-9473" tabindex="-1" target="_blank">Call me</a>‪ -->
+            </div>
         </div>
 
 <!--         
           -->
 
-        <div id="contact" style="font-size:2.5rem; 
-        /* bottom: 500px; */
-        position: absolute;
-        /* margin-top: 50px; */
-        bottom: 2px;
-        left:50%;
-        transform: translate(-50%);
-
-        ">
-            <!-- target=_blank is because game progress would be lost otherwise; the phone# is from google -->
-                <a href="https://www.linkedin.com/in/edzhou/" tabindex="-1" target="_blank"> My Linkedin</a>&nbsp;|&nbsp;
-                <a href="https://github.com/featurerich1/" tabindex="-1" target="_blank">My Github</a>&nbsp;|&nbsp;
-                <a href="mailto:edward@utexas.edu" tabindex="-1" target="_blank">Email me!</a> 
-                <img id="clipboard" title= "Click to copy my e-mail" src="/src/clipboard.png" style="display:inline-block; width:25px;vertical-align:top;"><img>
-
-                <!-- &nbsp;|&nbsp;  -->
-                <!-- <a href="tel:281-401-9473" tabindex="-1" target="_blank">Call me</a>‪ -->
-        </div>
+     
 
 
         <!-- <input type="file" accept=".csv"> maybe accept csv or arrays or something just set window.game.dictionary=[array of ur choosing] set with my js</input>
@@ -259,169 +264,23 @@
 
             <h1 PRIMARY data-hi = "5" bye='123'> High Scores  </h1> 
             <!-- tbd: I want to test reflectivity of html attrs -->
+        </div>    
+
+        <div id='chatroom' style="height:800px; width: 600px;">
+            <h1>chatbox!</h1>
         </div>
 
-            <script>
-                // all functions defined here attach to window object
-                try {
-                    const tooltipStyle = {
-                        position: `relative`,
-                        display: `inline-block`,
-                    }
-
-                    const tooltiptextStyle = {
-                        ...tooltipStyle,
-                        // visibility: `hidden`,
-                        display: `none`,
-                        // width: `150px`,
-                        backgroundColor: `black`,
-                        color: `#fff`,
-                        textAlign: `left`,
-                        borderRadius: `6px`,
-                        padding: `5px 0`,
-                        /* Position the tooltip */
-                        position: `absolute`,
-                        zIndex: `1`,
-                    }
-
-                    Object.assign(document.querySelector(`#cheat-tooltiptext`).style, tooltiptextStyle)
-                    Object.assign(document.querySelector(`#cheat-tooltip`).style, tooltipStyle)
-
-                } catch (err) {
-                    alert(err)
-                }
-
-                                    
-                const ensureSorted = (scores) => {
-                    const sorted = scores.sort( (a, b) => b[0] - a[0] )
-
-                    return ({
-                        sorted,
-                        'noInconsistency': ( JSON.stringify(sorted) === JSON.stringify(scores) )
-                    })
-                }
-                //aliasing while object destrucing: as for import and : for const {} expression; how about params? DONT THINK can alias in params only set defArg
-                const createScoreTable = function (scores) {
-                    const { noInconsistency: noInconsistency, sorted } = ensureSorted(scores)
-                    if ( !noInconsistency) throw `high scores' broken`
-                    const textNode = document.createTextNode.bind(document)
-                    const lineBreak = () => document.createElement(`br`)
-                    const table = document.querySelector(`#highscore`)
-
-                    for (let [index, [score, name]] of Object.entries(scores) ) {
-                        table.appendChild(
-                            textNode(`${++index}. ${name} scored ${score}`)
-                        )
-                        table.appendChild(lineBreak())
-                    }
-                    table.style.position = `absolute`
-                    attachTableToCanvasRight(table)
-                }; 
-
-                const attachTableToCanvasRight = (table, yetToAttach = true) => {
-                    const canvas = document.getElementById(`canvas`)
-                    table.style.left =  10 + canvas.getBoundingClientRect().right+`px`
-                    table.style.top = canvas.getBoundingClientRect().y+`px`
-                    if (yetToAttach) window.addEventListener('resize', () => attachTableToCanvasRight(table, false) );
-                }
-
-                const deleteScores = () => {
-                    const table = document.querySelector(`#highscore`)
-                    table.innerHTML = table.innerHTML.split(`</h1>`)[0]
-
-                    // let child = table.lastElementChild;
-                    // while (child && table.children.length > 1) {
-                    //     table.removeChild(child);
-                    //     child = table.lastElementChild;
-                    // } 
-                    // table.innerHTML = 
-                }
-                // (async function fetchScores(){
-                //     let data
-                //     const defaultData = Object.freeze({ "highScores": [[123, "Edward"], [50, "John"], [30, "Crono"], [25, "Scala"], [15, "Robo"]] })
-                //     try {
-                //         data = await fetch(`./highscore`).then(res => res.json()) // res is a response object and running res.json() returns a promsie on the body stream is async so cant access res
-                //     } catch (err) {
-                //         console.log(err)
-                //         data = defaultData
-                //     } finally {
-                //         createScoreTable(data)
-                //     }
-                // })();
-                async function fetchScores() {
-                    let data
-                    const defaultData = Object.freeze([[123, "Edward"], [50, "John"], [30, "Crono"], [25, "Scala"], [15, "Robo"]])
-                    try {
-                        data = await fetch(`./highscore`).then(res => res.json()) // res is a response object and running res.json() returns a promsie on the body stream is async so cant access res
-                    } catch (err) {
-                        console.log(err)
-                        data = defaultData
-                    } finally {
-                        createScoreTable(data)
-                    }
-                };
-
-                fetchScores()
-
-            //  this may be useless 
-                function destroyerOfObjects(){
-                    for (let prop in window.game) {
-                        eval(`delete window.game.${prop}`)
-                    }
-                    console.log(window.game)
-                }
-
-                function fallbackCopyTextToClipboard(text) {
-                    var textArea = document.createElement("textarea");
-                    textArea.value = text;
-
-                    // Avoid scrolling to bottom
-                    textArea.style.top = "0";
-                    textArea.style.left = "0";
-                    textArea.style.position = "fixed";
-
-                    document.body.appendChild(textArea);
-                    textArea.focus();
-                    textArea.select();
-
-                    try {
-                        var successful = document.execCommand('copy');
-                        var msg = successful ? 'successful' : 'unsuccessful';
-                        console.log('Fallback: Copying text command was ' + msg);
-                    } catch (err) {
-                        console.error('Fallback: Oops, unable to copy', err);
-                    }
-
-                    document.body.removeChild(textArea);
-                }
- 
-                function copyTextToClipboard(text) {
-                    if (!navigator.clipboard) {
-                        fallbackCopyTextToClipboard(text);
-                        return;
-                    }
-
-                    navigator.clipboard.writeText(text).then( () => {
-                        console.log('Async: Copying to clipboard was successful!');
-                    }, (err) => {
-                        console.error('Async: Could not copy text: ', err);
-                    });
-                }
-
-                const clipboardImage = document.querySelector(`#clipboard`)
-                clipboardImage.addEventListener('click', function() {
-                    copyTextToClipboard('edward@utexas.edu');
-                    this.style.height = `30px`
-                    setTimeout(function(){
-                        this.style.height = `25px`
-                    }.bind(this),500)
-                    
-                });
-
-            </script> 
-
-
-
+        <script src="/socket.io/socket.io.js"></script>
+        <script>
+            var socket = io();
+            socket.on('word typed', function (word) {
+                // console.log(word)
+                document.querySelector(`#chatroom`)
+                .appendChild(document.createElement("LI"))
+                .appendChild(document.createTextNode(`Someone typed: `+ word))
+                
+            });
+        </script>
 
 
     </body>

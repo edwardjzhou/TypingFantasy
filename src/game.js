@@ -1,6 +1,7 @@
 import Enemy from './enemy';
 import Crono from './crono';
 import Trie from './trie';
+import UI from './ui'
 
 
 // TBD 1. Add a monster Try data strcuture to highlight in red possible targets as a sort of demo of tries and like a targeting system to warn a user he
@@ -31,9 +32,9 @@ class Game {
         this._addListeners();
         this.animateSplash(); 
 
-        const event = new EventEmitter();
 
-  
+
+      
 
         //animate stops recursively calling itself then 0-2 secs later we start downloading the full chosen lang pack THEN -> gameloop()
         let interval = setInterval(  () => {
@@ -377,6 +378,7 @@ class Game {
         this.trie = new Trie();
         this.enemies = [];
         this.player = new Crono(300, 300, this.canvas, this.ctx, this.cronoleftimg, this.cronorightimg, this.cronoupimg, this.cronodownimg, this.cronothrust, this.keys, this.enemies);
+        UI.addCheats()
         this.animate();
         return
     }
@@ -533,6 +535,8 @@ class Game {
             if (this.enemies[i].word === this.word && this.enemies[i].alive === true) {
                 this.player.animateAttack(this.enemies[i].x, this.enemies[i].y - 50, this.cronothrust)
                 this.enemies[i].alive = false;
+                socket.emit('word typed', this.word);
+
                 this.destroyedCount >= 1 ? this.destroyedCount++ : this.destroyedCount = 1
             }
         }
@@ -599,8 +603,8 @@ class Game {
                     // console.log(`third`)
                     return res.json()
                 })
-        deleteScores()
-        createScoreTable(newScores)
+        UI.deleteScores()
+        UI.createScoreTable(newScores)
 
         // console.log(`fourth`)
 
@@ -639,7 +643,7 @@ class Game {
             // document.body.insertBefore(this.canvas, document.querySelector(`#instructions`) )
             // console.log(`inserted new canv`)
             // delete this 
-            destroyerOfObjects()
+            UI.destroyerOfObjects()
             // console.log(`insetTIMEOUT`)
             
             window.game = new Game() // no more refs to old game so it hsould be garbage colelcted?
@@ -679,6 +683,12 @@ class Game {
         for (let i = 0; i < this.enemies.length; i++) {
             if (this.enemies[i].word === this.word.join(``) && this.enemies[i].alive === true) {
                 this.player.animateAttack(this.enemies[i].x, this.enemies[i].y - 50, this.cronothrust)
+                
+                // const event = new EventEmitter();
+                //console.log(socket)
+                console.log(socket)
+                socket.emit('word typed', this.word.join(``));
+
                 this.enemies[i].alive = false;
                 this.destroyedCount >= 1 ? this.destroyedCount++ : this.destroyedCount = 1
             }

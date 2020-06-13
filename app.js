@@ -5,11 +5,29 @@ var port = process.env.PORT || 3001;
 var bodyParser = require('body-parser')
 app.use(bodyParser.json())
 
+// require('express-http2-workaround')({ express: express, http2: http2, app: app });
 
-// STATIC files: this may be somewhat not DRY but I didnt want to expose any files unnecessarily while stil developing -- will refactor
+// // Setup HTTP/2 Server
+// var httpsOptions = {
+//     'key': fs.readFileSync(__dirname + '/keys/ssl.key'),
+//     'cert': fs.readFileSync(__dirname + '/keys/ssl.crt'),
+//     'ca': fs.readFileSync(__dirname + '/keys/ssl.crt')
+// };
+// var http2Server = http2.createServer(httpsOptions, app);
+// http2Server.listen(443, function () {
+//     console.log("Express HTTP/2 server started");
+// });
+
+
+
+
 app.get('/', function (req, res) {
     res.sendFile(path.join(__dirname + '/index.html'));
 });
+
+
+// STATIC files: this may be somewhat not DRY but I didnt want to expose any files unnecessarily while stil developing -- will refactor
+
 
 app.get('/dist/main.js', (req,res)=>{
     res.sendFile(path.join(__dirname + '/dist/main.js'))
@@ -179,14 +197,27 @@ new CronJob('0 * * * *', function () { //top o' the hour 0 * * * *
 
 }, null, true, 'America/Los_Angeles');
 
-app.get('/sound', (req, res) => {
-    request('https://ssl.gstatic.com/dictionary/static/sounds/20180430/chuck--_us_1.mp3', function (error, response, body) {
-        // console.log('error:', error); 
-        console.log('statusCode:', response && response.statusCode);
-        console.log(body)
-    });
-    res.send(body)
-})
+new CronJob('1 0 1 * *', () => { // 00:01 on every first day of a month '1 0 1 * *'
+    fs.writeFileSync(`./src/highscores.json`, JSON.stringify({"highScores": [[123, "Edward"], [50, "John"], [30, "Crono"], [25, "Scala"], [15, "Robo"]] } ))
+}, null, true, 'America/Los_Angeles')
+// # 1. Entry: Minute when the process will be started[0 - 60]
+// # 2. Entry: Hour when the process will be started[0 - 23]
+// # 3. Entry: Day of the month when the process will be started[1 - 28 / 29 / 30 / 31]
+// # 4. Entry: Month of the year when the process will be started[1 - 12]
+// # 5. Entry: Weekday when the process will be started[0 - 6][0 is Sunday]
+//So according to this your 5 8 * * 0 would run 8:05 every Sunday.
+
+
+
+
+// app.get('/sound', (req, res) => {
+//     request('https://ssl.gstatic.com/dictionary/static/sounds/20180430/chuck--_us_1.mp3', function (error, response, body) {
+//         // console.log('error:', error); 
+//         console.log('statusCode:', response && response.statusCode);
+//         console.log(body)
+//     });
+//     res.send(body)
+// })
 
 
 // serve stuff up to DOWNLOAD for the user
@@ -270,7 +301,38 @@ app.get('/word/:word', function (req, res) {
     }
 });
 
-app.listen(port);
+
+
+var http = require('http').createServer(app);
+var io = require('socket.io')(http);
+
+
+io.on('connection', (socket) => {
+    console.log(socket)
+    console.log(socket.username)
+    console.log('a user connected');
+
+    socket.on('word typed', (word) => {
+        console.log('chat message: ' + word);
+        io.emit('word typed', word)
+    });
+    
+    socket.on('disconnect', () => {
+        console.log('user disconnected');
+    });
+});
+
+http.listen(port, () => {
+    console.log(`listening on *:${port}`);
+});
+
+
+
+
+
+// app.listen(port, ()=> {
+//     console.log(`listening on`, port)
+// });
 
 
 //piping readstreams:
@@ -278,3 +340,6 @@ app.listen(port);
 
 //translation w/o captcha
 // https://translate.google.com.vn/translate_tts?ie=UTF-8&q=%E4%B8%AD%E6%96%87&tl=zh-CN&client=tw-ob
+
+
+
