@@ -30,7 +30,7 @@ io.on('connection', (socket) => {
     // console.log(socket)
     // console.log(socket.username)
     var clientIpAddress = socket.request.headers['x-forwarded-for'] || socket.request.connection.remoteAddress;
-    request(`http://ip-api.com/json/${ip}`, function (error, response, body) {
+    request(`http://ip-api.com/json/${clientIpAddress}`, function (error, response, body) {
         console.log(`GET IP`)
         io.emit('a user connected', JSON.parse(response.body)[`city`])
     })
