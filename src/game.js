@@ -535,7 +535,7 @@ class Game {
             if (this.enemies[i].word === this.word && this.enemies[i].alive === true) {
                 this.player.animateAttack(this.enemies[i].x, this.enemies[i].y - 50, this.cronothrust)
                 this.enemies[i].alive = false;
-                // socket.emit('word typed', this.word);
+                socket.emit('word typed', this.word);
 
                 this.destroyedCount >= 1 ? this.destroyedCount++ : this.destroyedCount = 1
             }
@@ -685,9 +685,9 @@ class Game {
                 this.player.animateAttack(this.enemies[i].x, this.enemies[i].y - 50, this.cronothrust)
                 
                 // const event = new EventEmitter();
-                //console.log(socket)
+                console.log(socket)
                 // console.log(socket)
-                // socket.emit('word typed', this.word.join(``));
+                socket.emit('word typed', this.word.join(``));
 
                 this.enemies[i].alive = false;
                 this.destroyedCount >= 1 ? this.destroyedCount++ : this.destroyedCount = 1

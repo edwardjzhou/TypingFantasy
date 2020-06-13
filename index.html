@@ -270,7 +270,7 @@
             <h1>chatbox!</h1>
         </div>
 
-        <!-- <script src="/socket.io/socket.io.js"></script>
+        <script src="/socket.io/socket.io.js"></script>
         <script>
             var socket = io();
             socket.on('word typed', function (word) {
@@ -280,7 +280,23 @@
                 .appendChild(document.createTextNode(`Someone typed: `+ word))
                 
             });
-        </script> -->
+             socket.on('a user connected', function () {
+                    // console.log(word)
+                    document.querySelector(`#chatroom`)
+                        .appendChild(document.createElement("LI"))
+                        .appendChild(document.createTextNode(`A new user connected!` ))
+
+                });
+            socket.on('a user disconnected', function () {
+                // console.log(word)
+                document.querySelector(`#chatroom`)
+                    .appendChild(document.createElement("LI"))
+                    .appendChild(document.createTextNode(`A user disconnected! :(`))
+
+            });
+
+
+        </script>
 
 
     </body>

@@ -303,36 +303,38 @@ app.get('/word/:word', function (req, res) {
 
 
 
-// var http = require('http').createServer(app);
-// var io = require('socket.io')(http);
+var http = require('http').createServer(app);
+var io = require('socket.io')(http);
 
 
-// io.on('connection', (socket) => {
-//     console.log(socket)
-//     console.log(socket.username)
-//     console.log('a user connected');
+io.on('connection', (socket) => {
+    console.log(socket)
+    console.log(socket.username)
+    io.emit('a user connected')
+    console.log('a user connected');
 
-//     socket.on('word typed', (word) => {
-//         console.log('chat message: ' + word);
-//         io.emit('word typed', word)
-//     });
+    socket.on('word typed', (word) => {
+        console.log('chat message: ' + word);
+        io.emit('word typed', word)
+    });
     
-//     socket.on('disconnect', () => {
-//         console.log('user disconnected');
-//     });
-// });
-
-// http.listen(port, () => {
-//     console.log(`listening on *:${port}`);
-// });
-
-
-
-
-
-app.listen(port, ()=> {
-    console.log(`listening on`, port)
+    socket.on('disconnect', () => {
+        console.log('user disconnected');
+        io.emit('a user disconnected')
+    });
 });
+
+http.listen(port, () => {
+    console.log(`listening on *:${port}`);
+});
+
+
+
+
+
+// app.listen(port, ()=> {
+//     console.log(`listening on`, port)
+// });
 
 
 //piping readstreams:
