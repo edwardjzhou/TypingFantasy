@@ -330,9 +330,9 @@ app.get('/word/:word', function (req, res) {
 
 
 
-// app.listen(port, ()=> {
-//     console.log(`listening on`, port)
-// });
+app.listen(port, ()=> {
+    console.log(`listening on`, port)
+});
 
 
 //piping readstreams:
