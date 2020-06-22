@@ -168,6 +168,42 @@
             </ruby>
         </h1>
 
+
+
+
+        <div id='chatroom' style="height:800px; width: 600px;">
+            <h1>chatbox!</h1>
+        </div>
+        
+        <script src="/socket.io/socket.io.js"></script>
+        <script>
+            var socket = io();
+            socket.on('word typed', function (word) {
+                // console.log(word)
+                document.querySelector(`#chatroom`)
+                    .appendChild(document.createElement("LI"))
+                    .appendChild(document.createTextNode(`Someone typed: ` + word))
+
+            });
+            socket.on('a user connected', function (city) {
+                // console.log(word)
+                document.querySelector(`#chatroom`)
+                    .appendChild(document.createElement("LI"))
+                    .appendChild(document.createTextNode(`A new user from ${city} connected!`))
+
+            });
+            socket.on('a user disconnected', function () {
+                // console.log(word)
+                document.querySelector(`#chatroom`)
+                    .appendChild(document.createElement("LI"))
+                    .appendChild(document.createTextNode(`A user disconnected! :(`))
+
+            });
+
+
+        </script>
+        
+
         <canvas id="canvas" width=800px height=600 tabindex="1"></canvas>
             <!-- to be able to type on a smartphone's onscreen keyboard but not autozoom the input from it being 16px-->
         <div id="phone-input" style="font-size:17px;"
@@ -266,37 +302,7 @@
             <!-- tbd: I want to test reflectivity of html attrs -->
         </div>    
 
-        <div id='chatroom' style="height:800px; width: 600px;">
-            <h1>chatbox!</h1>
-        </div>
-
-        <script src="/socket.io/socket.io.js"></script>
-        <script>
-            var socket = io();
-            socket.on('word typed', function (word) {
-                // console.log(word)
-                document.querySelector(`#chatroom`)
-                .appendChild(document.createElement("LI"))
-                .appendChild(document.createTextNode(`Someone typed: `+ word))
-                
-            });
-             socket.on('a user connected', function (city) {
-                    // console.log(word)
-                    document.querySelector(`#chatroom`)
-                        .appendChild(document.createElement("LI"))
-                        .appendChild(document.createTextNode(`A new user from ${city} connected!` ))
-
-                });
-            socket.on('a user disconnected', function () {
-                // console.log(word)
-                document.querySelector(`#chatroom`)
-                    .appendChild(document.createElement("LI"))
-                    .appendChild(document.createTextNode(`A user disconnected! :(`))
-
-            });
-
-
-        </script>
+        
 
 
     </body>

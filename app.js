@@ -5,6 +5,9 @@ var port = process.env.PORT || 3001;
 var bodyParser = require('body-parser')
 app.use(bodyParser.json())
 
+
+
+
 // require('express-http2-workaround')({ express: express, http2: http2, app: app });
 
 // // Setup HTTP/2 Server
@@ -31,8 +34,7 @@ io.on('connection', (socket) => {
     // console.log(socket.username)
     var clientIpAddress = socket.request.headers['x-forwarded-for'] || socket.request.connection.remoteAddress;
     request(`http://ip-api.com/json/${clientIpAddress}`, function (error, response, body) {
-        console.log(`GET IP`)
-        io.emit('a user connected', JSON.parse(response.body)[`city`])
+        io.emit('a user connected', JSON.parse(response.body)[`city`] + `,` + JSON.parse(response.body)[`country`])
     })
     console.log(' new request from : ' + clientIpAddress);
     console.log('a user connected');
@@ -51,19 +53,46 @@ io.on('connection', (socket) => {
 });
 
 
+// app.use(express.static(path.join(__dirname, 'dist')));
 
+
+// const cache = new Map()
+// cache.set(5,2)
 
 
 app.get('/', function (req, res) {
+    
+    // if (cluster.isMaster) {
+    //     console.log(`Master ${process.pid} is running`)
+
+    //     for (let i = 0; i < numCPUs; i++) {
+    //         cluster.fork()
+    //     }
+
+    //     cluster.on('exit', (worker, code, signal) => {
+    //         console.log(`worker ${worker.process.pid} died`)
+    //     })
+    // } else {
+    //     const express = require('express')
+
+    //     const app = express()
+
+    //     // define our endpoints here
+
+    //     app.listen(port)
+
+    //     console.log(`Process ${process.pid} started`)
+    // }
+
+
     // console.log(req.ip)
-    var ip = (req.headers['x-forwarded-for'] || '').split(',').pop().trim() ||
-        req.connection.remoteAddress ||
-        req.socket.remoteAddress ||
-        req.connection.socket.remoteAddress
-    ip = `172.58.95.6`
+    // var ip = (req.headers['x-forwarded-for'] || '').split(',').pop().trim() ||
+    //     req.connection.remoteAddress ||
+    //     req.socket.remoteAddress ||
+    //     req.connection.socket.remoteAddress
+    // ip = `172.58.95.6`
 
 
-   
     res.sendFile(path.join(__dirname + '/index.html'));
 });
 
@@ -302,6 +331,9 @@ app.get('/word/:word', function (req, res) {
             case true: // ENGLISH would be language=null
                 handleEnglish();
                 break;
+            default: 
+                handleEnglish();
+
         }
        
             
