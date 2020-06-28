@@ -1,4 +1,3 @@
-
 // document.addEventListener('DOMContentLoaded', () => {
 
 // canvas = document.getElementById('canvas');
@@ -20,7 +19,7 @@
 // function game() {
 //     fontSize = 50;
 
-//     //handles deleting old characters 
+//     //handles deleting old characters
 //     ctx.clearRect(0, canvas.height - fontSize, canvas.width, fontSize)
 //     //end deleting
 
@@ -122,10 +121,10 @@
 // //     x += dx;
 // // }
 // function makeEnemy() {
-//     Math.randomcanvas.width 
+//     Math.randomcanvas.width
 //     enemies = []
 //     enemiesWords = []
-//     // each enemy: 
+//     // each enemy:
 //     // 1. has a rendered pic at random location
 //     // 2. has a word in enemieswords array thats checked per keypress
 //     enemyId++
@@ -226,4 +225,3 @@
 //             break;
 //     }
 // }
-

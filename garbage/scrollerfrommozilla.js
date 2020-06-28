@@ -1,4 +1,3 @@
-
 // var img = new Image();
 
 // // User Variables - customize these to change the image being scrolled, its

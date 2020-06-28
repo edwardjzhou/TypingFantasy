@@ -1,5 +1,4 @@
-const chineseIdiomsString =
-`12,"哀莫大于心死","āi  mò  dà  yú  xīn  sǐ","指最可悲哀的事，莫过于思想顽钝，麻木不仁。","《庄子·田子方》：“夫哀莫大于心死，而人死亦次之。”","人说：“～。”我的心已经死了。我不该再到你们公馆里来，打扰你们。（巴金《家》二回）","amds"
+const chineseIdiomsString = `12,"哀莫大于心死","āi  mò  dà  yú  xīn  sǐ","指最可悲哀的事，莫过于思想顽钝，麻木不仁。","《庄子·田子方》：“夫哀莫大于心死，而人死亦次之。”","人说：“～。”我的心已经死了。我不该再到你们公馆里来，打扰你们。（巴金《家》二回）","amds"
 14,"哀思如潮","āi  sī  rú  cháo","哀伤的思绪如同潮涌一般。形容极度悲痛。",,,"asrc"
 16,"哀痛欲绝","āi  tòng  yù  jué","伤心得要死。形容悲痛到了极点。","清·曹雪芹《红楼梦》第十三回：“那宝珠按未嫁女之礼在灵前哀哀欲绝。”","宝庆给大哥唱了一曲挽歌，直唱得泣不成声，～。（老舍《鼓书艺人》十七）","atyj"
 21,"挨肩擦膀","āi  jiān  cā  bǎng","指身体相贴近。也形容人群拥挤。","元·刘君锡《来生债》第一折：“你怎么偏要挨肩擦膀的，舒着手往我怀里摸甚么？”","那两边围看的，～，不知其数。（明·兰陵笑笑生《金瓶梅词话》第四二回）","ajcb"
@@ -12974,9 +12973,12 @@ const chineseIdiomsString =
 12998,"做一日和尚撞一天钟","zuò  yī  rì  hé  shàng  zhuàng  yī  tiān  zhōng","俗语。比喻遇事敷衍，得过且过。",,"人活着要有理想，有作为，切不可～。","zyrz"
 12999,"做贼心虚","zuò  zéi  xīn  xū","虚：怕。指做了坏事怕人知道，心里老是不安。","宋·释悟明《联灯会要·重显禅师》：“却顾侍者云：‘适来有人看方丈么？’侍者云：‘有。’师云：‘作贼人心虚。’”","这个毛病，起先人家还不知道，这又是他们～弄穿的。（清·吴趼人《二十年目睹之怪现状》第六十回）","zzxx"
 13000,"做张做势","zuò  zhāng  zuò shì","装模作样，故意做出一种姿态。",,"沈琼枝看那两个妇人时，一个二十六七岁光景，一个十七八岁，乔素打扮，～。（清·吴敬梓《儒林外史》第四十一回）","zzzs"
-13033,"哀哀父母","āi  āi  fù  mǔ","可哀呀可哀，我的父母啊！原指古时在暴政下人民终年在外服劳役，对父母病痛、老死不能照料而悲哀。","《诗经·小雅·蓼莪》：“蓼蓼者莪，匪莪伊蒿，哀哀父母，生我劬劳。”","咱人有子方知不孝娘，岂不问～情肠！（元·无名氏《小张屠》第一折）","aafm"`
+13033,"哀哀父母","āi  āi  fù  mǔ","可哀呀可哀，我的父母啊！原指古时在暴政下人民终年在外服劳役，对父母病痛、老死不能照料而悲哀。","《诗经·小雅·蓼莪》：“蓼蓼者莪，匪莪伊蒿，哀哀父母，生我劬劳。”","咱人有子方知不孝娘，岂不问～情肠！（元·无名氏《小张屠》第一折）","aafm"`;
 
-export const chineseDictionary =chineseIdiomsString.split(`\n`).map(line => line.split(`"`)[1]).filter(idiom => /\p{Script=Han}/u.test(idiom))
+export const chineseDictionary = chineseIdiomsString
+  .split(`\n`)
+  .map((line) => line.split(`"`)[1])
+  .filter((idiom) => /\p{Script=Han}/u.test(idiom));
 // module.exports = chineseIdiomsString.split(`\n`).map(line => line.split(`"`)[1]).filter(idiom => /\p{Script=Han}/u.test(idiom))
 // const dictionary = chineseIdiomsString.split(`\n`).map(line => line.split(`"`)[1]).filter(idiom => /\p{Script=Han}/u.test(idiom))
 
