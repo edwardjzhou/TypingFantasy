@@ -39,7 +39,7 @@ document.addEventListener("DOMContentLoaded", () => {
   UI.styleTooltip(); //onetime
   UI.handleClipboard(); //onetime
   UI.fetchScores();
-  UI.attachChatToCanvasLeft()
+  UI.attachChatToCanvasLeft();
 
   window.game = new Game(); // window for testing
 

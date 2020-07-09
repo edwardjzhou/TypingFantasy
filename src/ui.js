@@ -131,6 +131,7 @@ export default class UI {
   }
 
   static attachTableToCanvasRight(table, yetToAttach = true) {
+    table.style.display = "block";
     const canvas = document.getElementById(`canvas`);
     table.style.left = 10 + canvas.getBoundingClientRect().right + `px`;
     table.style.top = canvas.getBoundingClientRect().y + `px`;
@@ -141,18 +142,18 @@ export default class UI {
   }
 
   static attachChatToCanvasLeft(yetToAttach = true) {
-        let chat = document.querySelector("#chatroom")
-        const canvas = document.getElementById(`canvas`);
-        chat.style.position = `absolute`;
+    let chat = document.querySelector("#chatroom");
+    const canvas = document.getElementById(`canvas`);
+    chat.style.position = `absolute`;
 
-       chat.style.left = "50px"
-        chat.style.width = canvas.getBoundingClientRect().left - 30 + "px";
-        chat.style.height = canvas.getBoundingClientRect().height + "px";
-       chat.style.top = canvas.getBoundingClientRect().y + `px`;
-       if (yetToAttach)
-         window.addEventListener("resize", () =>
-           this.attachChatToCanvasLeft(chat, false)
-         );
+    chat.style.left = "50px";
+    chat.style.width = canvas.getBoundingClientRect().left - 30 + "px";
+    chat.style.height = canvas.getBoundingClientRect().height + "px";
+    chat.style.top = canvas.getBoundingClientRect().y + `px`;
+    // if (yetToAttach)
+    //   window.addEventListener("resize", () =>
+    //     this.attachChatToCanvasLeft(chat, false)
+    //   );
   }
 
   static deleteScores() {

@@ -47,16 +47,13 @@ module.exports = {
       {
         test: /\.(js)$/,
         exclude: /node_modules/,
-        use: ['babel-loader']
-      }
-    ]
+        use: ["babel-loader"],
+      },
+    ],
   },
   resolve: {
-    extensions: ['*', '.js']
+    extensions: ["*", ".js"],
   },
-
 };
 
-
 // In package.lock.json "requires" reflects dependencies from package.json file, while "dependencies" reflects actually installed dependencies in node_modules folder of this dependency.
-

@@ -12,7 +12,6 @@
 //   ],
 // };
 
-
 module.exports = {
   presets: [
     [
@@ -24,9 +23,9 @@ module.exports = {
       },
     ],
   ],
-      plugins: [
-        "@babel/plugin-proposal-private-methods",
-        "@babel/plugin-proposal-class-properties",
-        "@babel/plugin-proposal-object-rest-spread"
-      ]
+  plugins: [
+    "@babel/plugin-proposal-private-methods",
+    "@babel/plugin-proposal-class-properties",
+    "@babel/plugin-proposal-object-rest-spread",
+  ],
 };
