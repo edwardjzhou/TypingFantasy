@@ -1,15 +1,18 @@
-var express = require("express");
-var app = express();
-var path = require("path");
-var port = process.env.PORT || 3001;
-var bodyParser = require("body-parser");
+const express = require("express");
+const app = express();
+const path = require("path");
+const port = process.env.PORT || 3001;
+const bodyParser = require("body-parser");
 app.use(bodyParser.json());
 
 
 // websockets for chatbox
-var http = require("http").createServer(app);
-var io = require("socket.io")(http);
-var request = require("request");
+// http to serve websockets 
+const http = require("http").createServer(app);
+// https to https request for serving audio fiels
+const https = require("https")
+const request = require("request");
+const io = require("socket.io")(http);
 
 io.on("connection", (socket) => {
   var clientIpAddress =
@@ -123,7 +126,6 @@ function sendHighScores(req, res) {
 
 // cron https://github.com/ncb000gt/node-cron
 var CronJob = require("cron").CronJob;
-var request = require("request");
 
 // keep alive heroku/my django project dynamos with a CRON JOB
 new CronJob(
@@ -213,7 +215,6 @@ app.get("/word/:word", function (req, res) {
   if (dirCont.includes(req.params.word + `.mp3`)) {
     res.sendFile(path.join(__dirname + `/words/${req.params.word}.mp3`));
   } else {
-    const file = fs.createWriteStream(`words/${req.params.word}.mp3`);
     const language = req.params.word.match(/[\u3400-\u9FBF]/);
 
     switch (!language) {
@@ -230,20 +231,23 @@ app.get("/word/:word", function (req, res) {
 });
 
 function handleEnglish(req, res) {
+  const file = fs.createWriteStream(`words/${req.params.word}.mp3`);
   const request = https.get(
     `https://ssl.gstatic.com/dictionary/static/sounds/20180430/${encodeURI(
       req.params.word
     )}--_us_1.mp3`,
-    function (response) {
+    function onResponse (response) {
       if (response.headers[`content-type`] === `audio/mpeg`) {
         response.pipe(file);
-        file.on("finish", function () {
-          file.close(() =>
-            res.sendFile(
-              path.join(__dirname + `/words/${req.params.word}.mp3`)
-            )
-          );
-        });
+        response.pipe(res);
+        
+        // file.on("finish", function () {
+        //   file.close(() =>
+        //     res.sendFile(
+        //       path.join(__dirname + `/words/${req.params.word}.mp3`)
+        //     )
+        //   );
+        // });
       } else {
         const secondRequest = https.get(
           `https://translate.google.com.vn/translate_tts?ie=UTF-8&q=${encodeURI(
@@ -266,12 +270,13 @@ function handleEnglish(req, res) {
 }
 
 function handleChinese(req,res) {
+  const file = fs.createWriteStream(`words/${req.params.word}.mp3`);
   const request = https.get(
     `https://gss0.baidu.com/6KAZsjip0QIZ8tyhnq/text2audio?tex=${encodeURI(
       req.params.word
     )}&cuid=baike&lan=ZH&ctp=1&pdt=31&vol=9&spd=4&per=4100`,
     function (response) {
-      if (true) {
+      // if (true) {
         console.log(request.headers);
         response.pipe(file);
         file.on("finish", function () {
@@ -281,9 +286,9 @@ function handleChinese(req,res) {
             )
           );
         });
-      } else {
-        fs.unlink(`words/${req.params.word}.mp3`, () => {});
-      }
+      // } else {
+      //   fs.unlink(`words/${req.params.word}.mp3`, () => {});
+      // }
     }
   );
 }
