@@ -9,13 +9,13 @@ app.use(bodyParser.json());
 // websockets for chatbox
 // http to serve websockets 
 const http = require("http").createServer(app);
-// https to https request for serving audio fiels
+// https request for serving audio files
 const https = require("https")
 const request = require("request");
 const io = require("socket.io")(http);
 
 io.on("connection", (socket) => {
-  var clientIpAddress =
+  const clientIpAddress =
     socket.request.headers["x-forwarded-for"] ||
     socket.request.connection.remoteAddress;
   request(`http://ip-api.com/json/${clientIpAddress}`, function (
@@ -23,15 +23,15 @@ io.on("connection", (socket) => {
     response,
     body
   ) {
-    io.emit(
-      "a user connected",
-      JSON.parse(response.body)[`city`] +
-        ', ' +
+    if (JSON.parse(body)["status"] !== "fail"){
+      io.emit(
+        "a user connected",
+        JSON.parse(response.body)[`city`] +
+          ', ' +
         JSON.parse(response.body)[`country`]
-    );
+      );
+    }
   });
-  console.log(" new request from : " + clientIpAddress);
-  console.log("a user connected");
 
   socket.on("word typed", (word) => {
     io.emit("word typed", word);
@@ -240,28 +240,18 @@ function handleEnglish(req, res) {
       if (response.headers[`content-type`] === `audio/mpeg`) {
         response.pipe(file);
         response.pipe(res);
-        
-        // file.on("finish", function () {
-        //   file.close(() =>
-        //     res.sendFile(
-        //       path.join(__dirname + `/words/${req.params.word}.mp3`)
-        //     )
-        //   );
-        // });
       } else {
         const secondRequest = https.get(
           `https://translate.google.com.vn/translate_tts?ie=UTF-8&q=${encodeURI(
             req.params.word
           )}&tl=en&client=tw-ob`,
           function (response) {
-            response.pipe(file);
-            file.on("finish", function () {
-              file.close(() =>
-                res.sendFile(
-                  path.join(__dirname + `/words/${req.params.word}.mp3`)
-                )
-              );
-            });
+            if (response.headers[`content-type`] === `audio/mpeg`) {
+              response.pipe(file);
+              response.pipe(res);
+            } else {
+              fs.unlink(`words/${req.params.word}.mp3`, () => {});
+            }
           }
         );
       }
@@ -276,8 +266,7 @@ function handleChinese(req,res) {
       req.params.word
     )}&cuid=baike&lan=ZH&ctp=1&pdt=31&vol=9&spd=4&per=4100`,
     function (response) {
-      // if (true) {
-        console.log(request.headers);
+      if (response.headers['content-type'] === 'audio/mp3') {
         response.pipe(file);
         file.on("finish", function () {
           file.close(() =>
@@ -286,9 +275,9 @@ function handleChinese(req,res) {
             )
           );
         });
-      // } else {
-      //   fs.unlink(`words/${req.params.word}.mp3`, () => {});
-      // }
+      } else {
+        fs.unlink(`words/${req.params.word}.mp3`, () => {});
+      }
     }
   );
 }

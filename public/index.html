@@ -14,10 +14,7 @@
         <meta property="og:description" content="TypingFantasy is a fun typing game made with ES6 Javascript and HTML5 Canvas" />
         <meta property="og:image" content="http://cryptic-escarpment-31838.herokuapp.com/Blue_Imp.png" />
 
-
-
         <link rel="stylesheet" href="index.css">
-
             
         <img src="/src/Blue_Imp.png" id="imp">
         <img src="/src/ChronoTrigger1000GuardiaForestBG.png" id="forest">
@@ -33,12 +30,11 @@
         <img src="/src/splash.jpg" id="splash">
         <img src="/src/squarereticle.png" id="squarereticle">
         <img src="/src/cursor.png" id="cursor">
-
     </head>
 
+
     <body>
-        
-        <h1 id="Title">
+        <h1>
             <ruby>
                 <rb>TYPING FANTASY</rb>
                 <rp>(</rp>
@@ -47,11 +43,6 @@
             </ruby>
         </h1>
 
-
-
-
-  
-        
         <script src="/socket.io/socket.io.js"></script>
         <script>
             var socket = io();
@@ -90,16 +81,14 @@
 
             <div id="cheat-tooltip" onmouseover="this.nextElementSibling.style.display='block'"
                 onmouseout="this.nextElementSibling.style.display='none'">
-            <!-- <div id="cheat-tooltip" onmouseover="this.nextElementSibling.style.visibility='visible'" 
-            onmouseout="this.nextElementSibling.style.visibility='hidden'"> -->
                 3. Activate cheats if you're so inclined!
             </div>
 
-            <div id="cheat-tooltiptext" ">
+            <ul id="cheat-tooltiptext" ">
                 <p>&bull;Hover over my Email link to add 50% to the monster spawn rate (repeatable)</p>
                 <p>&bull;Click my Linkedin link to halve the monster spawn rate (repeatable)</p>
                 <p>&bull;Type and enter my first name, edward, to activate infinite health</p>
-            </div>
+            </ul>
 
             <br>
             <audio controls id="myAudio" preload="auto">
@@ -107,26 +96,16 @@
                 Your browser does not support the audio element.
             </audio>
 
-            <div id="contact" style="font-size:2.5rem; 
-                    /* bottom: 500px; */
-                    /* position: absolute; */
-                    /* margin-top: 50px; */
-                    /* bottom: 2px; */
-                    /* margin-bottom: 2px; */
-                    /* left:50%;
-                    transform: translate(-50%); */
-                    margin-top: 20px;
-
-                    ">
-                <!-- target=_blank is because game progress would be lost otherwise; the phone# is from google -->
+            <div id="contact">
+                <!-- target=_blank is because game progress would be lost otherwise -->
                 <a href="https://www.linkedin.com/in/edzhou/" tabindex="-1" target="_blank"> My Linkedin</a>&nbsp;|&nbsp;
                 <a href="https://github.com/featurerich1/" tabindex="-1" target="_blank">My Github</a>&nbsp;|&nbsp;
                 <a href="mailto:edward@utexas.edu" tabindex="-1" target="_blank">Email me!</a>
                 <img id="clipboard" title="Click to copy my e-mail" src="/src/clipboard.png"
-                    style="display:inline-block; width:25px;vertical-align:top;"><img>
-
-
+                    style="display:inline-block; width:25px;vertical-align:top;">
+                <img>
             </div>
+
         </div>
 
      
