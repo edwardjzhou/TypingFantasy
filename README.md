@@ -1,9 +1,8 @@
 # TypingFantasy
 
-I like Javascript and Chrono Trigger: so why not combine the two?
-Play the all-new typing game set in Chrono Trigger!
+Play the all-new Javascript typing game set in Chrono Trigger!
 
-'''
+'''javascript
 export default class Trie {
 constructor() {
 this.trie = {}

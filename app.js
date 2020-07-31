@@ -5,27 +5,13 @@ var port = process.env.PORT || 3001;
 var bodyParser = require("body-parser");
 app.use(bodyParser.json());
 
-// require('express-http2-workaround')({ express: express, http2: http2, app: app });
 
-// // Setup HTTP/2 Server
-// var httpsOptions = {
-//     'key': fs.readFileSync(__dirname + '/keys/ssl.key'),
-//     'cert': fs.readFileSync(__dirname + '/keys/ssl.crt'),
-//     'ca': fs.readFileSync(__dirname + '/keys/ssl.crt')
-// };
-// var http2Server = http2.createServer(httpsOptions, app);
-// http2Server.listen(443, function () {
-//     console.log("Express HTTP/2 server started");
-// });
-
+// websockets for chatbox
 var http = require("http").createServer(app);
 var io = require("socket.io")(http);
-const https = require("https");
 var request = require("request");
 
 io.on("connection", (socket) => {
-  // console.log(socket)
-  // console.log(socket.username)
   var clientIpAddress =
     socket.request.headers["x-forwarded-for"] ||
     socket.request.connection.remoteAddress;
@@ -37,141 +23,27 @@ io.on("connection", (socket) => {
     io.emit(
       "a user connected",
       JSON.parse(response.body)[`city`] +
-        `,` +
+        ', ' +
         JSON.parse(response.body)[`country`]
     );
   });
   console.log(" new request from : " + clientIpAddress);
   console.log("a user connected");
-  // io.emit('a user connected', clientIpAddress)
 
-  // console.log(socket)
   socket.on("word typed", (word) => {
-    // console.log('chat message: ' + word);
     io.emit("word typed", word);
   });
 
   socket.on("disconnect", () => {
-    // console.log('user disconnected');
     io.emit("a user disconnected");
   });
 });
 
-// app.use(express.static(path.join(__dirname, 'dist')));
-
-// const cache = new Map()
-// cache.set(5,2)
-
-app.get("/", function (req, res) {
-  // if (cluster.isMaster) {
-  //     console.log(`Master ${process.pid} is running`)
-
-  //     for (let i = 0; i < numCPUs; i++) {
-  //         cluster.fork()
-  //     }
-
-  //     cluster.on('exit', (worker, code, signal) => {
-  //         console.log(`worker ${worker.process.pid} died`)
-  //     })
-  // } else {
-  //     const express = require('express')
-
-  //     const app = express()
-
-  //     // define our endpoints here
-
-  //     app.listen(port)
-
-  //     console.log(`Process ${process.pid} started`)
-  // }
-
-  // console.log(req.ip)
-  // var ip = (req.headers['x-forwarded-for'] || '').split(',').pop().trim() ||
-  //     req.connection.remoteAddress ||
-  //     req.socket.remoteAddress ||
-  //     req.connection.socket.remoteAddress
-  // ip = `172.58.95.6`
-
-  res.sendFile(path.join(__dirname + "/index.html"));
-});
-
-// STATIC files: this may be somewhat not DRY but I didnt want to expose any files unnecessarily while stil developing -- will refactor
-
+app.use(express.static("public"));
+app.use("/src",express.static(path.join(__dirname, "src"))) // everything at get ./src of app.js is hosted in virtual /src
 app.get("/dist/main.js", (req, res) => {
   res.sendFile(path.join(__dirname + "/dist/main.js"));
 });
-
-app.get("/src/ChronoTrigger1000GuardiaForestBG.png", (req, res) => {
-  res.sendFile(
-    path.join(__dirname + "/src/ChronoTrigger1000GuardiaForestBG.png")
-  );
-});
-
-app.get("/src/chrono.gif", (req, res) => {
-  res.sendFile(path.join(__dirname + "/src/chrono.gif"));
-});
-
-app.get("/src/cronobattleleft.gif", (req, res) => {
-  res.sendFile(path.join(__dirname + "/src/cronobattleleft.gif"));
-});
-app.get("/src/cronobattleright.gif", (req, res) => {
-  res.sendFile(path.join(__dirname + "/src/cronobattleright.gif"));
-});
-
-app.get("/src/cronobattleup.gif", (req, res) => {
-  res.sendFile(path.join(__dirname + "/src/cronobattleup.gif"));
-});
-
-app.get("/src/cronobattledown.gif", (req, res) => {
-  res.sendFile(path.join(__dirname + "/src/cronobattledown.gif"));
-});
-app.get("/src/cronodownthrust.gif", (req, res) => {
-  res.sendFile(path.join(__dirname + "/src/cronodownthrust.gif"));
-});
-app.get("/src/520448.jpg", (req, res) => {
-  res.sendFile(path.join(__dirname + "/src/520448.jpg"));
-});
-app.get("/src/blue.png", (req, res) => {
-  res.sendFile(path.join(__dirname + "/src/blue.png"));
-});
-
-app.get("/src/TechnodeChocobo.mp3", (req, res) => {
-  res.sendFile(path.join(__dirname + "/src/TechnodeChocobo.mp3"));
-});
-
-app.get("/src/Blue_Imp.png", (req, res) => {
-  res.sendFile(path.join(__dirname + "/src/Blue_Imp.png"));
-});
-
-app.get("/src/chronotype/ChronoType.eot", (req, res) => {
-  res.sendFile(path.join(__dirname + "/src/chronotype/ChronoType.eot"));
-});
-app.get("/src/chronotype/ChronoType.woff", (req, res) => {
-  res.sendFile(path.join(__dirname + "/src/chronotype/ChronoType.woff"));
-});
-app.get("/src/chronotype/ChronoType.ttf", (req, res) => {
-  res.sendFile(path.join(__dirname + "/src/chronotype/ChronoType.ttf"));
-});
-app.get("/src/chronotype/ChronoType.svg", (req, res) => {
-  res.sendFile(path.join(__dirname + "/src/chronotype/ChronoType.svg"));
-});
-app.get("/src/blue.png", (req, res) => {
-  res.sendFile(path.join(__dirname + "/src/blue.png"));
-});
-
-app.get("/src/splash.jpg", (req, res) => {
-  res.sendFile(path.join(__dirname + "/src/splash.jpg"));
-});
-app.get("/src/squarereticle.png", (req, res) => {
-  res.sendFile(path.join(__dirname + "/src/squarereticle.png"));
-});
-app.get("/src/cursor.png", (req, res) => {
-  res.sendFile(path.join(__dirname + "/src/cursor.png"));
-});
-app.get("/src/clipboard.png", (req, res) => {
-  res.sendFile(path.join(__dirname + "/src/clipboard.png"));
-});
-//end static files
 
 //  these are the split js bundles
 app.get("/dictionaryChinese.bundle.js", (req, res) => {
@@ -183,10 +55,8 @@ app.get("/dictionaryEnglish.bundle.js", (req, res) => {
 });
 //end split budnles
 
-// 1. read the json {1: [name, score],... 5:}
 
 const fs = require("fs");
-
 // this route sends out the current high scores
 app.get("/highscore", (req, res) => {
   sendHighScores(req, res);
@@ -206,7 +76,7 @@ app.post(`/highscore`, (req, res) => {
 // this is the user asking if he should be considered for a high score
 app.post(`/newhighscore`, (req, res) => {
   // req.body = [3434,`player`]
-  const [score = Number.MIN_SAFE_INTEGER, _] = req.body; // its a number and string despite JSON.stringify without using JSON.parse because of JSON body parser module?
+  const [score = Number.MIN_SAFE_INTEGER, _] = req.body; // it's a number and string despite JSON.stringify without using JSON.parse because of JSON body parser module?
   res.send(shouldHighScoresUpdate(score));
 
   // fetch('./newhighscore', {
@@ -336,6 +206,7 @@ new CronJob(
 //     });
 // })
 
+// pipe it instead of keeping on server?
 app.get("/word/:word", function (req, res) {
   const dirCont = fs.readdirSync(`./words`);
 
@@ -346,85 +217,82 @@ app.get("/word/:word", function (req, res) {
     const language = req.params.word.match(/[\u3400-\u9FBF]/);
 
     switch (!language) {
-      case false: // CHINESE would be language =[anything]
-        handleChinese();
+      case false: // CHINESE would be language = [anything]
+        handleChinese(req, res);
         break;
       case true: // ENGLISH would be language=null
-        handleEnglish();
+        handleEnglish(req, res);
         break;
       default:
-        handleEnglish();
-    }
-
-    function handleEnglish() {
-      const request = https.get(
-        `https://ssl.gstatic.com/dictionary/static/sounds/20180430/${encodeURI(
-          req.params.word
-        )}--_us_1.mp3`,
-        function (response) {
-          if (response.headers[`content-type`] === `audio/mpeg`) {
-            //"text/html")
-            response.pipe(file);
-            file.on("finish", function () {
-              file.close(() =>
-                res.sendFile(
-                  path.join(__dirname + `/words/${req.params.word}.mp3`)
-                )
-              );
-            });
-          } else {
-            const secondRequest = https.get(
-              `https://translate.google.com.vn/translate_tts?ie=UTF-8&q=${encodeURI(
-                req.params.word
-              )}&tl=en&client=tw-ob`,
-              function (response) {
-                response.pipe(file);
-                file.on("finish", function () {
-                  file.close(() =>
-                    res.sendFile(
-                      path.join(__dirname + `/words/${req.params.word}.mp3`)
-                    )
-                  );
-                });
-              }
-            );
-          }
-        }
-      );
-    }
-
-    function handleChinese() {
-      const request = https.get(
-        `https://gss0.baidu.com/6KAZsjip0QIZ8tyhnq/text2audio?tex=${encodeURI(
-          req.params.word
-        )}&cuid=baike&lan=ZH&ctp=1&pdt=31&vol=9&spd=4&per=4100`,
-        function (response) {
-          if (true) {
-            console.log(request.headers);
-            response.pipe(file);
-            file.on("finish", function () {
-              file.close(() =>
-                res.sendFile(
-                  path.join(__dirname + `/words/${req.params.word}.mp3`)
-                )
-              );
-            });
-          } else {
-            fs.unlink(`words/${req.params.word}.mp3`, () => {});
-          }
-        }
-      );
-    }
+        handleEnglish(req, res);
+    }  
   }
 });
+
+function handleEnglish(req, res) {
+  const request = https.get(
+    `https://ssl.gstatic.com/dictionary/static/sounds/20180430/${encodeURI(
+      req.params.word
+    )}--_us_1.mp3`,
+    function (response) {
+      if (response.headers[`content-type`] === `audio/mpeg`) {
+        response.pipe(file);
+        file.on("finish", function () {
+          file.close(() =>
+            res.sendFile(
+              path.join(__dirname + `/words/${req.params.word}.mp3`)
+            )
+          );
+        });
+      } else {
+        const secondRequest = https.get(
+          `https://translate.google.com.vn/translate_tts?ie=UTF-8&q=${encodeURI(
+            req.params.word
+          )}&tl=en&client=tw-ob`,
+          function (response) {
+            response.pipe(file);
+            file.on("finish", function () {
+              file.close(() =>
+                res.sendFile(
+                  path.join(__dirname + `/words/${req.params.word}.mp3`)
+                )
+              );
+            });
+          }
+        );
+      }
+    }
+  );
+}
+
+function handleChinese(req,res) {
+  const request = https.get(
+    `https://gss0.baidu.com/6KAZsjip0QIZ8tyhnq/text2audio?tex=${encodeURI(
+      req.params.word
+    )}&cuid=baike&lan=ZH&ctp=1&pdt=31&vol=9&spd=4&per=4100`,
+    function (response) {
+      if (true) {
+        console.log(request.headers);
+        response.pipe(file);
+        file.on("finish", function () {
+          file.close(() =>
+            res.sendFile(
+              path.join(__dirname + `/words/${req.params.word}.mp3`)
+            )
+          );
+        });
+      } else {
+        fs.unlink(`words/${req.params.word}.mp3`, () => {});
+      }
+    }
+  );
+}
+
 
 http.listen(port, () => {
   console.log(`listening on *:${port}`);
 });
 
-// app.listen(port, ()=> {
-//     console.log(`listening on`, port)
-// });
 
 //piping readstreams:
 //https://flaviocopes.com/nodejs-streams/#signaling-a-writable-stream-that-you-ended-writing
