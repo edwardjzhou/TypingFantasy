@@ -110,7 +110,13 @@
 
      
         <div id="chatroom">
-            <h1>chatbox!</h1>
+            <h2>chatbox!</h2>
+            <div id="messages"></div>
+            <form>
+                <input class=chat-input type="text" id="message" autocomplete="off" autofocus placeholder="Type English message...">
+                <input class=chat-input type="text" id="name" autocomplete="off" value="匿名" placeholder="Make up a name...">
+                <input class=chat-input type="submit" value="Send">
+            </form>
         </div>
         <div title="High Score Table" id="highscore"> 
             <!-- Load Facebook SDK for JavaScript -->
@@ -125,8 +131,7 @@
                 ">
             </div>
 
-            <h1 PRIMARY data-hi = "5" bye='123'> High Scores  </h1> 
-            <!-- tbd: I want to test reflectivity of html attrs -->
+            <h2> High Scores  </h2> 
         </div>    
 
         
@@ -134,3 +139,5 @@
 
     </body>
 </html>
+
+
