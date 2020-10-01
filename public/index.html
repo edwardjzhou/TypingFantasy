@@ -78,16 +78,19 @@
             <p>1. Type the word above the monster's head to attack it!</p>
             <p>2. Press space to pause/unpause. <label> Toggle sound:<input type="checkbox" id="soundToggle" name="soundToggle" checked></label> </p>
 
-
+            <!-- MADE THIS DISAPPEAR --><!-- MADE THIS DISAPPEAR --><!-- MADE THIS DISAPPEAR -->
             <div id="cheat-tooltip" onmouseover="this.nextElementSibling.style.display='block'"
-                onmouseout="this.nextElementSibling.style.display='none'">
+                onmouseout="this.nextElementSibling.style.display='none'" style="display:none;">
                 3. Activate cheats if you're so inclined!
             </div>
+            <!-- MADE THIS DISAPPEAR -->
+            <!-- MADE THIS DISAPPEAR -->
+            <!-- MADE THIS DISAPPEAR -->
 
-            <ul id="cheat-tooltiptext" ">
-                <p>&bull;Hover over my Email link to add 50% to the monster spawn rate (repeatable)</p>
-                <p>&bull;Click my Linkedin link to halve the monster spawn rate (repeatable)</p>
-                <p>&bull;Type and enter my first name, edward, to activate infinite health</p>
+            <ul id="cheat-tooltiptext" style="display:none;">
+                <li>&bull;Hover over my Email link to add 50% to the monster spawn rate (repeatable)</li>
+                <li>&bull;Click my Linkedin link to halve the monster spawn rate (repeatable)</li>
+                <li>&bull;Type and enter my first name, edward, to activate infinite health</li>
             </ul>
 
             <br>
@@ -108,9 +111,12 @@
 
         </div>
 
-     
-        <div id="chatroom">
-            <h2>chatbox!</h2>
+                <!-- MADE THIS DISAPPEAR -->
+                <!-- MADE THIS DISAPPEAR -->
+                <!-- MADE THIS DISAPPEAR -->
+
+        <div id="chatroom" style="display:none">
+            <h2>chat</h2>
             <div id="messages"></div>
             <form>
                 <input class=chat-input type="text" id="message" autocomplete="off" autofocus placeholder="Type English message...">
@@ -118,13 +124,14 @@
                 <input class=chat-input type="submit" value="Send">
             </form>
         </div>
+
+
+
         <div title="High Score Table" id="highscore"> 
-            <!-- Load Facebook SDK for JavaScript -->
             <div id="fb-root"></div>
             <script async defer crossorigin="anonymous"
                 src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v3.0"></script>
             
-            <!-- Your like button code -->
             <div class="fb-like" data-href="http://cryptic-escarpment-31838.herokuapp.com/" data-colorscheme="dark"
                 data-layout="standard" data-action="like" data-share="true" width="180px" style="margin-bottom: 10px;
                 pointer-events:all
@@ -132,7 +139,7 @@
             </div>
 
             <h2> High Scores  </h2> 
-        </div>    
+        </div>     
 
         
 
@@ -141,3 +148,13 @@
 </html>
 
 
+
+<!-- 
+    2 breakpoints
+    x
+    1280x800
+    x
+    1920x1080
+    x
+
+ -->
